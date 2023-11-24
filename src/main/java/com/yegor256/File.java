@@ -67,6 +67,18 @@ final class File {
     }
 
     /**
+     * Read content.
+     * @return The content of the file
+     * @throws IOException If fails
+     */
+    String content() throws IOException {
+        return new String(
+            java.nio.file.Files.readAllBytes(this.path()),
+            StandardCharsets.UTF_8
+        );
+    }
+
+    /**
      * Check existence.
      * @return TRUE if file exists
      */

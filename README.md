@@ -30,11 +30,11 @@ import com.yegor256.Farea;
 
 class MyPluginTest {
   @Test
-  void worksAsExpected(@TempDir dir) {
+  void worksAsExpected(@TempDir Path dir) {
     new Farea(dir)
       .files()
-      .append("src/test/java/Hello.java")
-      .content("class Hello {}")
+      .file("src/test/java/Hello.java")
+      .write("class Hello {}");
     new Farea(dir)
       .dependencies()
       .append("org.cactoos", "cactoos", "0.55.0")

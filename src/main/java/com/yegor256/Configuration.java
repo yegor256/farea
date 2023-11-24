@@ -27,11 +27,11 @@ import java.io.IOException;
 import org.xembly.Directives;
 
 /**
- * Dependencies inside Build.
+ * Configuration of a Plugin.
  *
  * @since 0.0.1
  */
-final class Dependencies {
+final class Configuration {
 
     /**
      * Location.
@@ -39,33 +39,34 @@ final class Dependencies {
     private final Pom pom;
 
     /**
-     * Ctor.
-     * @param file The POM
+     * Xpath to use.
      */
-    Dependencies(final Pom file) {
-        this.pom = file;
-    }
+    private final String xpath;
 
     /**
      * Ctor.
-     * @param group The group ID
-     * @param artifact The artifact ID
-     * @param version The version
-     * @return Deps
+     * @param file The POM
+     * @param xpth Xpath
+     */
+    Configuration(final Pom file, final String xpth) {
+        this.pom = file;
+        this.xpath = xpth;
+    }
+
+    /**
+     * Get config.
+     * @param key The key
+     * @param value The value
+     * @return Config
      * @throws IOException If fails
      */
-    Dependency append(final String group, final String artifact,
-        final String version) throws IOException {
+    Configuration set(final String key, final Object value) throws IOException {
         this.pom.modify(
-            new Directives()
-                .xpath("/project")
-                .addIf("dependencies")
-                .add("dependency")
-                .add("groupId").set(group).up()
-                .add("artifactId").set(artifact).up()
-                .add("version").set(version).up()
+            new Directives().xpath(this.xpath)
+                .addIf(key)
+                .set(value)
         );
-        return new Dependency(this.pom, group, artifact);
+        return this;
     }
 
 }

@@ -24,80 +24,49 @@
 package com.yegor256;
 
 import java.io.IOException;
-import java.nio.file.Path;
+import org.xembly.Directives;
 
 /**
- * Fake Maven Reactor.
- *
- * <p>Run it like this to test a simple Java compilation:</p>
- *
- * <code><pre> </pre></code>
+ * Plugins inside Build.
  *
  * @since 0.0.1
  */
-public final class Farea {
+final class Plugins {
 
     /**
-     * Home.
+     * Location.
      */
-    private final Path home;
+    private final Pom pom;
 
     /**
      * Ctor.
-     * @param dir The home dir
+     * @param file The POM
      */
-    public Farea(final Path dir) {
-        this.home = dir;
-    }
-
-    /**
-     * Access to files.
-     * @return Files in home
-     */
-    public Files files() {
-        return new Files(this.home);
-    }
-
-    /**
-     * Get access to build.
-     * @return Build
-     * @throws IOException If fails
-     */
-    public Build build() throws IOException {
-        return new Build(this.pom());
+    Plugins(final Pom file) {
+        this.pom = file;
     }
 
     /**
      * Ctor.
+     * @param group The group ID
+     * @param artifact The artifact ID
+     * @param version The version
      * @return Deps
      * @throws IOException If fails
      */
-    public Dependencies dependencies() throws IOException {
-        return new Dependencies(this.pom());
-    }
-
-    /**
-     * Execute with command line arguments.
-     * @param args Command line arguments
-     * @throws IOException If fails
-     */
-    public void exec(final String... args) throws IOException {
-        this.pom().init();
-        new Jaxec()
-            .with("mvn")
-            .with(args)
-            .withHome(this.home)
-            .withCheck(false)
-            .exec();
-    }
-
-    /**
-     * Execute with command line arguments.
-     * @return POM
-     * @throws IOException If fails
-     */
-    public Pom pom() throws IOException {
-        return new Pom(this.home.resolve("pom.xml")).init();
+    Plugin append(final String group, final String artifact,
+        final String version) throws IOException {
+        this.pom.modify(
+            new Directives()
+                .xpath("/project")
+                .addIf("build")
+                .addIf("plugins")
+                .add("plugin")
+                .add("groupId").set(group).up()
+                .add("artifactId").set(artifact).up()
+                .add("version").set(version).up()
+        );
+        return new Plugin(this.pom, group, artifact);
     }
 
 }

@@ -24,80 +24,58 @@
 package com.yegor256;
 
 import java.io.IOException;
-import java.nio.file.Path;
+import org.xembly.Directives;
 
 /**
- * Fake Maven Reactor.
- *
- * <p>Run it like this to test a simple Java compilation:</p>
- *
- * <code><pre> </pre></code>
+ * Dependency inside Dependencies.
  *
  * @since 0.0.1
  */
-public final class Farea {
+final class Dependency {
 
     /**
-     * Home.
+     * Location.
      */
-    private final Path home;
+    private final Pom pom;
+
+    /**
+     * Group.
+     */
+    private final String group;
+
+    /**
+     * Artifact.
+     */
+    private final String artifact;
 
     /**
      * Ctor.
-     * @param dir The home dir
+     * @param file The POM
+     * @param grp GroupId
+     * @param art ArtifactId
      */
-    public Farea(final Path dir) {
-        this.home = dir;
-    }
-
-    /**
-     * Access to files.
-     * @return Files in home
-     */
-    public Files files() {
-        return new Files(this.home);
-    }
-
-    /**
-     * Get access to build.
-     * @return Build
-     * @throws IOException If fails
-     */
-    public Build build() throws IOException {
-        return new Build(this.pom());
+    Dependency(final Pom file, final String grp, final String art) {
+        this.pom = file;
+        this.group = grp;
+        this.artifact = art;
     }
 
     /**
      * Ctor.
-     * @return Deps
+     * @param scp The scope
+     * @return Itself
      * @throws IOException If fails
      */
-    public Dependencies dependencies() throws IOException {
-        return new Dependencies(this.pom());
-    }
-
-    /**
-     * Execute with command line arguments.
-     * @param args Command line arguments
-     * @throws IOException If fails
-     */
-    public void exec(final String... args) throws IOException {
-        this.pom().init();
-        new Jaxec()
-            .with("mvn")
-            .with(args)
-            .withHome(this.home)
-            .withCheck(false)
-            .exec();
-    }
-
-    /**
-     * Execute with command line arguments.
-     * @return POM
-     * @throws IOException If fails
-     */
-    public Pom pom() throws IOException {
-        return new Pom(this.home.resolve("pom.xml")).init();
+    Dependency scope(final String scp) throws IOException {
+        this.pom.modify(
+            new Directives().xpath(
+                String.format(
+                    "/project/dependencies/dependency[groupId='%s' and artifactId='%s']",
+                    this.group, this.artifact
+                )
+            ).addIf("scope").set(scp)
+        );
+        return this;
     }
 
 }

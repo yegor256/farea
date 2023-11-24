@@ -42,8 +42,12 @@ final class FareaTest {
         new Farea(dir)
             .files()
             .file("src/main/java/foo/Hello.java")
-            .write("package foo; class Hello {}");
-        new Farea(dir).exec("compile");
+            .write("package foo; import org.cactoos.Input; class Hello {}");
+        new Farea(dir)
+            .dependencies()
+            .append("org.cactoos", "cactoos", "0.55.0");
+        new Farea(dir)
+            .exec("compile");
         MatcherAssert.assertThat(
             new Farea(dir).files().file("target/classes/foo/Hello.class").exists(),
             Matchers.is(true)

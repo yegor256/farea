@@ -23,15 +23,12 @@
  */
 package com.yegor256;
 
-import java.io.IOException;
-import org.xembly.Directives;
-
 /**
- * Dependencies inside Build.
+ * Plugin inside Plugin.
  *
  * @since 0.0.1
  */
-final class Dependencies {
+final class Plugin {
 
     /**
      * Location.
@@ -39,33 +36,39 @@ final class Dependencies {
     private final Pom pom;
 
     /**
-     * Ctor.
-     * @param file The POM
+     * Group.
      */
-    Dependencies(final Pom file) {
-        this.pom = file;
-    }
+    private final String group;
+
+    /**
+     * Artifact.
+     */
+    private final String artifact;
 
     /**
      * Ctor.
-     * @param group The group ID
-     * @param artifact The artifact ID
-     * @param version The version
-     * @return Deps
-     * @throws IOException If fails
+     * @param file The POM
+     * @param grp GroupId
+     * @param art ArtifactId
      */
-    Dependency append(final String group, final String artifact,
-        final String version) throws IOException {
-        this.pom.modify(
-            new Directives()
-                .xpath("/project")
-                .addIf("dependencies")
-                .add("dependency")
-                .add("groupId").set(group).up()
-                .add("artifactId").set(artifact).up()
-                .add("version").set(version).up()
+    Plugin(final Pom file, final String grp, final String art) {
+        this.pom = file;
+        this.group = grp;
+        this.artifact = art;
+    }
+
+    /**
+     * Get config.
+     * @return Config
+     */
+    Configuration configuration() {
+        return new Configuration(
+            this.pom,
+            String.format(
+                "/project/build/plugins/plugin[groupId='%s' and artifactId='%s']",
+                this.group, this.artifact
+            )
         );
-        return new Dependency(this.pom, group, artifact);
     }
 
 }

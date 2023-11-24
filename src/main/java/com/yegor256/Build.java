@@ -44,11 +44,11 @@ final class Build {
     }
 
     /**
-     * Ctor.
-     * @return Deps
+     * Get access to build.
+     * @return Build
      */
-    Dependencies dependencies() {
-        return new Dependencies(this.pom);
+    public Plugins plugins() {
+        return new Plugins(this.pom);
     }
 
 }
