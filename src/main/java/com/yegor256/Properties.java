@@ -24,71 +24,44 @@
 package com.yegor256;
 
 import java.io.IOException;
-import java.nio.file.Path;
+import org.xembly.Directives;
 
 /**
- * Fake Maven Reactor.
- *
- * <p>Run it like this to test a simple Java compilation:</p>
- *
- * <code><pre> </pre></code>
+ * Properties of a project.
  *
  * @since 0.0.1
  */
-public final class Farea {
+final class Properties {
 
     /**
-     * Home.
+     * Location.
      */
-    private final Path home;
+    private final Pom pom;
 
     /**
      * Ctor.
-     * @param dir The home dir
+     * @param file The POM
      */
-    public Farea(final Path dir) {
-        this.home = dir;
+    Properties(final Pom file) {
+        this.pom = file;
     }
 
     /**
-     * Access to files.
-     * @return Files in home
-     */
-    public Files files() {
-        return new Files(this.home);
-    }
-
-    /**
-     * Get access to build.
-     * @return Build
+     * Ctor.
+     * @param name The name
+     * @param value The value
+     * @return Properties
      * @throws IOException If fails
      */
-    public Build build() throws IOException {
-        return new Build(this.pom());
-    }
-
-    /**
-     * Execute with command line arguments.
-     * @param args Command line arguments
-     * @throws IOException If fails
-     */
-    public void exec(final String... args) throws IOException {
-        this.pom().init();
-        new Jaxec()
-            .with("mvn")
-            .with(args)
-            .withHome(this.home)
-            .withCheck(false)
-            .exec();
-    }
-
-    /**
-     * Execute with command line arguments.
-     * @return POM
-     * @throws IOException If fails
-     */
-    public Pom pom() throws IOException {
-        return new Pom(this.home.resolve("pom.xml")).init();
+    Properties set(final String name, final String value) throws IOException {
+        this.pom.modify(
+            new Directives()
+                .xpath("/project")
+                .addIf("properties")
+                .add(name)
+                .set(value)
+        );
+        return this;
     }
 
 }

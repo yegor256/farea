@@ -29,6 +29,7 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import org.xembly.Directive;
+import org.xembly.Directives;
 import org.xembly.Xembler;
 
 /**
@@ -49,6 +50,32 @@ final class Pom {
      */
     Pom(final Path file) {
         this.path = file;
+    }
+
+    /**
+     * Ctor.
+     * @return Itself
+     * @throws IOException If fails
+     */
+    Pom init() throws IOException {
+        if (!this.path.toFile().exists()) {
+            this.modify(
+                new Directives()
+                    .xpath("/")
+                    .addIf("project")
+                    .addIf("modelVersion").set("4.0.0").up()
+                    .addIf("groupId").set("test").up()
+                    .addIf("artifactId").set("test").up()
+                    .addIf("version").set("0.0.0").up()
+                    .addIf("name")
+                    .set("test")
+                    .up()
+            );
+            new Properties(this)
+                .set("maven.compiler.source", "11")
+                .set("maven.compiler.target", "11");
+        }
+        return this;
     }
 
     /**
