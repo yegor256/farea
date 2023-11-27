@@ -63,6 +63,7 @@ final class Configuration {
     Configuration set(final String key, final Object value) throws IOException {
         this.pom.modify(
             new Directives().xpath(this.xpath)
+                .addIf("configuration")
                 .addIf(key)
                 .set(value)
         );

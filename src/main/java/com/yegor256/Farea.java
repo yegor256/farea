@@ -88,7 +88,18 @@ public final class Farea {
             .with(args)
             .withHome(this.home)
             .withCheck(false)
+            .withRedirect(true)
+            .withStdout(ProcessBuilder.Redirect.to(this.home.resolve("log.txt").toFile()))
             .exec();
+    }
+
+    /**
+     * Log file.
+     * @return Files in home
+     * @throws IOException If fails
+     */
+    public String log() throws IOException {
+        return this.files().file("log.txt").content();
     }
 
     /**
@@ -96,7 +107,7 @@ public final class Farea {
      * @return POM
      * @throws IOException If fails
      */
-    public Pom pom() throws IOException {
+    private Pom pom() throws IOException {
         return new Pom(this.home.resolve("pom.xml")).init();
     }
 
