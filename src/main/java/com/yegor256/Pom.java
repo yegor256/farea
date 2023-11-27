@@ -27,7 +27,9 @@ import com.jcabi.xml.XML;
 import com.jcabi.xml.XMLDocument;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.List;
 import org.xembly.Directive;
 import org.xembly.Directives;
 import org.xembly.Xembler;
@@ -50,6 +52,19 @@ final class Pom {
      */
     Pom(final Path file) {
         this.path = file;
+    }
+
+    /**
+     * Show it to console.
+     * @throws IOException If fails
+     */
+    void show() throws IOException {
+        System.out.println(
+            new String(
+                Files.readAllBytes(this.path),
+                StandardCharsets.UTF_8
+            )
+        );
     }
 
     /**
@@ -79,23 +94,40 @@ final class Pom {
     }
 
     /**
+     * Get by XPath.
+     * @param expr XPath expression
+     * @throws IOException If fails
+     */
+    List<String> xpath(final String expr) throws IOException {
+        return this.before().xpath(expr);
+    }
+
+    /**
      * Ctor.
      * @param dirs Directives
      * @throws IOException If fails
      */
     void modify(final Iterable<Directive> dirs) throws IOException {
+        Files.write(
+            this.path,
+            new XMLDocument(
+                new Xembler(dirs).applyQuietly(this.before().node())
+            ).toString().getBytes(StandardCharsets.UTF_8)
+        );
+    }
+
+    /**
+     * Get content as is now.
+     * @return XML
+     * @throws IOException If fails
+     */
+    private XML before() throws IOException {
         final XML before;
         if (this.path.toFile().exists()) {
             before = new XMLDocument(this.path);
         } else {
             before = new XMLDocument("<project/>");
         }
-        java.nio.file.Files.write(
-            this.path,
-            new XMLDocument(
-                new Xembler(dirs).applyQuietly(before.node())
-            ).toString().getBytes(StandardCharsets.UTF_8)
-        );
+        return before;
     }
-
 }

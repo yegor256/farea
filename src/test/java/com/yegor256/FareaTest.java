@@ -68,4 +68,21 @@ final class FareaTest {
             Matchers.containsString("BUILD SUCCESS\n")
         );
     }
+
+    @Test
+    void callsCustomPlugin(final @TempDir Path dir) throws IOException {
+        new Farea(dir)
+            .build()
+            .plugins()
+            .append()
+            .phase("initialize")
+            .goal("fake")
+            .configuration()
+            .set("message", "Hello, world!");
+        new Farea(dir).exec("initialize");
+        MatcherAssert.assertThat(
+            new Farea(dir).log(),
+            Matchers.containsString("Hello, world!\n")
+        );
+    }
 }

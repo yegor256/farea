@@ -23,7 +23,16 @@
  */
 package com.yegor256;
 
+import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 import org.xembly.Directives;
 
 /**
@@ -51,7 +60,7 @@ final class Plugins {
      * @param group The group ID
      * @param artifact The artifact ID
      * @param version The version
-     * @return Deps
+     * @return Plugin just added
      * @throws IOException If fails
      */
     Plugin append(final String group, final String artifact,
@@ -66,7 +75,49 @@ final class Plugins {
                 .add("artifactId").set(artifact).up()
                 .add("version").set(version).up()
         );
-        return new Plugin(this.pom, group, artifact);
+        return new Plugin(
+            this.pom,
+            Integer.parseInt(this.pom.xpath("count(/project/build/plugins/plugin)").get(0))
+        );
+    }
+
+    /**
+     * Ctor.
+     * @return Itself as a plugin
+     * @throws IOException If fails
+     */
+    Plugin append() throws IOException {
+        final String classpath = System.getProperty("java.class.path");
+        final Path zip = Paths.get("/tmp/farea.jar");
+        if (zip.toFile().exists()) {
+            Files.delete(zip);
+        }
+        Files.createFile(zip);
+        final Set<String> seen = new HashSet<>();
+        try (ZipOutputStream stream = new ZipOutputStream(Files.newOutputStream(zip))) {
+            for (final String ent : classpath.split(java.io.File.pathSeparator)) {
+                final File dir = new File(ent);
+                if (!dir.isDirectory()) {
+                    continue;
+                }
+                final Path src = Paths.get(dir.getAbsolutePath());
+                for (final Path file : Files.walk(src).collect(Collectors.toList())) {
+                    if (file.toFile().isDirectory()) {
+                        continue;
+                    }
+                    final String name = src.relativize(file).toString();
+                    if (seen.contains(name)) {
+                        continue;
+                    }
+                    ZipEntry entry = new ZipEntry(name);
+                    stream.putNextEntry(entry);
+                    Files.copy(file, stream);
+                    stream.closeEntry();
+                    seen.add(name);
+                }
+            }
+        }
+        return this.append("com.yegor256", "farea-stub", "0.0.0");
     }
 
 }

@@ -30,7 +30,7 @@ import java.nio.file.Path;
  *
  * @since 0.0.1
  */
-final class Files {
+final class Requisites {
 
     /**
      * Home.
@@ -41,7 +41,7 @@ final class Files {
      * Ctor.
      * @param dir The home dir
      */
-    Files(final Path dir) {
+    Requisites(final Path dir) {
         this.home = dir;
     }
 
@@ -50,8 +50,8 @@ final class Files {
      * @param name File name
      * @return File in home
      */
-    File file(final String name) {
-        return new File(this.home, name);
+    Requisite file(final String name) {
+        return new Requisite(this.home, name);
     }
 
 }

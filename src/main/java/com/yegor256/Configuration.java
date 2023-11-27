@@ -39,18 +39,18 @@ final class Configuration {
     private final Pom pom;
 
     /**
-     * Xpath to use.
+     * Position of the plugin inside plugins.
      */
-    private final String xpath;
+    private final int pos;
 
     /**
      * Ctor.
      * @param file The POM
-     * @param xpth Xpath
+     * @param position The position
      */
-    Configuration(final Pom file, final String xpth) {
+    Configuration(final Pom file, final int position) {
         this.pom = file;
-        this.xpath = xpth;
+        this.pos = position;
     }
 
     /**
@@ -62,7 +62,13 @@ final class Configuration {
      */
     Configuration set(final String key, final Object value) throws IOException {
         this.pom.modify(
-            new Directives().xpath(this.xpath)
+            new Directives()
+                .xpath(
+                    String.format(
+                        "/project/plugins/plugin[position()=%d]",
+                        this.pos
+                    )
+                )
                 .addIf("configuration")
                 .addIf(key)
                 .set(value)

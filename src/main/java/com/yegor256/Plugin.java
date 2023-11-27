@@ -23,6 +23,9 @@
  */
 package com.yegor256;
 
+import java.io.IOException;
+import org.xembly.Directives;
+
 /**
  * Plugin inside Plugin.
  *
@@ -36,25 +39,65 @@ final class Plugin {
     private final Pom pom;
 
     /**
-     * Group.
+     * Position in "plugins".
      */
-    private final String group;
-
-    /**
-     * Artifact.
-     */
-    private final String artifact;
+    private final int pos;
 
     /**
      * Ctor.
      * @param file The POM
-     * @param grp GroupId
-     * @param art ArtifactId
+     * @param position The position
      */
-    Plugin(final Pom file, final String grp, final String art) {
+    Plugin(final Pom file, final int position) {
         this.pom = file;
-        this.group = grp;
-        this.artifact = art;
+        this.pos = position;
+    }
+
+    /**
+     * Set phase.
+     * @return Config
+     * @throws IOException If fails
+     */
+    Plugin phase(final String value) throws IOException {
+        this.pom.modify(
+            new Directives()
+                .xpath(
+                    String.format(
+                        "/project/build/plugins/plugin[position()=%d]",
+                        this.pos
+                    )
+                )
+                .strict(1)
+                .addIf("executions")
+                .addIf("execution")
+                .addIf("phase")
+                .set(value)
+        );
+        return this;
+    }
+
+    /**
+     * Set phase.
+     * @return Config
+     * @throws IOException If fails
+     */
+    Plugin goal(final String value) throws IOException {
+        this.pom.modify(
+            new Directives()
+                .xpath(
+                    String.format(
+                        "/project/build/plugins/plugin[position()=%d]",
+                        this.pos
+                    )
+                )
+                .strict(1)
+                .addIf("executions")
+                .addIf("execution")
+                .addIf("goals")
+                .addIf("goal")
+                .set(value)
+        );
+        return this;
     }
 
     /**
@@ -62,13 +105,7 @@ final class Plugin {
      * @return Config
      */
     Configuration configuration() {
-        return new Configuration(
-            this.pom,
-            String.format(
-                "/project/build/plugins/plugin[groupId='%s' and artifactId='%s']",
-                this.group, this.artifact
-            )
-        );
+        return new Configuration(this.pom, this.pos);
     }
 
 }

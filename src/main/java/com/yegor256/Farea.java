@@ -54,8 +54,8 @@ public final class Farea {
      * Access to files.
      * @return Files in home
      */
-    public Files files() {
-        return new Files(this.home);
+    public Requisites files() {
+        return new Requisites(this.home);
     }
 
     /**
@@ -83,6 +83,7 @@ public final class Farea {
      */
     public void exec(final String... args) throws IOException {
         this.pom().init();
+        this.pom().show();
         new Jaxec()
             .with("mvn")
             .with(args)
