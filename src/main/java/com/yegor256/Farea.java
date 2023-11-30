@@ -25,6 +25,8 @@ package com.yegor256;
 
 import java.io.IOException;
 import java.nio.file.Path;
+import java.util.Collection;
+import java.util.LinkedList;
 import java.util.Locale;
 
 /**
@@ -118,16 +120,18 @@ public final class Farea {
 
     /**
      * Name of Maven executable, specific for an operating system.
-     * @return The name
+     * @return The command
      */
-    private static String mvn() {
-        final String result;
+    private static Collection<String> mvn() {
+        final Collection<String> cmd = new LinkedList<>();
         if (System.getProperty("os.name").toLowerCase(Locale.getDefault()).contains("windows")) {
-            result = "mvn.bat";
+            cmd.add("cmd");
+            cmd.add("/c");
+            cmd.add("mvn");
         } else {
-            result = "mvn";
+            cmd.add("mvn");
         }
-        return result;
+        return cmd;
     }
 
 }

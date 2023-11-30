@@ -101,7 +101,7 @@ final class Plugins {
                 )
             );
         }
-        final Path place = mhome.resolve("repository/farea/farea/0.0.0/");
+        final Path place = mhome.resolve("repository/farea/farea/0.0.0");
         Plugins.assembleJar(place.resolve("farea-0.0.0.jar"));
         Plugins.assemblePom(place.resolve("farea-0.0.0.pom"));
         return this.append("farea", "farea", "0.0.0");
