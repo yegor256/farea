@@ -189,10 +189,14 @@ final class Plugins {
             }
         }
         try (JarFile jar = new JarFile(zip.toFile(), false)) {
-            final ZipEntry desc = jar.getJarEntry("META-INF/maven/plugin.xml");
+            final String path = String.format("META-INF%smaven%1$splugin.xml", File.separator);
+            final ZipEntry desc = jar.getJarEntry(path);
             if (desc == null) {
                 throw new IllegalStateException(
-                    "The plugin.xml descriptor is missing in the JAR"
+                    String.format(
+                        "The plugin.xml descriptor is missing in the JAR at %s",
+                        path
+                    )
                 );
             }
         }
