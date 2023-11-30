@@ -25,6 +25,7 @@ package com.yegor256;
 
 import java.io.IOException;
 import java.nio.file.Path;
+import java.util.Locale;
 
 /**
  * Fake Maven Reactor.
@@ -84,7 +85,7 @@ public final class Farea {
     public void exec(final String... args) throws IOException {
         this.pom().init();
         new Jaxec()
-            .with("mvn")
+            .with(Farea.mvn())
             .with("--update-snapshots")
             .with("--batch-mode")
             .with("--fail-fast")
@@ -113,6 +114,22 @@ public final class Farea {
      */
     private Pom pom() throws IOException {
         return new Pom(this.home.resolve("pom.xml")).init();
+    }
+
+    /**
+     * Name Maven executable.
+     * - On Windows it is "mvn.exe".
+     * - On Unix it is just "mvn".
+     * @return The name
+     */
+    private static String mvn() {
+        final String result;
+        if (System.getProperty("os.name").toLowerCase(Locale.getDefault()).contains("windows")) {
+            result = "mvn.exe";
+        } else {
+            result = "mvn";
+        }
+        return result;
     }
 
 }
