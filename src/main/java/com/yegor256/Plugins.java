@@ -176,7 +176,9 @@ final class Plugins {
                     if (file.toFile().isDirectory()) {
                         continue;
                     }
-                    final String name = src.relativize(file).toString();
+                    final String name = src.relativize(file).toString()
+                        .replace("/", File.separator)
+                        .replace("\\", File.separator);
                     if (seen.contains(name)) {
                         continue;
                     }
