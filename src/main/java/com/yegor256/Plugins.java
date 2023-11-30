@@ -35,6 +35,7 @@ import java.nio.file.Paths;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.jar.JarFile;
 import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
@@ -185,6 +186,14 @@ final class Plugins {
                     stream.closeEntry();
                     seen.add(name);
                 }
+            }
+        }
+        try (JarFile jar = new JarFile(zip.toFile(), false)) {
+            final ZipEntry desc = jar.getJarEntry("META-INF/maven/plugin.xml");
+            if (desc == null) {
+                throw new IllegalStateException(
+                    "The plugin.xml descriptor is missing in the JAR"
+                );
             }
         }
         Logger.debug(
