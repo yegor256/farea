@@ -23,6 +23,7 @@
  */
 package com.yegor256;
 
+import com.jcabi.log.Logger;
 import com.jcabi.xml.XML;
 import com.jcabi.xml.XMLDocument;
 import java.io.File;
@@ -142,6 +143,11 @@ final class Plugins {
             pom,
             new Xembler(dirs).xmlQuietly().getBytes(StandardCharsets.UTF_8)
         );
+        Logger.debug(
+            Plugins.class,
+            "POM saved to %s (%d bytes)",
+            pom, pom.toFile().length()
+        );
     }
 
     /**
@@ -181,6 +187,11 @@ final class Plugins {
                 }
             }
         }
+        Logger.debug(
+            Plugins.class,
+            "JAR saved to %s (%d bytes)",
+            zip, zip.toFile().length()
+        );
     }
 
 }
