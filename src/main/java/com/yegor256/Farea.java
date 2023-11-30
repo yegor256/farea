@@ -117,15 +117,13 @@ public final class Farea {
     }
 
     /**
-     * Name Maven executable.
-     * - On Windows it is "mvn.exe".
-     * - On Unix it is just "mvn".
+     * Name of Maven executable, specific for an operating system.
      * @return The name
      */
     private static String mvn() {
         final String result;
         if (System.getProperty("os.name").toLowerCase(Locale.getDefault()).contains("windows")) {
-            result = "mvn.exe";
+            result = "mvn.bat";
         } else {
             result = "mvn";
         }
