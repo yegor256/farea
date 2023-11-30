@@ -73,6 +73,5 @@ public final class FakeMojo extends AbstractMojo {
             )
         );
         this.getLog().info(this.message);
-        this.getLog().info("boom");
     }
 }
