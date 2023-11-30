@@ -189,7 +189,7 @@ final class Plugins {
             }
         }
         try (JarFile jar = new JarFile(zip.toFile(), false)) {
-            final String path = String.format("META-INF%smaven%1$splugin.xml", File.separator);
+            final String path = "META-INF/maven/plugin.xml";
             final ZipEntry desc = jar.getJarEntry(path);
             if (desc == null) {
                 throw new IllegalStateException(
