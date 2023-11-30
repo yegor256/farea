@@ -92,7 +92,7 @@ final class Plugins {
      * @throws IOException If fails
      */
     Plugin appendItself() throws IOException {
-        final Path mhome = Paths.get(System.getenv("HOME")).resolve(".m2");
+        final Path mhome = Paths.get(System.getProperty("user.home")).resolve(".m2");
         if (!mhome.toFile().exists()) {
             throw new IllegalStateException(
                 String.format(
