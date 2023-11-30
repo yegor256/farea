@@ -25,6 +25,7 @@ package com.yegor256;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.nio.file.Path;
 
 /**
@@ -61,8 +62,9 @@ final class Requisite {
      */
     void write(final String content) throws IOException {
         this.path().toFile().getParentFile().mkdirs();
-        java.nio.file.Files.write(
-            this.path(), content.getBytes(StandardCharsets.UTF_8)
+        Files.write(
+            this.path(),
+            content.getBytes(StandardCharsets.UTF_8)
         );
     }
 
@@ -73,7 +75,7 @@ final class Requisite {
      */
     String content() throws IOException {
         return new String(
-            java.nio.file.Files.readAllBytes(this.path()),
+            Files.readAllBytes(this.path()),
             StandardCharsets.UTF_8
         );
     }

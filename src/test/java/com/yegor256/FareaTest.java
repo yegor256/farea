@@ -82,7 +82,11 @@ final class FareaTest {
         new Farea(dir).exec("initialize");
         MatcherAssert.assertThat(
             new Farea(dir).log(),
-            Matchers.containsString("Hello, world!\n")
+            Matchers.allOf(
+                Matchers.containsString("project.name: test"),
+                Matchers.containsString("total goals: 1"),
+                Matchers.containsString("Hello, world!\n")
+            )
         );
     }
 }

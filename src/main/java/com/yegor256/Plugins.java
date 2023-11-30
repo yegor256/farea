@@ -23,17 +23,22 @@
  */
 package com.yegor256;
 
+import com.jcabi.xml.XML;
+import com.jcabi.xml.XMLDocument;
 import java.io.File;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 import org.xembly.Directives;
+import org.xembly.Xembler;
 
 /**
  * Plugins inside Build.
@@ -87,20 +92,79 @@ final class Plugins {
      * @throws IOException If fails
      */
     Plugin append() throws IOException {
-        final String classpath = System.getProperty("java.class.path");
-        final Path zip = Paths.get("/tmp/farea.jar");
+        final Path mhome = Paths.get(System.getenv("HOME")).resolve(".m2");
+        if (!mhome.toFile().exists()) {
+            throw new IllegalStateException(
+                String.format(
+                    "Maven home is not found at this location: %s",
+                    mhome.toAbsolutePath()
+                )
+            );
+        }
+        final Path place = mhome.resolve("repository/farea/farea/0.0.0/");
+        Plugins.assembleJar(place.resolve("farea-0.0.0.jar"));
+        Plugins.assemblePom(place.resolve("farea-0.0.0.pom"));
+        return this.append("farea", "farea", "0.0.0");
+    }
+
+    /**
+     * Create a fake POM for the module.
+     * @param pom The location of the POM (pom.xml)
+     * @throws IOException If fails
+     */
+    private static void assemblePom(final Path pom) throws IOException {
+        final File xml = new File("pom.xml");
+        if (!xml.exists()) {
+            throw new IllegalStateException(
+                String.format(
+                    "The pom.xml is not found at this location: %s",
+                    xml.getAbsolutePath()
+                )
+            );
+        }
+        final List<XML> deps = new XMLDocument(xml)
+            .registerNs("mvn", "http://maven.apache.org/POM/4.0.0")
+            .nodes("/mvn:project/mvn:dependencies/mvn:dependency");
+        final Directives dirs = new Directives()
+            .add("project")
+            .add("modelVersion").set("4.0.0").up()
+            .add("artifactId").set("farea").up()
+            .add("groupId").set("farea").up()
+            .add("version").set("0.0.0").up()
+            .add("dependencies");
+        for (final XML dep : deps) {
+            dirs.xpath("/project/dependencies")
+                .strict(1)
+                .add("dependency")
+                .append(dep.node());
+        }
+        Files.write(
+            pom,
+            new Xembler(dirs).xmlQuietly().getBytes(StandardCharsets.UTF_8)
+        );
+    }
+
+    /**
+     * Zip the entire module into a JAR.
+     * @param zip The location of the JAR
+     * @throws IOException If fails
+     */
+    private static void assembleJar(final Path zip) throws IOException {
         if (zip.toFile().exists()) {
             Files.delete(zip);
         }
+        zip.toFile().getParentFile().mkdirs();
         Files.createFile(zip);
         final Set<String> seen = new HashSet<>();
+        final String classpath = System.getProperty("java.class.path");
+        final String[] jars = classpath.split(File.pathSeparator);
         try (ZipOutputStream stream = new ZipOutputStream(Files.newOutputStream(zip))) {
-            for (final String ent : classpath.split(java.io.File.pathSeparator)) {
-                final File dir = new File(ent);
-                if (!dir.isDirectory()) {
+            for (final String path : jars) {
+                final File jar = new File(path);
+                if (!jar.isDirectory()) {
                     continue;
                 }
-                final Path src = Paths.get(dir.getAbsolutePath());
+                final Path src = jar.toPath();
                 for (final Path file : Files.walk(src).collect(Collectors.toList())) {
                     if (file.toFile().isDirectory()) {
                         continue;
@@ -109,7 +173,7 @@ final class Plugins {
                     if (seen.contains(name)) {
                         continue;
                     }
-                    ZipEntry entry = new ZipEntry(name);
+                    final ZipEntry entry = new ZipEntry(name);
                     stream.putNextEntry(entry);
                     Files.copy(file, stream);
                     stream.closeEntry();
@@ -117,7 +181,6 @@ final class Plugins {
                 }
             }
         }
-        return this.append("com.yegor256", "farea-stub", "0.0.0");
     }
 
 }

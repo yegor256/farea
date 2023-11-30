@@ -55,6 +55,7 @@ final class Plugin {
 
     /**
      * Set phase.
+     * @param value The Maven phase
      * @return Config
      * @throws IOException If fails
      */
@@ -78,6 +79,7 @@ final class Plugin {
 
     /**
      * Set phase.
+     * @param value The Maven goal
      * @return Config
      * @throws IOException If fails
      */

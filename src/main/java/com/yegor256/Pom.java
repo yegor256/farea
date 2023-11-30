@@ -55,16 +55,12 @@ final class Pom {
     }
 
     /**
-     * Show it to console.
+     * Show its XML content.
+     * @return The XML
      * @throws IOException If fails
      */
-    void show() throws IOException {
-        System.out.println(
-            new String(
-                Files.readAllBytes(this.path),
-                StandardCharsets.UTF_8
-            )
-        );
+    String xml() throws IOException {
+        return this.before().toString();
     }
 
     /**
@@ -84,7 +80,6 @@ final class Pom {
                     .addIf("version").set("0.0.0").up()
                     .addIf("name")
                     .set("test")
-                    .up()
             );
             new Properties(this)
                 .set("maven.compiler.source", "11")
@@ -96,6 +91,7 @@ final class Pom {
     /**
      * Get by XPath.
      * @param expr XPath expression
+     * @return List of values
      * @throws IOException If fails
      */
     List<String> xpath(final String expr) throws IOException {

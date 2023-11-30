@@ -23,58 +23,29 @@
  */
 package com.yegor256;
 
+import com.jcabi.xml.XMLDocument;
 import java.io.IOException;
-import org.xembly.Directives;
+import java.nio.file.Path;
+import org.hamcrest.MatcherAssert;
+import org.hamcrest.Matchers;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
 
 /**
- * Configuration of a Plugin.
+ * Test case for {@link Pom}.
  *
- * @since 0.0.1
+ * @since 0.1.0
  */
-final class Configuration {
+final class PomTest {
 
-    /**
-     * Location.
-     */
-    private final Pom pom;
-
-    /**
-     * Position of the plugin inside plugins.
-     */
-    private final int pos;
-
-    /**
-     * Ctor.
-     * @param file The POM
-     * @param position The position
-     */
-    Configuration(final Pom file, final int position) {
-        this.pom = file;
-        this.pos = position;
-    }
-
-    /**
-     * Get config.
-     * @param key The key
-     * @param value The value
-     * @return Config
-     * @throws IOException If fails
-     */
-    Configuration set(final String key, final Object value) throws IOException {
-        this.pom.modify(
-            new Directives()
-                .xpath(
-                    String.format(
-                        "/project/build/plugins/plugin[position()=%d]",
-                        this.pos
-                    )
-                )
-                .strict(1)
-                .addIf("configuration")
-                .addIf(key)
-                .set(value)
+    @Test
+    void printsCorrectly(final @TempDir Path dir) throws IOException {
+        final Path xml = dir.resolve("pom.xml");
+        new Pom(xml).init();
+        MatcherAssert.assertThat(
+            new XMLDocument(xml).toString(),
+            Matchers.containsString("<modelVersion>")
         );
-        return this;
     }
 
 }

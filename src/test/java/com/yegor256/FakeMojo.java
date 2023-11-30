@@ -61,7 +61,7 @@ public final class FakeMojo extends AbstractMojo {
     private String message;
 
     @Override
-    public final void execute() {
+    public void execute() {
         this.getLog().info(
             String.format(
                 "project.name: %s", this.project.getName()
@@ -73,5 +73,6 @@ public final class FakeMojo extends AbstractMojo {
             )
         );
         this.getLog().info(this.message);
+        this.getLog().info("boom");
     }
 }

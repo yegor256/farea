@@ -83,9 +83,12 @@ public final class Farea {
      */
     public void exec(final String... args) throws IOException {
         this.pom().init();
-        this.pom().show();
         new Jaxec()
             .with("mvn")
+            .with("--update-snapshots")
+            .with("--batch-mode")
+            .with("--fail-fast")
+            .with("--errors")
             .with(args)
             .withHome(this.home)
             .withCheck(false)
