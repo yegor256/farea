@@ -74,7 +74,7 @@ final class FareaTest {
         new Farea(dir)
             .build()
             .plugins()
-            .append()
+            .appendItself()
             .phase("initialize")
             .goal("fake")
             .configuration()

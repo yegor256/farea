@@ -87,11 +87,11 @@ final class Plugins {
     }
 
     /**
-     * Ctor.
+     * Add itself (the code in this classpath) to the Maven reactor.
      * @return Itself as a plugin
      * @throws IOException If fails
      */
-    Plugin append() throws IOException {
+    Plugin appendItself() throws IOException {
         final Path mhome = Paths.get(System.getenv("HOME")).resolve(".m2");
         if (!mhome.toFile().exists()) {
             throw new IllegalStateException(
