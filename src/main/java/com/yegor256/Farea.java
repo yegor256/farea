@@ -32,9 +32,31 @@ import java.util.Locale;
 /**
  * Fake Maven Reactor.
  *
- * <p>Run it like this to test a simple Java compilation:</p>
+ * <p>Run it like this to test a simple Java compilation
+ * (here, the {@code dir} is a temporary directory where Maven
+ * project will be created and executed):</p>
  *
- * <code><pre> </pre></code>
+ * <code><pre> new Farea(dir)
+ *   .files()
+ *   .file("src/test/java/Hello.java")
+ *   .write("class Hello {}");
+ * new Farea(dir)
+ *   .exec("compile");
+ * assert(Farea(dir).log().contains("SUCCESS"));</pre></code>
+ *
+ * <p>If you are developing/testing your own plugin, you should use
+ * the {@link Plugins#appendItself()} method, which you access
+ * through {@link Farea#build()} and then {@code .plugins()}:</p>
+ *
+ * <code><pre> new Farea(dir)
+ *   .build()
+ *   .plugins()
+ *   .appendItself()
+ *   .goal("my-goal")
+ *   .phase("test")
+ *   .configuration("message", "Hello, world!");
+ * new Farea(dir)
+ *   .exec("test");</pre></code>
  *
  * @since 0.0.1
  */

@@ -23,7 +23,7 @@
  */
 
 /**
- * Tests for the main class.
+ * Tests for the main classes.
  *
  * @since 0.0.1
  */

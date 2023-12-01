@@ -24,24 +24,33 @@
 
 /**
  * There is only one class {@link com.yegor256.Farea} that helps
- * you execute a shell command through a simple fluent interface.
+ * you run any Maven plugin(s).
  *
  * <p>It is as simple as the following:</p>
  *
- * <code><pre> String stdout = new Farea("ls", "-al", "/tmp")
- *   .withHome("/home/me") // run it in this directory
- *   .withRedirect(false) // don't redirect STDERR to STDOUT
- *   .exec();</pre></code>
+ * <code><pre> new Farea(dir)
+ *       .files()
+ *       .file("src/test/java/Hello.java")
+ *       .write("class Hello {}");
+ *     new Farea(dir)
+ *       .dependencies()
+ *       .append("org.cactoos", "cactoos", "0.55.0")
+ *       .scope("test");
+ *     new Farea(dir)
+ *       .build()
+ *       .plugins()
+ *       .append("com.qulice", "qulice-maven-plugin", "0.22.0")
+ *       .configuration()
+ *       .set("excludes", new String[] {"checkstyle:/src"})
+ *       .up()
+ *       .exec();
+ *     assert(Farea(dir).log().contains("SUCCESS"));</pre></code>
  *
- * <p>The class {@link com.yegor256.Farea} is immutable, meaning that
- * on every <code>with()</code> call you get a new instance
- * of the class.</p>
- *
- * <p>The output of the shell command is sent to
+ * <p>The logging is sent to
  * <a href="https://www.slf4j.org/">Slf4j logging facility</a>,
  * which you can redirect to Log4j or any other
  * logging engine. Log events are sent to the
- * <code>com.jcabi.log</code> package.</p>
+ * <code>com.yegor256.Farea</code> and <code>com.jcabi.log</code>packages.</p>
  *
  * @since 0.0.1
  */
