@@ -29,6 +29,7 @@ import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.project.MavenProject;
+import org.slf4j.impl.StaticLoggerBinder;
 
 /**
  * Simple Maven mojo.
@@ -62,6 +63,7 @@ public final class SimpleMojo extends AbstractMojo {
 
     @Override
     public void execute() {
+        StaticLoggerBinder.getSingleton().setMavenLog(this.getLog());
         this.getLog().info(
             String.format(
                 "project.name: %s", this.project.getName()
