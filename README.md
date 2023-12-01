@@ -28,8 +28,10 @@ and available on `$PATH`):
 
 ```java
 import com.yegor256.Farea;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
 
-class MyPluginTest {
+class JavaCompilationTest {
   @Test
   void worksAsExpected(@TempDir Path dir) {
     new Farea(dir)
@@ -38,16 +40,8 @@ class MyPluginTest {
       .write("class Hello {}");
     new Farea(dir)
       .dependencies()
-      .append("org.cactoos", "cactoos", "0.55.0")
-      .scope("test");
-    new Farea(dir)
-      .build()
-      .plugins()
-      .append("com.qulice", "qulice-maven-plugin", "0.22.0")
-      .configuration()
-      .set("excludes", new String[] {"checkstyle:/src"})
-      .up()
-      .exec();
+      .append("org.cactoos", "cactoos", "0.55.0");
+    new Farea(dir).exec("compile");
     assert(Farea(dir).log().contains("SUCCESS"));
   }
 }
@@ -59,27 +53,21 @@ and then assert on what is created.
 You can also test the plugin that you are developing, inside the same reactor:
 
 ```java
-import com.yegor256.Farea;
-
-class MyPluginTest {
-  @Test
-  void worksAsExpected(@TempDir Path dir) {
-    new Farea(dir)
-      .build()
-      .plugins()
-      .appendItself()
-      .configuration()
-      .set("message", "Hello, world!")  
-      .up()
-      .exec();
-    assert(Farea(dir).log().contains("SUCCESS"));
-  }
-}
+new Farea(dir)
+  .build()
+  .plugins()
+  .appendItself()
+  .phase("test")
+  .goal("my-custom-goal")
+  .configuration()
+  .set("message", "Hello, world!");
+new Farea(dir).exec("test");
+assert(Farea(dir).log().contains("SUCCESS"));
 ```
 
 Here, a `.jar` with the entire classpath will be packaged and saved
-into `~/.md/repository/farea/farea/farea-0.0.0.jar`. This plugin will
-be used for testing.
+into `~/.md/repository/farea/farea/farea-0.0.0.jar`. Then, this
+synthetic plugin is used for testing.
 
 ## How to Contribute
 
