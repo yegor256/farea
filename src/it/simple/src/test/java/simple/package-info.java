@@ -21,47 +21,10 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.yegor256;
-
-import java.io.IOException;
-import org.xembly.Directives;
 
 /**
- * Properties of a project.
+ * Integration test.
  *
  * @since 0.0.1
  */
-public final class Properties {
-
-    /**
-     * Location.
-     */
-    private final Pom pom;
-
-    /**
-     * Ctor.
-     * @param file The POM
-     */
-    Properties(final Pom file) {
-        this.pom = file;
-    }
-
-    /**
-     * Ctor.
-     * @param name The name
-     * @param value The value
-     * @return Properties
-     * @throws IOException If fails
-     */
-    public Properties set(final String name, final String value) throws IOException {
-        this.pom.modify(
-            new Directives()
-                .xpath("/project")
-                .addIf("properties")
-                .add(name)
-                .set(value)
-        );
-        return this;
-    }
-
-}
+package simple;

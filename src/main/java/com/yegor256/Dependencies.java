@@ -31,7 +31,7 @@ import org.xembly.Directives;
  *
  * @since 0.0.1
  */
-final class Dependencies {
+public final class Dependencies {
 
     /**
      * Location.
@@ -54,7 +54,7 @@ final class Dependencies {
      * @return Deps
      * @throws IOException If fails
      */
-    Dependency append(final String group, final String artifact,
+    public Dependency append(final String group, final String artifact,
         final String version) throws IOException {
         this.pom.modify(
             new Directives()

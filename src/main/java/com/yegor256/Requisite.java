@@ -33,7 +33,7 @@ import java.nio.file.Path;
  *
  * @since 0.0.1
  */
-final class Requisite {
+public final class Requisite {
 
     /**
      * Home.
@@ -60,7 +60,7 @@ final class Requisite {
      * @param content The content to write
      * @throws IOException If fails
      */
-    void write(final String content) throws IOException {
+    public void write(final String content) throws IOException {
         this.path().toFile().getParentFile().mkdirs();
         Files.write(
             this.path(),
@@ -73,7 +73,7 @@ final class Requisite {
      * @return The content of the file
      * @throws IOException If fails
      */
-    String content() throws IOException {
+    public String content() throws IOException {
         return new String(
             Files.readAllBytes(this.path()),
             StandardCharsets.UTF_8
@@ -84,7 +84,7 @@ final class Requisite {
      * Check existence.
      * @return TRUE if file exists
      */
-    boolean exists() {
+    public boolean exists() {
         return this.path().toFile().exists();
     }
 

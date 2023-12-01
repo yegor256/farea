@@ -31,7 +31,7 @@ import org.xembly.Directives;
  *
  * @since 0.0.1
  */
-final class Configuration {
+public final class Configuration {
 
     /**
      * Location.
@@ -60,7 +60,7 @@ final class Configuration {
      * @return Config
      * @throws IOException If fails
      */
-    Configuration set(final String key, final Object value) throws IOException {
+    public Configuration set(final String key, final Object value) throws IOException {
         this.pom.modify(
             new Directives()
                 .xpath(

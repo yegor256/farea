@@ -30,7 +30,7 @@ import java.nio.file.Path;
  *
  * @since 0.0.1
  */
-final class Requisites {
+public final class Requisites {
 
     /**
      * Home.
@@ -50,7 +50,7 @@ final class Requisites {
      * @param name File name
      * @return File in home
      */
-    Requisite file(final String name) {
+    public Requisite file(final String name) {
         return new Requisite(this.home, name);
     }
 

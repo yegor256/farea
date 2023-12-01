@@ -28,7 +28,7 @@ package com.yegor256;
  *
  * @since 0.0.1
  */
-final class Build {
+public final class Build {
 
     /**
      * Location.

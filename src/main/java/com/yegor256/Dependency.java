@@ -31,7 +31,7 @@ import org.xembly.Directives;
  *
  * @since 0.0.1
  */
-final class Dependency {
+public final class Dependency {
 
     /**
      * Location.
@@ -66,7 +66,7 @@ final class Dependency {
      * @return Itself
      * @throws IOException If fails
      */
-    Dependency scope(final String scp) throws IOException {
+    public Dependency scope(final String scp) throws IOException {
         this.pom.modify(
             new Directives().xpath(
                 String.format(

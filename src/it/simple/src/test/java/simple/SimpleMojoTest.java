@@ -21,47 +21,37 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.yegor256;
+package simple;
 
+import com.yegor256.Farea;
 import java.io.IOException;
-import org.xembly.Directives;
+import java.nio.file.Path;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
 
 /**
- * Properties of a project.
+ * Test case for {@link SimpleMojo}.
  *
- * @since 0.0.1
+ * @since 0.1.0
  */
-public final class Properties {
+final class SimpleMojoTest {
 
-    /**
-     * Location.
-     */
-    private final Pom pom;
-
-    /**
-     * Ctor.
-     * @param file The POM
-     */
-    Properties(final Pom file) {
-        this.pom = file;
+    @Test
+    void callsCustomPlugin(final @TempDir Path dir) throws IOException {
+        new Farea(dir).files().file("src/main/resources/hello.txt").write("Hello!");
+        new Farea(dir)
+            .build()
+            .plugins()
+            .appendItself()
+            .phase("initialize")
+            .goal("simple")
+            .configuration()
+            .set("message", "Hello, world!");
+        new Farea(dir).exec("initialize");
+        final String log = new Farea(dir).log();
+        Assertions.assertTrue(log.contains("project.name: test"));
+        Assertions.assertTrue(log.contains("total goals: 1"));
+        Assertions.assertTrue(log.contains("Hello, world!"));
     }
-
-    /**
-     * Ctor.
-     * @param name The name
-     * @param value The value
-     * @return Properties
-     * @throws IOException If fails
-     */
-    public Properties set(final String name, final String value) throws IOException {
-        this.pom.modify(
-            new Directives()
-                .xpath("/project")
-                .addIf("properties")
-                .add(name)
-                .set(value)
-        );
-        return this;
-    }
-
 }

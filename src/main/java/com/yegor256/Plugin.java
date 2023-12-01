@@ -31,7 +31,7 @@ import org.xembly.Directives;
  *
  * @since 0.0.1
  */
-final class Plugin {
+public final class Plugin {
 
     /**
      * Location.
@@ -59,7 +59,7 @@ final class Plugin {
      * @return Config
      * @throws IOException If fails
      */
-    Plugin phase(final String value) throws IOException {
+    public Plugin phase(final String value) throws IOException {
         this.pom.modify(
             new Directives()
                 .xpath(
@@ -83,7 +83,7 @@ final class Plugin {
      * @return Config
      * @throws IOException If fails
      */
-    Plugin goal(final String value) throws IOException {
+    public Plugin goal(final String value) throws IOException {
         this.pom.modify(
             new Directives()
                 .xpath(
@@ -106,7 +106,7 @@ final class Plugin {
      * Get config.
      * @return Config
      */
-    Configuration configuration() {
+    public Configuration configuration() {
         return new Configuration(this.pom, this.pos);
     }
 

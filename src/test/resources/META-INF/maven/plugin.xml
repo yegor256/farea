@@ -24,9 +24,9 @@ SOFTWARE.
 -->
 <plugin>
   <name>fake</name>
-  <groupId>farea</groupId>
-  <artifactId>farea</artifactId>
-  <version>0.0.0</version>
+  <groupId>test</groupId>
+  <artifactId>test</artifactId>
+  <version>1.0-SNAPSHOT</version>
   <requiredJavaVersion>1.8</requiredJavaVersion>
   <requiredMavenVersion>3.9.5</requiredMavenVersion>
   <mojos>

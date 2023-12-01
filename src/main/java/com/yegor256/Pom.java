@@ -39,7 +39,7 @@ import org.xembly.Xembler;
  *
  * @since 0.0.1
  */
-final class Pom {
+public final class Pom {
 
     /**
      * Location.
@@ -59,7 +59,7 @@ final class Pom {
      * @return The XML
      * @throws IOException If fails
      */
-    String xml() throws IOException {
+    public String xml() throws IOException {
         return this.before().toString();
     }
 
@@ -68,7 +68,7 @@ final class Pom {
      * @return Itself
      * @throws IOException If fails
      */
-    Pom init() throws IOException {
+    public Pom init() throws IOException {
         if (!this.path.toFile().exists()) {
             this.modify(
                 new Directives()
