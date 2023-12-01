@@ -23,7 +23,10 @@
  */
 package com.yegor256;
 
+import com.jcabi.log.Logger;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Collection;
 import java.util.LinkedList;
@@ -108,6 +111,7 @@ public final class Farea {
      */
     public void exec(final String... args) throws IOException {
         this.pom().init();
+        final Path log = this.home.resolve("log.txt");
         new Jaxec()
             .with(Farea.mvn())
             .with("--update-snapshots")
@@ -118,8 +122,14 @@ public final class Farea {
             .withHome(this.home)
             .withCheck(false)
             .withRedirect(true)
-            .withStdout(ProcessBuilder.Redirect.to(this.home.resolve("log.txt").toFile()))
+            .withStdout(ProcessBuilder.Redirect.to(log.toFile()))
             .exec();
+        Logger.debug(
+            this, "Maven stdout:%n  %s",
+            new String(Files.readAllBytes(log), StandardCharsets.UTF_8).replace(
+                System.lineSeparator(), String.format("%s  ", System.lineSeparator())
+            )
+        );
     }
 
     /**
