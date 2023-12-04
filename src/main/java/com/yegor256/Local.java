@@ -21,42 +21,55 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package simple;
+package com.yegor256;
 
-import com.yegor256.Farea;
-import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.io.TempDir;
 
 /**
- * Test case for {@link SimpleMojo}.
+ * Local maven repository, usually in "~/.m2/repository".
  *
- * @since 0.1.0
+ * @since 0.0.1
  */
-final class SimpleMojoTest {
+public final class Local {
 
-    @Test
-    void callsCustomPlugin(final @TempDir Path dir) throws IOException {
-        final Path local = Paths.get(System.getProperty("maven.repo.local"));
-        new Farea(dir).files().file("src/main/resources/hello.txt").write("Hello!");
-        new Farea(dir)
-            .build()
-            .plugins()
-            .appendItself(local)
-            .phase("initialize")
-            .goal("simple")
-            .configuration()
-            .set("message", "Hello, world!");
-        new Farea(dir).exec(
-            String.format("-Dmaven.repo.local=%s", local),
-            "initialize"
-        );
-        final String log = new Farea(dir).log();
-        Assertions.assertTrue(log.contains("project.name: test"));
-        Assertions.assertTrue(log.contains("total goals: 1"));
-        Assertions.assertTrue(log.contains("Hello, world!"));
+    /**
+     * User home.
+     */
+    private final Path user;
+
+    /**
+     * Ctor.
+     */
+    public Local() {
+        this.user = Paths.get(System.getProperty("user.home"));
     }
+
+    /**
+     * Get its path.
+     *
+     * @return The absolute path of it
+     */
+    public Path path() {
+        final Path home = this.user.resolve(".m2");
+        if (!home.toFile().exists()) {
+            throw new IllegalStateException(
+                String.format(
+                    "Maven home is not found at this location: %s",
+                    home.toAbsolutePath()
+                )
+            );
+        }
+        final Path local = home.resolve("repository");
+        if (!local.toFile().exists()) {
+            throw new IllegalStateException(
+                String.format(
+                    "Maven home repository is not found at this location: %s",
+                    local.toAbsolutePath()
+                )
+            );
+        }
+        return local;
+    }
+
 }

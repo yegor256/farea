@@ -31,7 +31,6 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -77,21 +76,13 @@ final class Itself {
 
     /**
      * Deploy it to local Maven repository.
+     * @param local Path of local Maven repo, usually "~/.m2/repository"
      * @throws IOException If fails
      */
-    public void deploy() throws IOException {
-        final Path mhome = Paths.get(System.getProperty("user.home")).resolve(".m2");
-        if (!mhome.toFile().exists()) {
-            throw new IllegalStateException(
-                String.format(
-                    "Maven home is not found at this location: %s",
-                    mhome.toAbsolutePath()
-                )
-            );
-        }
-        final Path place = mhome.resolve(
+    public void deploy(final Path local) throws IOException {
+        final Path place = local.resolve(
             String.format(
-                "repository/%s/%s/%s",
+                "%s/%s/%s",
                 this.group, this.artifact, this.version
             )
         );

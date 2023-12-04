@@ -24,6 +24,7 @@
 package com.yegor256;
 
 import java.io.IOException;
+import java.nio.file.Path;
 import org.xembly.Directives;
 
 /**
@@ -78,10 +79,20 @@ public final class Plugins {
      * @throws IOException If fails
      */
     public Plugin appendItself() throws IOException {
+        return this.appendItself(new Local().path());
+    }
+
+    /**
+     * Add itself (the code in this classpath) to the Maven reactor.
+     * @param local Path of local Maven repo, usually "~/.m2/repository"
+     * @return Itself as a plugin
+     * @throws IOException If fails
+     */
+    public Plugin appendItself(final Path local) throws IOException {
         final String group = "farea";
         final String artifact = "farea";
         final String version = "0.0.0";
-        new Itself(group, artifact, version).deploy();
+        new Itself(group, artifact, version).deploy(local);
         return this.append(group, artifact, version);
     }
 
