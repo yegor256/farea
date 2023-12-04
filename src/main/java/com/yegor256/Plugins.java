@@ -48,7 +48,19 @@ public final class Plugins {
     }
 
     /**
-     * Ctor.
+     * Append Apache Maven plugin.
+     * @param artifact The artifact ID
+     * @param version The version
+     * @return Plugin just added
+     * @throws IOException If fails
+     */
+    public Plugin append(final String artifact,
+        final String version) throws IOException {
+        return this.append("org.apache.maven.plugins", artifact, version);
+    }
+
+    /**
+     * Append custom plugin.
      * @param group The group ID
      * @param artifact The artifact ID
      * @param version The version

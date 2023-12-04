@@ -79,26 +79,26 @@ public final class Plugin {
 
     /**
      * Set phase.
-     * @param value The Maven goal
+     * @param values The Maven goals (non-empty list)
      * @return Config
      * @throws IOException If fails
      */
-    public Plugin goal(final String value) throws IOException {
-        this.pom.modify(
-            new Directives()
-                .xpath(
-                    String.format(
-                        "/project/build/plugins/plugin[position()=%d]",
-                        this.pos
-                    )
+    public Plugin goals(final String... values) throws IOException {
+        final Directives dirs = new Directives()
+            .xpath(
+                String.format(
+                    "/project/build/plugins/plugin[position()=%d]",
+                    this.pos
                 )
-                .strict(1)
-                .addIf("executions")
-                .addIf("execution")
-                .addIf("goals")
-                .addIf("goal")
-                .set(value)
-        );
+            )
+            .strict(1)
+            .addIf("executions")
+            .addIf("execution")
+            .addIf("goals");
+        for (final String goal : values) {
+            dirs.add("goal").set(goal).up();
+        }
+        this.pom.modify(dirs);
         return this;
     }
 

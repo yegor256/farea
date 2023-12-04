@@ -59,7 +59,7 @@ final class FareaTest {
         new Farea(dir)
             .build()
             .plugins()
-            .append("org.apache.maven.plugins", "maven-compiler-plugin", "3.11.0")
+            .append("maven-compiler-plugin", "3.11.0")
             .configuration()
             .set("skip", "true");
         new Farea(dir).exec("compile");
@@ -76,7 +76,7 @@ final class FareaTest {
             .plugins()
             .appendItself()
             .phase("initialize")
-            .goal("fake")
+            .goals("fake")
             .configuration()
             .set("message", "Hello, world!");
         new Farea(dir).exec("initialize");

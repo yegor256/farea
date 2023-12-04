@@ -8,7 +8,6 @@
 [![Javadoc](http://www.javadoc.io/badge/com.yegor256/farea.svg)](http://www.javadoc.io/doc/com.yegor256/farea)
 [![codecov](https://codecov.io/gh/yegor256/farea/branch/master/graph/badge.svg)](https://codecov.io/gh/yegor256/farea)
 [![Hits-of-Code](https://hitsofcode.com/github/yegor256/farea)](https://hitsofcode.com/view/github/yegor256/farea)
-![Lines of code](https://img.shields.io/tokei/lines/github/yegor256/farea)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](https://github.com/yegor256/farea/blob/master/LICENSE.txt)
 
 It's a fake Maven Reactor, helping you to unit test your custom Maven plugins.

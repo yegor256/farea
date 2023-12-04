@@ -21,42 +21,49 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package simple;
+package com.yegor256;
 
-import com.yegor256.Farea;
+import com.jcabi.matchers.XhtmlMatchers;
 import java.io.IOException;
 import java.nio.file.Path;
-import java.nio.file.Paths;
-import org.junit.jupiter.api.Assertions;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
+import org.hamcrest.MatcherAssert;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
 /**
- * Test case for {@link SimpleMojo}.
+ * Test case for {@link Configuration}.
  *
  * @since 0.1.0
  */
-final class SimpleMojoTest {
+final class ConfigurationTest {
 
     @Test
-    void callsCustomPlugin(final @TempDir Path dir) throws IOException {
-        final Path local = Paths.get(System.getProperty("maven.repo.local"));
-        new Farea(dir).files().file("src/main/resources/hello.txt").write("Hello!");
-        new Farea(dir)
-            .build()
-            .plugins()
-            .appendItself(local)
-            .phase("initialize")
-            .goals("simple")
-            .configuration()
-            .set("message", "Hello, world!");
-        new Farea(dir).exec(
-            String.format("-Dmaven.repo.local=%s", local),
-            "initialize"
+    void setsListAsParam(final @TempDir Path dir) throws IOException {
+        final Path xml = dir.resolve("pom.xml");
+        final Pom pom = new Pom(xml);
+        new Plugins(pom).append("a", "0.0.0");
+        new Configuration(pom, 1).set("foo", Arrays.asList("one", "two"));
+        MatcherAssert.assertThat(
+            XhtmlMatchers.xhtml(pom.xml()),
+            XhtmlMatchers.hasXPath("//configuration/foo/item[.='one']")
         );
-        final String log = new Farea(dir).log();
-        Assertions.assertTrue(log.contains("project.name: test"));
-        Assertions.assertTrue(log.contains("total goals: 1"));
-        Assertions.assertTrue(log.contains("Hello, world!"));
     }
+
+    @Test
+    void setsMapAsParam(final @TempDir Path dir) throws IOException {
+        final Path xml = dir.resolve("pom.xml");
+        final Pom pom = new Pom(xml);
+        new Plugins(pom).append("a", "0.0.0");
+        final Map<String, Integer> map = new HashMap<>();
+        map.put("test", 42);
+        new Configuration(pom, 1).set("foo", map);
+        MatcherAssert.assertThat(
+            XhtmlMatchers.xhtml(pom.xml()),
+            XhtmlMatchers.hasXPath("//configuration/foo/test[.='42']")
+        );
+    }
+
 }

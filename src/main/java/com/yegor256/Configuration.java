@@ -24,6 +24,7 @@
 package com.yegor256;
 
 import java.io.IOException;
+import java.util.Map;
 import org.xembly.Directives;
 
 /**
@@ -60,20 +61,31 @@ public final class Configuration {
      * @return Config
      * @throws IOException If fails
      */
+    @SuppressWarnings("unchecked")
     public Configuration set(final String key, final Object value) throws IOException {
-        this.pom.modify(
-            new Directives()
-                .xpath(
-                    String.format(
-                        "/project/build/plugins/plugin[position()=%d]",
-                        this.pos
-                    )
+        final Directives dirs = new Directives()
+            .xpath(
+                String.format(
+                    "/project/build/plugins/plugin[position()=%d]",
+                    this.pos
                 )
-                .strict(1)
-                .addIf("configuration")
-                .addIf(key)
-                .set(value)
-        );
+            )
+            .strict(1)
+            .addIf("configuration")
+            .addIf(key);
+        if (value instanceof Iterable) {
+            for (final Object item : Iterable.class.cast(value)) {
+                dirs.add("item").set(item).up();
+            }
+        } else if (value instanceof Map) {
+            for (final Object entry : Map.class.cast(value).entrySet()) {
+                final Map.Entry<Object, Object> ent = Map.Entry.class.cast(entry);
+                dirs.add(ent.getKey()).set(ent.getValue()).up();
+            }
+        } else {
+            dirs.set(value);
+        }
+        this.pom.modify(dirs);
         return this;
     }
 
