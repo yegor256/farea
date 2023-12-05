@@ -23,6 +23,7 @@
  */
 package com.yegor256.farea;
 
+import com.jcabi.log.Logger;
 import com.jcabi.xml.XML;
 import com.jcabi.xml.XMLDocument;
 import java.io.IOException;
@@ -85,6 +86,7 @@ public final class Pom {
                 .set("maven.compiler.source", "11")
                 .set("maven.compiler.target", "11");
         }
+        Logger.debug(this, "Maven POM created at %s", this.path.toAbsolutePath());
         return this;
     }
 
