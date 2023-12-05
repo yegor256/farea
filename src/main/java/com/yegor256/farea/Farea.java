@@ -169,6 +169,7 @@ public final class Farea {
     public void exec(final String... args) throws IOException {
         this.pom().init();
         final Path log = this.home.resolve("log.txt");
+        Farea.log("pom.xml", this.pom().xml());
         new Jaxec()
             .with(Farea.mvn())
             .with(this.opts)
@@ -178,12 +179,7 @@ public final class Farea {
             .withRedirect(true)
             .withStdout(ProcessBuilder.Redirect.to(log.toFile()))
             .exec();
-        Logger.debug(
-            this, "Maven stdout:%n  %s",
-            new String(Files.readAllBytes(log), StandardCharsets.UTF_8).replace(
-                System.lineSeparator(), String.format("%s  ", System.lineSeparator())
-            )
-        );
+        Farea.log("Maven stdout", new String(Files.readAllBytes(log), StandardCharsets.UTF_8));
     }
 
     /**
@@ -218,6 +214,23 @@ public final class Farea {
             cmd.add("mvn");
         }
         return cmd;
+    }
+
+    /**
+     * Log with indentation.
+     * @param intro The intro message
+     * @param body The body
+     */
+    private static void log(final String intro, final String body) {
+        Logger.debug(
+            Farea.class,
+            "%s:%n  %s",
+            intro,
+            body.replace(
+                System.lineSeparator(),
+                String.format("%s  ", System.lineSeparator())
+            )
+        );
     }
 
     /**
