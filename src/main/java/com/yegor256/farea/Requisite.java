@@ -67,14 +67,22 @@ public final class Requisite {
         if (parent.mkdirs()) {
             Logger.debug(this, "Directory created at %s", parent);
         }
+        final boolean existed = this.path().toFile().exists();
         Files.write(
             this.path(),
             content.getBytes(StandardCharsets.UTF_8)
         );
-        Logger.debug(
-            this, "File saved to %s (%d bytes)",
-            this.path(), this.path().toFile().length()
-        );
+        if (existed) {
+            Logger.debug(
+                this, "File replaced at %s (%d bytes)",
+                this.path(), this.path().toFile().length()
+            );
+        } else {
+            Logger.debug(
+                this, "File created at %s (%d bytes)",
+                this.path(), this.path().toFile().length()
+            );
+        }
     }
 
     /**
