@@ -21,36 +21,36 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+package com.yegor256.farea;
+
+import com.jcabi.matchers.XhtmlMatchers;
+import java.io.IOException;
+import java.nio.file.Path;
+import org.hamcrest.MatcherAssert;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
 
 /**
- * There is only one class {@link com.yegor256.farea.Farea} that helps
- * you run any Maven plugin(s).
+ * Test case for {@link Dependency}.
  *
- * <p>It is as simple as the following:</p>
- *
- * <code><pre> new Farea(dir).together(f -> {
- *   f.files()
- *     .file("src/test/java/Hello.java")
- *     .write("class Hello {}");
- *   f.dependencies()
- *     .append("org.cactoos", "cactoos", "0.55.0")
- *     .scope("test");
- *   f.build()
- *     .plugins()
- *     .append("com.qulice", "qulice-maven-plugin", "0.22.0")
- *     .configuration()
- *     .set("excludes", new String[] {"checkstyle:/src"})
- *     .up()
- *     .exec();
- *   assert(f.log().contains("SUCCESS"));
- * });</pre></code>
- *
- * <p>The logging is sent to
- * <a href="https://www.slf4j.org/">Slf4j logging facility</a>,
- * which you can redirect to Log4j or any other
- * logging engine. Log events are sent to the
- * <code>com.yegor256.farea.Farea</code> and <code>com.jcabi.log</code>packages.</p>
- *
- * @since 0.0.1
+ * @since 0.1.0
  */
-package com.yegor256.farea;
+final class DependencyTest {
+
+    @Test
+    void setsDependencyScope(final @TempDir Path dir) throws IOException {
+        final Path xml = dir.resolve("pom-1.xml");
+        final Pom pom = new Pom(xml);
+        new Dependencies(pom).append("g", "a", "1.0-SNAPSHOT").scope("test");
+        MatcherAssert.assertThat(
+            XhtmlMatchers.xhtml(pom.xml()),
+            XhtmlMatchers.hasXPaths(
+                "//dependency[groupId='g']",
+                "//dependency[artifactId='a']",
+                "//dependency[version='1.0-SNAPSHOT']",
+                "//dependency[scope='test']"
+            )
+        );
+    }
+
+}

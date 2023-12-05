@@ -22,7 +22,8 @@ First, you add this to your `pom.xml`:
 </dependency>
 ```
 
-Then, you use it like this, in your JUnit5 test (obviously, you need to have `mvn` installed
+Then, you use it like this, in your JUnit5 test 
+(obviously, you need to have `mvn` installed
 and available on `$PATH`):
 
 ```java
@@ -51,25 +52,32 @@ and then assert on what is created.
 You can also test the plugin that you are developing, inside the same reactor:
 
 ```java
-new Farea(dir)
-  .build()
-  .plugins()
-  .appendItself()
-  .phase("test")
-  .goal("my-custom-goal")
-  .configuration()
-  .set("message", "Hello, world!");
-new Farea(dir).exec("test");
-assert(Farea(dir).log().contains("SUCCESS"));
+class MyPluginTest {
+    @Test
+    void worksAsExpected(@TempDir Path dir) {
+        new Farea(dir).together(f -> {
+            f.build()
+                .plugins()
+                .appendItself()
+                .phase("test")
+                .goal("my-custom-goal")
+                .configuration()
+                .set("message", "Hello, world!");
+            f.exec("test");
+            assert (f.log().contains("SUCCESS"));
+        });
+    }
+}
 ```
 
 Here, a `.jar` with the entire classpath will be packaged and saved
-into `~/.md/repository/farea/farea/farea-0.0.0.jar`. Then, this
+into `~/.md/repository/farea/farea/0.0.0/farea-0.0.0.jar`. Then, this
 synthetic plugin is used for testing.
 
 ## How to Contribute
 
-Fork repository, make changes, send us a [pull request](https://www.yegor256.com/2014/04/15/github-guidelines.html).
+Fork repository, make changes, send us a 
+[pull request](https://www.yegor256.com/2014/04/15/github-guidelines.html).
 We will review your changes and apply them to the `master` branch shortly,
 provided they don't violate our quality standards. To avoid frustration,
 before sending us your pull request please run full Maven build:
@@ -78,4 +86,4 @@ before sending us your pull request please run full Maven build:
 $ mvn clean install -Pqulice
 ```
 
-You will need Maven 3.3+ and Java 8+.
+You will need Maven 3.3+ and Java 11+.

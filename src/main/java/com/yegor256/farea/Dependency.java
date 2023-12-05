@@ -61,12 +61,11 @@ public final class Dependency {
     }
 
     /**
-     * Ctor.
+     * Set scope of it.
      * @param scp The scope
-     * @return Itself
      * @throws IOException If fails
      */
-    public Dependency scope(final String scp) throws IOException {
+    public void scope(final String scp) throws IOException {
         this.pom.modify(
             new Directives().xpath(
                 String.format(
@@ -75,7 +74,6 @@ public final class Dependency {
                 )
             ).addIf("scope").set(scp)
         );
-        return this;
     }
 
 }

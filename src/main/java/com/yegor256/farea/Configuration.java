@@ -82,6 +82,10 @@ public final class Configuration {
                 final Map.Entry<Object, Object> ent = Map.Entry.class.cast(entry);
                 dirs.add(ent.getKey()).set(ent.getValue()).up();
             }
+        } else if (value instanceof Object[]) {
+            for (final Object item : Object[].class.cast(value)) {
+                dirs.add("item").set(item).up();
+            }
         } else {
             dirs.set(value);
         }

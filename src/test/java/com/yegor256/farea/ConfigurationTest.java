@@ -42,7 +42,7 @@ final class ConfigurationTest {
 
     @Test
     void setsListAsParam(final @TempDir Path dir) throws IOException {
-        final Path xml = dir.resolve("pom.xml");
+        final Path xml = dir.resolve("pom-1.xml");
         final Pom pom = new Pom(xml);
         new Plugins(pom).append("a", "0.0.0");
         new Configuration(pom, 1).set("foo", Arrays.asList("one", "two"));
@@ -53,16 +53,28 @@ final class ConfigurationTest {
     }
 
     @Test
-    void setsMapAsParam(final @TempDir Path dir) throws IOException {
-        final Path xml = dir.resolve("pom.xml");
+    void setsArrayAsParam(final @TempDir Path dir) throws IOException {
+        final Path xml = dir.resolve("pom-2.xml");
         final Pom pom = new Pom(xml);
-        new Plugins(pom).append("a", "0.0.0");
-        final Map<String, Integer> map = new HashMap<>();
-        map.put("test", 42);
-        new Configuration(pom, 1).set("foo", map);
+        new Plugins(pom).append("xyz", "1.1.1");
+        new Configuration(pom, 1).set("bar", new String[] {"alpha", "beta"});
         MatcherAssert.assertThat(
             XhtmlMatchers.xhtml(pom.xml()),
-            XhtmlMatchers.hasXPath("//configuration/foo/test[.='42']")
+            XhtmlMatchers.hasXPath("//configuration/bar/item[.='alpha']")
+        );
+    }
+
+    @Test
+    void setsMapAsParam(final @TempDir Path dir) throws IOException {
+        final Path xml = dir.resolve("pom-3.xml");
+        final Pom pom = new Pom(xml);
+        new Plugins(pom).append("bbb", "1.2.3");
+        final Map<String, Integer> map = new HashMap<>();
+        map.put("test", 42);
+        new Configuration(pom, 1).set("hello", map);
+        MatcherAssert.assertThat(
+            XhtmlMatchers.xhtml(pom.xml()),
+            XhtmlMatchers.hasXPath("//configuration/hello/test[.='42']")
         );
     }
 
