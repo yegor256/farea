@@ -56,16 +56,19 @@ final class FareaTest {
 
     @Test
     void callsSimplePlugin(final @TempDir Path dir) throws IOException {
-        new Farea(dir)
-            .build()
-            .plugins()
-            .append("maven-compiler-plugin", "3.11.0")
-            .configuration()
-            .set("skip", "true");
-        new Farea(dir).exec("compile");
-        MatcherAssert.assertThat(
-            new Farea(dir).log(),
-            Matchers.containsString("BUILD SUCCESS")
+        new Farea(dir).together(
+            f -> {
+                f.build()
+                    .plugins()
+                    .append("maven-compiler-plugin", "3.11.0")
+                    .configuration()
+                    .set("skip", "true");
+                f.withOpt("--debug").exec("compile");
+                MatcherAssert.assertThat(
+                    f.log(),
+                    Matchers.containsString("BUILD SUCCESS")
+                );
+            }
         );
     }
 

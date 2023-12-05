@@ -28,7 +28,10 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.Locale;
 
@@ -39,27 +42,34 @@ import java.util.Locale;
  * (here, the {@code dir} is a temporary directory where Maven
  * project will be created and executed):</p>
  *
- * <code><pre> new Farea(dir)
- *   .files()
- *   .file("src/test/java/Hello.java")
- *   .write("class Hello {}");
- * new Farea(dir)
- *   .exec("compile");
- * assert(Farea(dir).log().contains("SUCCESS"));</pre></code>
+ * <code><pre> new Farea(dir).together(f -> {
+ *   f.files()
+ *     .file("src/test/java/Hello.java")
+ *     .write("class Hello {}");
+ *   f.exec("compile");
+ *   assert(f.log().contains("SUCCESS"));
+ * });</pre></code>
  *
  * <p>If you are developing/testing your own plugin, you should use
  * the {@link Plugins#appendItself()} method, which you access
  * through {@link Farea#build()} and then {@code .plugins()}:</p>
  *
- * <code><pre> new Farea(dir)
- *   .build()
- *   .plugins()
- *   .appendItself()
- *   .goal("my-goal")
- *   .phase("test")
- *   .configuration("message", "Hello, world!");
- * new Farea(dir)
- *   .exec("test");</pre></code>
+ * <code><pre> new Farea(dir).together(f -> {
+ *   f.build()
+ *     .plugins()
+ *     .appendItself()
+ *     .goal("my-goal")
+ *     .phase("test")
+ *     .configuration("message", "Hello, world!");
+ *   f.exec("test");
+ * });</pre></code>
+ *
+ * <p>The class is thread-safe, which means that you can use it
+ * in many parallel threads. However, if you don't use the
+ * {@link Farea#together(Script)}, your threads may conflict at the level
+ * of files in your local Maven repository,
+ * inside the {@code ~/.m2/repository} directory. Thus, it is strongly
+ * recommended to use {@link Farea#together(Script)}.</p>
  *
  * @since 0.0.1
  */
@@ -71,11 +81,57 @@ public final class Farea {
     private final Path home;
 
     /**
+     * Maven opts.
+     */
+    private final Collection<String> opts;
+
+    /**
      * Ctor.
      * @param dir The home dir
      */
     public Farea(final Path dir) {
+        this(
+            dir,
+            Arrays.asList(
+                "--update-snapshots",
+                "--batch-mode",
+                "--fail-fast",
+                "--errors"
+            )
+        );
+    }
+
+    /**
+     * Ctor.
+     * @param dir The home dir
+     * @param mopts Maven opts
+     */
+    public Farea(final Path dir, final Collection<String> mopts) {
         this.home = dir;
+        this.opts = Collections.unmodifiableCollection(mopts);
+    }
+
+    /**
+     * With an extra option.
+     * @param opt The option to add
+     * @return Itself
+     */
+    public Farea withOpt(final String opt) {
+        final Collection<String> after = new ArrayList<>(this.opts.size() + 1);
+        after.addAll(this.opts);
+        after.add(opt);
+        return new Farea(this.home, after);
+    }
+
+    /**
+     * Run it all together in one thread-safe script.
+     * @param script The script to run
+     * @throws IOException If fails
+     */
+    public void together(final Farea.Script script) throws IOException {
+        synchronized (Farea.class) {
+            script.run(this);
+        }
     }
 
     /**
@@ -114,10 +170,7 @@ public final class Farea {
         final Path log = this.home.resolve("log.txt");
         new Jaxec()
             .with(Farea.mvn())
-            .with("--update-snapshots")
-            .with("--batch-mode")
-            .with("--fail-fast")
-            .with("--errors")
+            .with(this.opts)
             .with(args)
             .withHome(this.home)
             .withCheck(false)
@@ -164,6 +217,20 @@ public final class Farea {
             cmd.add("mvn");
         }
         return cmd;
+    }
+
+    /**
+     * Script to run.
+     *
+     * @since 0.0.4
+     */
+    public interface Script {
+        /**
+         * Run it.
+         * @param farea Instance of itself
+         * @throws IOException If fails
+         */
+        void run(Farea farea) throws IOException;
     }
 
 }

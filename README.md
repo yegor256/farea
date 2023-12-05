@@ -33,15 +33,14 @@ import org.junit.jupiter.api.io.TempDir;
 class JavaCompilationTest {
   @Test
   void worksAsExpected(@TempDir Path dir) {
-    new Farea(dir)
-      .files()
-      .file("src/test/java/Hello.java")
-      .write("class Hello {}");
-    new Farea(dir)
-      .dependencies()
-      .append("org.cactoos", "cactoos", "0.55.0");
-    new Farea(dir).exec("compile");
-    assert(Farea(dir).log().contains("SUCCESS"));
+    new Farea(dir).together(f -> {
+      f.files()
+        .file("src/test/java/Hello.java")
+        .write("class Hello {}");
+      f.dependencies().append("org.cactoos", "cactoos", "0.55.0");
+      f.exec("compile");
+      assert(f.log().contains("SUCCESS"));
+    });
   }
 }
 ```
