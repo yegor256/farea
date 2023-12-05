@@ -26,6 +26,7 @@ package com.yegor256.farea;
 import java.io.IOException;
 import java.util.Map;
 import org.xembly.Directives;
+import org.xembly.Xembler;
 
 /**
  * Configuration of a Plugin.
@@ -75,16 +76,16 @@ public final class Configuration {
             .addIf(key);
         if (value instanceof Iterable) {
             for (final Object item : Iterable.class.cast(value)) {
-                dirs.add("item").set(item).up();
+                dirs.add("item").set(Xembler.escape(item.toString())).up();
             }
         } else if (value instanceof Map) {
             for (final Object entry : Map.class.cast(value).entrySet()) {
                 final Map.Entry<Object, Object> ent = Map.Entry.class.cast(entry);
-                dirs.add(ent.getKey()).set(ent.getValue()).up();
+                dirs.add(ent.getKey()).set(Xembler.escape(ent.getValue().toString())).up();
             }
         } else if (value instanceof Object[]) {
             for (final Object item : Object[].class.cast(value)) {
-                dirs.add("item").set(item).up();
+                dirs.add("item").set(Xembler.escape(item.toString())).up();
             }
         } else {
             dirs.set(value);

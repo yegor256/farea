@@ -39,18 +39,19 @@ final class FareaTest {
 
     @Test
     void compilesSimpleProject(final @TempDir Path dir) throws IOException {
-        new Farea(dir)
-            .files()
-            .file("src/main/java/foo/Hello.java")
-            .write("package foo; import org.cactoos.Input; class Hello {}");
-        new Farea(dir)
-            .dependencies()
-            .append("org.cactoos", "cactoos", "0.55.0");
-        new Farea(dir)
-            .exec("compile");
-        MatcherAssert.assertThat(
-            new Farea(dir).files().file("target/classes/foo/Hello.class").exists(),
-            Matchers.is(true)
+        new Farea(dir).together(
+            f -> {
+                f.files()
+                    .file("src/main/java/foo/Hello.java")
+                    .write("package foo; import org.cactoos.Input; class Hello {}");
+                f.dependencies()
+                    .append("org.cactoos", "cactoos", "0.55.0");
+                f.exec("compile");
+                MatcherAssert.assertThat(
+                    f.files().file("target/classes/foo/Hello.class").exists(),
+                    Matchers.is(true)
+                );
+            }
         );
     }
 
@@ -74,22 +75,25 @@ final class FareaTest {
 
     @Test
     void callsCustomPlugin(final @TempDir Path dir) throws IOException {
-        new Farea(dir)
-            .build()
-            .plugins()
-            .appendItself()
-            .phase("initialize")
-            .goals("fake")
-            .configuration()
-            .set("message", "Hello, world!");
-        new Farea(dir).exec("initialize");
-        MatcherAssert.assertThat(
-            new Farea(dir).log(),
-            Matchers.allOf(
-                Matchers.containsString("project.name: test"),
-                Matchers.containsString("total goals: 1"),
-                Matchers.containsString("Hello, world!")
-            )
+        new Farea(dir).together(
+            f -> {
+                f.build()
+                    .plugins()
+                    .appendItself()
+                    .phase("initialize")
+                    .goals("fake")
+                    .configuration()
+                    .set("message", "Hello, world!");
+                f.exec("initialize");
+                MatcherAssert.assertThat(
+                    f.log(),
+                    Matchers.allOf(
+                        Matchers.containsString("project.name: test"),
+                        Matchers.containsString("total goals: 1"),
+                        Matchers.containsString("Hello, world!")
+                    )
+                );
+            }
         );
     }
 }

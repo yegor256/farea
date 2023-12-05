@@ -85,8 +85,11 @@ public final class Pom {
             new Properties(this)
                 .set("maven.compiler.source", "11")
                 .set("maven.compiler.target", "11");
+            Logger.debug(
+                this, "Maven POM created at %s (%d bytes)",
+                this.path.toAbsolutePath(), this.path.toFile().length()
+            );
         }
-        Logger.debug(this, "Maven POM created at %s", this.path.toAbsolutePath());
         return this;
     }
 

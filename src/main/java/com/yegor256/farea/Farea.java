@@ -169,7 +169,10 @@ public final class Farea {
     public void exec(final String... args) throws IOException {
         this.pom().init();
         final Path log = this.home.resolve("log.txt");
-        Farea.log("pom.xml", this.pom().xml());
+        Farea.log(
+            String.format("pom.xml at %s", this.home),
+            this.pom().xml()
+        );
         new Jaxec()
             .with(Farea.mvn())
             .with(this.opts)

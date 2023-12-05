@@ -45,10 +45,10 @@ final class ConfigurationTest {
         final Path xml = dir.resolve("pom-1.xml");
         final Pom pom = new Pom(xml);
         new Plugins(pom).append("a", "0.0.0");
-        new Configuration(pom, 1).set("foo", Arrays.asList("one", "two"));
+        new Configuration(pom, 1).set("foo", Arrays.asList("<one>", "two"));
         MatcherAssert.assertThat(
             XhtmlMatchers.xhtml(pom.xml()),
-            XhtmlMatchers.hasXPath("//configuration/foo/item[.='one']")
+            XhtmlMatchers.hasXPath("//configuration/foo/item[.='<one>']")
         );
     }
 
@@ -57,10 +57,10 @@ final class ConfigurationTest {
         final Path xml = dir.resolve("pom-2.xml");
         final Pom pom = new Pom(xml);
         new Plugins(pom).append("xyz", "1.1.1");
-        new Configuration(pom, 1).set("bar", new String[] {"alpha", "beta"});
+        new Configuration(pom, 1).set("bar", new String[] {"\u0000", "beta"});
         MatcherAssert.assertThat(
             XhtmlMatchers.xhtml(pom.xml()),
-            XhtmlMatchers.hasXPath("//configuration/bar/item[.='alpha']")
+            XhtmlMatchers.hasXPath("//configuration/bar/item[.='\\u0000']")
         );
     }
 
