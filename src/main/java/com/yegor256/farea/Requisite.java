@@ -23,6 +23,8 @@
  */
 package com.yegor256.farea;
 
+import com.jcabi.log.Logger;
+import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -61,10 +63,17 @@ public final class Requisite {
      * @throws IOException If fails
      */
     public void write(final String content) throws IOException {
-        this.path().toFile().getParentFile().mkdirs();
+        final File parent = this.path().toFile().getParentFile();
+        if (parent.mkdirs()) {
+            Logger.debug(this, "Directory created at %s", parent);
+        }
         Files.write(
             this.path(),
             content.getBytes(StandardCharsets.UTF_8)
+        );
+        Logger.debug(
+            this, "File saved to %s (%d bytes)",
+            this.path(), this.path().toFile().length()
         );
     }
 
