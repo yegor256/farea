@@ -21,10 +21,31 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+package com.yegor256.farea;
+
+import com.jcabi.xml.XMLDocument;
+import java.io.IOException;
+import java.nio.file.Path;
+import org.hamcrest.MatcherAssert;
+import org.hamcrest.Matchers;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
 
 /**
- * Tests for the main classes.
+ * Test case for {@link Pom}.
  *
- * @since 0.0.1
+ * @since 0.1.0
  */
-package com.yegor256;
+final class PomTest {
+
+    @Test
+    void printsCorrectly(final @TempDir Path dir) throws IOException {
+        final Path xml = dir.resolve("pom.xml");
+        new Pom(xml).init();
+        MatcherAssert.assertThat(
+            new XMLDocument(xml).toString(),
+            Matchers.containsString("<modelVersion>")
+        );
+    }
+
+}

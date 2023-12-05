@@ -21,31 +21,51 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.yegor256;
+package com.yegor256.farea;
 
-import com.jcabi.xml.XMLDocument;
 import java.io.IOException;
-import java.nio.file.Path;
-import org.hamcrest.MatcherAssert;
-import org.hamcrest.Matchers;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.io.TempDir;
+import org.xembly.Directives;
 
 /**
- * Test case for {@link Pom}.
+ * Dependencies inside Build.
  *
- * @since 0.1.0
+ * @since 0.0.1
  */
-final class PomTest {
+public final class Dependencies {
 
-    @Test
-    void printsCorrectly(final @TempDir Path dir) throws IOException {
-        final Path xml = dir.resolve("pom.xml");
-        new Pom(xml).init();
-        MatcherAssert.assertThat(
-            new XMLDocument(xml).toString(),
-            Matchers.containsString("<modelVersion>")
+    /**
+     * Location.
+     */
+    private final Pom pom;
+
+    /**
+     * Ctor.
+     * @param file The POM
+     */
+    Dependencies(final Pom file) {
+        this.pom = file;
+    }
+
+    /**
+     * Ctor.
+     * @param group The group ID
+     * @param artifact The artifact ID
+     * @param version The version
+     * @return Deps
+     * @throws IOException If fails
+     */
+    public Dependency append(final String group, final String artifact,
+        final String version) throws IOException {
+        this.pom.modify(
+            new Directives()
+                .xpath("/project")
+                .addIf("dependencies")
+                .add("dependency")
+                .add("groupId").set(group).up()
+                .add("artifactId").set(artifact).up()
+                .add("version").set(version).up()
         );
+        return new Dependency(this.pom, group, artifact);
     }
 
 }

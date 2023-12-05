@@ -26,22 +26,22 @@ Then, you use it like this, in your JUnit5 test (obviously, you need to have `mv
 and available on `$PATH`):
 
 ```java
-import com.yegor256.Farea;
+import com.yegor256.farea.Farea;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
 class JavaCompilationTest {
-  @Test
-  void worksAsExpected(@TempDir Path dir) {
-    new Farea(dir).together(f -> {
-      f.files()
-        .file("src/test/java/Hello.java")
-        .write("class Hello {}");
-      f.dependencies().append("org.cactoos", "cactoos", "0.55.0");
-      f.exec("compile");
-      assert(f.log().contains("SUCCESS"));
-    });
-  }
+    @Test
+    void worksAsExpected(@TempDir Path dir) {
+        new Farea(dir).together(f -> {
+            f.files()
+                .file("src/test/java/Hello.java")
+                .write("class Hello {}");
+            f.dependencies().append("org.cactoos", "cactoos", "0.55.0");
+            f.exec("compile");
+            assert (f.log().contains("SUCCESS"));
+        });
+    }
 }
 ```
 

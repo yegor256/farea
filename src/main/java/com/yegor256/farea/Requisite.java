@@ -21,47 +21,79 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.yegor256;
+package com.yegor256.farea;
 
 import java.io.IOException;
-import org.xembly.Directives;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 /**
- * Properties of a project.
+ * File in Maven Reactor.
  *
  * @since 0.0.1
  */
-public final class Properties {
+public final class Requisite {
 
     /**
-     * Location.
+     * Home.
      */
-    private final Pom pom;
+    private final Path home;
+
+    /**
+     * Name.
+     */
+    private final String name;
 
     /**
      * Ctor.
-     * @param file The POM
+     * @param dir The home dir
+     * @param file The name of it
      */
-    Properties(final Pom file) {
-        this.pom = file;
+    Requisite(final Path dir, final String file) {
+        this.home = dir;
+        this.name = file;
     }
 
     /**
-     * Ctor.
-     * @param name The name
-     * @param value The value
-     * @return Properties
+     * Write to file.
+     * @param content The content to write
      * @throws IOException If fails
      */
-    public Properties set(final String name, final String value) throws IOException {
-        this.pom.modify(
-            new Directives()
-                .xpath("/project")
-                .addIf("properties")
-                .add(name)
-                .set(value)
+    public void write(final String content) throws IOException {
+        this.path().toFile().getParentFile().mkdirs();
+        Files.write(
+            this.path(),
+            content.getBytes(StandardCharsets.UTF_8)
         );
-        return this;
+    }
+
+    /**
+     * Read content.
+     * @return The content of the file
+     * @throws IOException If fails
+     */
+    public String content() throws IOException {
+        return new String(
+            Files.readAllBytes(this.path()),
+            StandardCharsets.UTF_8
+        );
+    }
+
+    /**
+     * Check existence.
+     * @return TRUE if file exists
+     */
+    public boolean exists() {
+        return this.path().toFile().exists();
+    }
+
+    /**
+     * Absolute path of it.
+     * @return The path
+     */
+    private Path path() {
+        return this.home.resolve(this.name);
     }
 
 }

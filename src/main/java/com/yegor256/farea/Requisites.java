@@ -21,51 +21,37 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.yegor256;
+package com.yegor256.farea;
 
-import java.io.IOException;
-import org.xembly.Directives;
+import java.nio.file.Path;
 
 /**
- * Dependencies inside Build.
+ * Files in Maven Reactor.
  *
  * @since 0.0.1
  */
-public final class Dependencies {
+public final class Requisites {
 
     /**
-     * Location.
+     * Home.
      */
-    private final Pom pom;
+    private final Path home;
 
     /**
      * Ctor.
-     * @param file The POM
+     * @param dir The home dir
      */
-    Dependencies(final Pom file) {
-        this.pom = file;
+    Requisites(final Path dir) {
+        this.home = dir;
     }
 
     /**
-     * Ctor.
-     * @param group The group ID
-     * @param artifact The artifact ID
-     * @param version The version
-     * @return Deps
-     * @throws IOException If fails
+     * Access to a single file.
+     * @param name File name
+     * @return File in home
      */
-    public Dependency append(final String group, final String artifact,
-        final String version) throws IOException {
-        this.pom.modify(
-            new Directives()
-                .xpath("/project")
-                .addIf("dependencies")
-                .add("dependency")
-                .add("groupId").set(group).up()
-                .add("artifactId").set(artifact).up()
-                .add("version").set(version).up()
-        );
-        return new Dependency(this.pom, group, artifact);
+    public Requisite file(final String name) {
+        return new Requisite(this.home, name);
     }
 
 }

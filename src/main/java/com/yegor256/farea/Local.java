@@ -21,34 +21,55 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.yegor256;
+package com.yegor256.farea;
+
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 /**
- * Build inside POM.
+ * Local maven repository, usually in "~/.m2/repository".
  *
  * @since 0.0.1
  */
-public final class Build {
+public final class Local {
 
     /**
-     * Location.
+     * User home.
      */
-    private final Pom pom;
+    private final Path user;
 
     /**
      * Ctor.
-     * @param file The POM
      */
-    Build(final Pom file) {
-        this.pom = file;
+    public Local() {
+        this.user = Paths.get(System.getProperty("user.home"));
     }
 
     /**
-     * Get access to build.
-     * @return Build
+     * Get its path.
+     *
+     * @return The absolute path of it
      */
-    public Plugins plugins() {
-        return new Plugins(this.pom);
+    public Path path() {
+        final Path home = this.user.resolve(".m2");
+        if (!home.toFile().exists()) {
+            throw new IllegalStateException(
+                String.format(
+                    "Maven home is not found at this location: %s",
+                    home.toAbsolutePath()
+                )
+            );
+        }
+        final Path local = home.resolve("repository");
+        if (!local.toFile().exists()) {
+            throw new IllegalStateException(
+                String.format(
+                    "Maven home repository is not found at this location: %s",
+                    local.toAbsolutePath()
+                )
+            );
+        }
+        return local;
     }
 
 }

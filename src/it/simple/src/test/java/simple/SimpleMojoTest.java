@@ -23,7 +23,7 @@
  */
 package simple;
 
-import com.yegor256.Farea;
+import com.yegor256.farea.Farea;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -41,22 +41,25 @@ final class SimpleMojoTest {
     @Test
     void callsCustomPlugin(final @TempDir Path dir) throws IOException {
         final Path local = Paths.get(System.getProperty("maven.repo.local"));
-        new Farea(dir).files().file("src/main/resources/hello.txt").write("Hello!");
-        new Farea(dir)
-            .build()
-            .plugins()
-            .appendItself(local)
-            .phase("initialize")
-            .goals("simple")
-            .configuration()
-            .set("message", "Hello, world!");
-        new Farea(dir).exec(
-            String.format("-Dmaven.repo.local=%s", local),
-            "initialize"
+        new Farea(dir).together(
+            f -> {
+                f.files().file("src/main/resources/hello.txt").write("Hello!");
+                f.build()
+                    .plugins()
+                    .appendItself(local)
+                    .phase("initialize")
+                    .goals("simple")
+                    .configuration()
+                    .set("message", "Hello, world!");
+                f.exec(
+                    String.format("-Dmaven.repo.local=%s", local),
+                    "initialize"
+                );
+                final String log = f.log();
+                Assertions.assertTrue(log.contains("project.name: test"));
+                Assertions.assertTrue(log.contains("total goals: 1"));
+                Assertions.assertTrue(log.contains("Hello, world!"));
+            }
         );
-        final String log = new Farea(dir).log();
-        Assertions.assertTrue(log.contains("project.name: test"));
-        Assertions.assertTrue(log.contains("total goals: 1"));
-        Assertions.assertTrue(log.contains("Hello, world!"));
     }
 }

@@ -21,17 +21,14 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.yegor256;
-
-import java.io.IOException;
-import org.xembly.Directives;
+package com.yegor256.farea;
 
 /**
- * Dependency inside Dependencies.
+ * Build inside POM.
  *
  * @since 0.0.1
  */
-public final class Dependency {
+public final class Build {
 
     /**
      * Location.
@@ -39,43 +36,19 @@ public final class Dependency {
     private final Pom pom;
 
     /**
-     * Group.
-     */
-    private final String group;
-
-    /**
-     * Artifact.
-     */
-    private final String artifact;
-
-    /**
      * Ctor.
      * @param file The POM
-     * @param grp GroupId
-     * @param art ArtifactId
      */
-    Dependency(final Pom file, final String grp, final String art) {
+    Build(final Pom file) {
         this.pom = file;
-        this.group = grp;
-        this.artifact = art;
     }
 
     /**
-     * Ctor.
-     * @param scp The scope
-     * @return Itself
-     * @throws IOException If fails
+     * Get access to build.
+     * @return Build
      */
-    public Dependency scope(final String scp) throws IOException {
-        this.pom.modify(
-            new Directives().xpath(
-                String.format(
-                    "/project/dependencies/dependency[groupId='%s' and artifactId='%s']",
-                    this.group, this.artifact
-                )
-            ).addIf("scope").set(scp)
-        );
-        return this;
+    public Plugins plugins() {
+        return new Plugins(this.pom);
     }
 
 }

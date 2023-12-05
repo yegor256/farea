@@ -33,7 +33,7 @@ SOFTWARE.
     <mojo>
       <goal>fake</goal>
       <phase>initialize</phase>
-      <implementation>com.yegor256.FakeMojo</implementation>
+      <implementation>com.yegor256.farea.FakeMojo</implementation>
       <language>java</language>
       <instantiationStrategy>per-lookup</instantiationStrategy>
       <executionStrategy>once-per-session</executionStrategy>

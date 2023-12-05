@@ -21,79 +21,61 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.yegor256;
+package com.yegor256.farea;
 
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Path;
+import org.xembly.Directives;
 
 /**
- * File in Maven Reactor.
+ * Dependency inside Dependencies.
  *
  * @since 0.0.1
  */
-public final class Requisite {
+public final class Dependency {
 
     /**
-     * Home.
+     * Location.
      */
-    private final Path home;
+    private final Pom pom;
 
     /**
-     * Name.
+     * Group.
      */
-    private final String name;
+    private final String group;
+
+    /**
+     * Artifact.
+     */
+    private final String artifact;
 
     /**
      * Ctor.
-     * @param dir The home dir
-     * @param file The name of it
+     * @param file The POM
+     * @param grp GroupId
+     * @param art ArtifactId
      */
-    Requisite(final Path dir, final String file) {
-        this.home = dir;
-        this.name = file;
+    Dependency(final Pom file, final String grp, final String art) {
+        this.pom = file;
+        this.group = grp;
+        this.artifact = art;
     }
 
     /**
-     * Write to file.
-     * @param content The content to write
+     * Ctor.
+     * @param scp The scope
+     * @return Itself
      * @throws IOException If fails
      */
-    public void write(final String content) throws IOException {
-        this.path().toFile().getParentFile().mkdirs();
-        Files.write(
-            this.path(),
-            content.getBytes(StandardCharsets.UTF_8)
+    public Dependency scope(final String scp) throws IOException {
+        this.pom.modify(
+            new Directives().xpath(
+                String.format(
+                    "/project/dependencies/dependency[groupId='%s' and artifactId='%s']",
+                    this.group, this.artifact
+                )
+            ).addIf("scope").set(scp)
         );
-    }
-
-    /**
-     * Read content.
-     * @return The content of the file
-     * @throws IOException If fails
-     */
-    public String content() throws IOException {
-        return new String(
-            Files.readAllBytes(this.path()),
-            StandardCharsets.UTF_8
-        );
-    }
-
-    /**
-     * Check existence.
-     * @return TRUE if file exists
-     */
-    public boolean exists() {
-        return this.path().toFile().exists();
-    }
-
-    /**
-     * Absolute path of it.
-     * @return The path
-     */
-    private Path path() {
-        return this.home.resolve(this.name);
+        return this;
     }
 
 }

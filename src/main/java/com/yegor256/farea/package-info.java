@@ -23,7 +23,7 @@
  */
 
 /**
- * There is only one class {@link com.yegor256.Farea} that helps
+ * There is only one class {@link com.yegor256.farea.Farea} that helps
  * you run any Maven plugin(s).
  *
  * <p>It is as simple as the following:</p>
@@ -50,8 +50,8 @@
  * <a href="https://www.slf4j.org/">Slf4j logging facility</a>,
  * which you can redirect to Log4j or any other
  * logging engine. Log events are sent to the
- * <code>com.yegor256.Farea</code> and <code>com.jcabi.log</code>packages.</p>
+ * <code>com.yegor256.farea.Farea</code> and <code>com.jcabi.log</code>packages.</p>
  *
  * @since 0.0.1
  */
-package com.yegor256;
+package com.yegor256.farea;

@@ -21,18 +21,17 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.yegor256;
+package com.yegor256.farea;
 
 import java.io.IOException;
-import java.util.Map;
 import org.xembly.Directives;
 
 /**
- * Configuration of a Plugin.
+ * Plugin inside Plugin.
  *
  * @since 0.0.1
  */
-public final class Configuration {
+public final class Plugin {
 
     /**
      * Location.
@@ -40,7 +39,7 @@ public final class Configuration {
     private final Pom pom;
 
     /**
-     * Position of the plugin inside plugins.
+     * Position in "plugins".
      */
     private final int pos;
 
@@ -49,20 +48,42 @@ public final class Configuration {
      * @param file The POM
      * @param position The position
      */
-    Configuration(final Pom file, final int position) {
+    Plugin(final Pom file, final int position) {
         this.pom = file;
         this.pos = position;
     }
 
     /**
-     * Get config.
-     * @param key The key
-     * @param value The value
+     * Set phase.
+     * @param value The Maven phase
      * @return Config
      * @throws IOException If fails
      */
-    @SuppressWarnings("unchecked")
-    public Configuration set(final String key, final Object value) throws IOException {
+    public Plugin phase(final String value) throws IOException {
+        this.pom.modify(
+            new Directives()
+                .xpath(
+                    String.format(
+                        "/project/build/plugins/plugin[position()=%d]",
+                        this.pos
+                    )
+                )
+                .strict(1)
+                .addIf("executions")
+                .addIf("execution")
+                .addIf("phase")
+                .set(value)
+        );
+        return this;
+    }
+
+    /**
+     * Set phase.
+     * @param values The Maven goals (non-empty list)
+     * @return Config
+     * @throws IOException If fails
+     */
+    public Plugin goals(final String... values) throws IOException {
         final Directives dirs = new Directives()
             .xpath(
                 String.format(
@@ -71,22 +92,22 @@ public final class Configuration {
                 )
             )
             .strict(1)
-            .addIf("configuration")
-            .addIf(key);
-        if (value instanceof Iterable) {
-            for (final Object item : Iterable.class.cast(value)) {
-                dirs.add("item").set(item).up();
-            }
-        } else if (value instanceof Map) {
-            for (final Object entry : Map.class.cast(value).entrySet()) {
-                final Map.Entry<Object, Object> ent = Map.Entry.class.cast(entry);
-                dirs.add(ent.getKey()).set(ent.getValue()).up();
-            }
-        } else {
-            dirs.set(value);
+            .addIf("executions")
+            .addIf("execution")
+            .addIf("goals");
+        for (final String goal : values) {
+            dirs.add("goal").set(goal).up();
         }
         this.pom.modify(dirs);
         return this;
+    }
+
+    /**
+     * Get config.
+     * @return Config
+     */
+    public Configuration configuration() {
+        return new Configuration(this.pom, this.pos);
     }
 
 }

@@ -21,37 +21,47 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.yegor256;
+package com.yegor256.farea;
 
-import java.nio.file.Path;
+import java.io.IOException;
+import org.xembly.Directives;
 
 /**
- * Files in Maven Reactor.
+ * Properties of a project.
  *
  * @since 0.0.1
  */
-public final class Requisites {
+public final class Properties {
 
     /**
-     * Home.
+     * Location.
      */
-    private final Path home;
+    private final Pom pom;
 
     /**
      * Ctor.
-     * @param dir The home dir
+     * @param file The POM
      */
-    Requisites(final Path dir) {
-        this.home = dir;
+    Properties(final Pom file) {
+        this.pom = file;
     }
 
     /**
-     * Access to a single file.
-     * @param name File name
-     * @return File in home
+     * Ctor.
+     * @param name The name
+     * @param value The value
+     * @return Properties
+     * @throws IOException If fails
      */
-    public Requisite file(final String name) {
-        return new Requisite(this.home, name);
+    public Properties set(final String name, final String value) throws IOException {
+        this.pom.modify(
+            new Directives()
+                .xpath("/project")
+                .addIf("properties")
+                .add(name)
+                .set(value)
+        );
+        return this;
     }
 
 }

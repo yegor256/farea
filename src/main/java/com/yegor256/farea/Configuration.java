@@ -21,17 +21,18 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.yegor256;
+package com.yegor256.farea;
 
 import java.io.IOException;
+import java.util.Map;
 import org.xembly.Directives;
 
 /**
- * Plugin inside Plugin.
+ * Configuration of a Plugin.
  *
  * @since 0.0.1
  */
-public final class Plugin {
+public final class Configuration {
 
     /**
      * Location.
@@ -39,7 +40,7 @@ public final class Plugin {
     private final Pom pom;
 
     /**
-     * Position in "plugins".
+     * Position of the plugin inside plugins.
      */
     private final int pos;
 
@@ -48,42 +49,20 @@ public final class Plugin {
      * @param file The POM
      * @param position The position
      */
-    Plugin(final Pom file, final int position) {
+    Configuration(final Pom file, final int position) {
         this.pom = file;
         this.pos = position;
     }
 
     /**
-     * Set phase.
-     * @param value The Maven phase
+     * Get config.
+     * @param key The key
+     * @param value The value
      * @return Config
      * @throws IOException If fails
      */
-    public Plugin phase(final String value) throws IOException {
-        this.pom.modify(
-            new Directives()
-                .xpath(
-                    String.format(
-                        "/project/build/plugins/plugin[position()=%d]",
-                        this.pos
-                    )
-                )
-                .strict(1)
-                .addIf("executions")
-                .addIf("execution")
-                .addIf("phase")
-                .set(value)
-        );
-        return this;
-    }
-
-    /**
-     * Set phase.
-     * @param values The Maven goals (non-empty list)
-     * @return Config
-     * @throws IOException If fails
-     */
-    public Plugin goals(final String... values) throws IOException {
+    @SuppressWarnings("unchecked")
+    public Configuration set(final String key, final Object value) throws IOException {
         final Directives dirs = new Directives()
             .xpath(
                 String.format(
@@ -92,22 +71,22 @@ public final class Plugin {
                 )
             )
             .strict(1)
-            .addIf("executions")
-            .addIf("execution")
-            .addIf("goals");
-        for (final String goal : values) {
-            dirs.add("goal").set(goal).up();
+            .addIf("configuration")
+            .addIf(key);
+        if (value instanceof Iterable) {
+            for (final Object item : Iterable.class.cast(value)) {
+                dirs.add("item").set(item).up();
+            }
+        } else if (value instanceof Map) {
+            for (final Object entry : Map.class.cast(value).entrySet()) {
+                final Map.Entry<Object, Object> ent = Map.Entry.class.cast(entry);
+                dirs.add(ent.getKey()).set(ent.getValue()).up();
+            }
+        } else {
+            dirs.set(value);
         }
         this.pom.modify(dirs);
         return this;
-    }
-
-    /**
-     * Get config.
-     * @return Config
-     */
-    public Configuration configuration() {
-        return new Configuration(this.pom, this.pos);
     }
 
 }
