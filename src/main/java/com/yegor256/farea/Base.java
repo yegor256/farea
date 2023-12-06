@@ -28,6 +28,7 @@ import com.jcabi.xml.XMLDocument;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -111,8 +112,10 @@ final class Base {
      * @throws IOException If fails
      */
     private String inherit(final String tag) throws IOException {
-        final List<String> vals = this.xml().xpath(
-            String.format("/mvn:project/mvn:%s/text()", tag)
+        final List<String> vals = new LinkedList<>(
+            this.xml().xpath(
+                String.format("/mvn:project/mvn:%s/text()", tag)
+            )
         );
         if (vals.isEmpty()) {
             vals.addAll(
