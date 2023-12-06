@@ -35,6 +35,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.Locale;
+import java.util.stream.Collectors;
 
 /**
  * Fake Maven Reactor.
@@ -172,6 +173,14 @@ public final class Farea {
         Farea.log(
             String.format("pom.xml at %s", this.home),
             this.pom().xml()
+        );
+        Farea.log(
+            String.format("Files at %s", this.home),
+            Files.walk(this.home)
+                .map(this.home::relativize)
+                .map(Path::toString)
+                .map(s -> String.format("/%s", s))
+                .collect(Collectors.joining("\n"))
         );
         new Jaxec()
             .with(Farea.mvn())
