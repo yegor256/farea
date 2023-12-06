@@ -39,9 +39,8 @@
  *     .plugins()
  *     .append("com.qulice", "qulice-maven-plugin", "0.22.0")
  *     .configuration()
- *     .set("excludes", new String[] {"checkstyle:/src"})
- *     .up()
- *     .exec();
+ *     .set("excludes", new String[] {"checkstyle:/src"});
+ *   f.exec("install");
  *   assert(f.log().contains("SUCCESS"));
  * });</pre></code>
  *
