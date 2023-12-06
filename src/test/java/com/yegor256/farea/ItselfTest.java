@@ -28,6 +28,7 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
@@ -42,22 +43,22 @@ final class ItselfTest {
 
     @Test
     void deploysJarAndPom(final @TempDir Path dir) throws IOException {
-        new Itself().deploy(dir);
+        new Itself(new Base(Paths.get("src/test/resources/fake-pom.xml"))).deploy(dir);
         MatcherAssert.assertThat(
-            dir.resolve("com/yegor256/farea/1.0-SNAPSHOT/farea-1.0-SNAPSHOT.jar").toFile().exists(),
+            dir.resolve("g1/g2/a/1.1.1/a-1.1.1.jar").toFile().exists(),
             Matchers.is(true)
         );
         MatcherAssert.assertThat(
             XhtmlMatchers.xhtml(
                 new String(
                     Files.readAllBytes(
-                        dir.resolve("com/yegor256/farea/1.0-SNAPSHOT/farea-1.0-SNAPSHOT.pom")
+                        dir.resolve("g1/g2/a/1.1.1/a-1.1.1.pom")
                     ),
                     StandardCharsets.UTF_8
                 )
             ),
             XhtmlMatchers.hasXPath(
-                "/ns1:project/ns1:properties/ns1:maven.version",
+                "/ns1:project/ns1:groupId[.='g1.g2']",
                 "http://maven.apache.org/POM/4.0.0"
             )
         );
