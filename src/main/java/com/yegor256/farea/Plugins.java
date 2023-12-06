@@ -101,11 +101,9 @@ public final class Plugins {
      * @throws IOException If fails
      */
     public Plugin appendItself(final Path local) throws IOException {
-        final String group = "farea";
-        final String artifact = "farea";
-        final String version = "0.0.0";
-        new Itself(group, artifact, version).deploy(local);
-        return this.append(group, artifact, version);
+        final Base base = new Base();
+        new Itself(base).deploy(local);
+        return this.append(base.groupId(), base.artifactId(), base.version());
     }
 
 }

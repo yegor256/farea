@@ -42,21 +42,23 @@ final class ItselfTest {
 
     @Test
     void deploysJarAndPom(final @TempDir Path dir) throws IOException {
-        new Itself("g", "a", "1.0").deploy(dir);
+        new Itself().deploy(dir);
         MatcherAssert.assertThat(
-            dir.resolve("g/a/1.0/a-1.0.jar").toFile().exists(),
+            dir.resolve("com/yegor256/farea/1.0-SNAPSHOT/farea-1.0-SNAPSHOT.jar").toFile().exists(),
             Matchers.is(true)
         );
         MatcherAssert.assertThat(
             XhtmlMatchers.xhtml(
                 new String(
-                    Files.readAllBytes(dir.resolve("g/a/1.0/a-1.0.pom")),
+                    Files.readAllBytes(
+                        dir.resolve("com/yegor256/farea/1.0-SNAPSHOT/farea-1.0-SNAPSHOT.pom")
+                    ),
                     StandardCharsets.UTF_8
                 )
             ),
-            XhtmlMatchers.hasXPaths(
-                "/project/parent/groupId",
-                "/project/properties/maven.version"
+            XhtmlMatchers.hasXPath(
+                "/ns1:project/ns1:properties/ns1:maven.version",
+                "http://maven.apache.org/POM/4.0.0"
             )
         );
     }

@@ -24,8 +24,6 @@
 package com.yegor256.farea;
 
 import com.jcabi.log.Logger;
-import com.jcabi.xml.XML;
-import com.jcabi.xml.XMLDocument;
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -36,8 +34,6 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
-import org.xembly.Directives;
-import org.xembly.Xembler;
 
 /**
  * This classpath classes packaged as a plugin.
@@ -47,30 +43,23 @@ import org.xembly.Xembler;
 final class Itself {
 
     /**
-     * Fake groupId.
+     * Original POM, of the current project.
      */
-    private final String group;
-
-    /**
-     * Fake artifactId.
-     */
-    private final String artifact;
-
-    /**
-     * Fake version.
-     */
-    private final String version;
+    private final Base base;
 
     /**
      * Ctor.
-     * @param grp The group
-     * @param art The artifact
-     * @param ver The version
      */
-    Itself(final String grp, final String art, final String ver) {
-        this.group = grp;
-        this.artifact = art;
-        this.version = ver;
+    Itself() {
+        this(new Base());
+    }
+
+    /**
+     * Ctor.
+     * @param pom Original pom.xml
+     */
+    Itself(final Base pom) {
+        this.base = pom;
     }
 
     /**
@@ -82,71 +71,24 @@ final class Itself {
         final Path place = local.resolve(
             String.format(
                 "%s/%s/%s",
-                this.group, this.artifact, this.version
+                this.base.groupId().replace(".", "/"),
+                this.base.artifactId(), this.base.version()
             )
+        );
+        final String name = String.format(
+            "%s-%s",
+            this.base.artifactId(), this.base.version()
         );
         this.assembleJar(
             place.resolve(
-                String.format("%s-%s.jar", this.artifact, this.version)
+                String.format("%s.jar", name)
             )
         );
-        this.assemblePom(
-            place.resolve(
-                String.format("%s-%s.pom", this.artifact, this.version)
-            )
-        );
-    }
-
-    /**
-     * Create a fake POM for the module.
-     * @param pom The location of the POM (pom.xml) to create
-     * @throws IOException If fails
-     */
-    private void assemblePom(final Path pom) throws IOException {
-        final File xml = new File("pom.xml");
-        if (!xml.exists()) {
-            throw new IllegalStateException(
-                String.format(
-                    "The pom.xml is not found at this location: %s",
-                    xml.getAbsolutePath()
-                )
-            );
-        }
-        final XML src = new XMLDocument(xml).registerNs(
-            "mvn", "http://maven.apache.org/POM/4.0.0"
-        );
-        final Directives dirs = new Directives()
-            .add("project")
-            .add("modelVersion").set("4.0.0").up()
-            .add("artifactId").set(this.artifact).up()
-            .add("groupId").set(this.group).up()
-            .add("version").set(this.version).up()
-            .add("properties").up()
-            .add("dependencies");
-        for (final XML dep : src.nodes("/mvn:project/mvn:dependencies/mvn:dependency")) {
-            dirs.xpath("/project/dependencies")
-                .strict(1)
-                .add("dependency")
-                .append(dep.node());
-        }
-        for (final XML parent : src.nodes("/mvn:project/mvn:parent")) {
-            dirs.xpath("/project")
-                .add("parent")
-                .append(parent.node());
-        }
-        for (final XML prop : src.nodes("/mvn:project/mvn:properties")) {
-            dirs.xpath("/project/properties")
-                .strict(1)
-                .append(prop.node());
-        }
         Files.write(
-            pom,
-            new Xembler(dirs).xmlQuietly().getBytes(StandardCharsets.UTF_8)
-        );
-        Logger.debug(
-            Itself.class,
-            "POM saved to %s (%d bytes)",
-            pom, pom.toFile().length()
+            place.resolve(
+                String.format("%s.pom", name)
+            ),
+            this.base.xml().toString().getBytes(StandardCharsets.UTF_8)
         );
     }
 
@@ -159,7 +101,12 @@ final class Itself {
         if (zip.toFile().exists()) {
             Files.delete(zip);
         }
-        zip.toFile().getParentFile().mkdirs();
+        if (zip.toFile().getParentFile().mkdirs()) {
+            Logger.debug(
+                this, "Directory created at %s",
+                zip.toFile().getParentFile()
+            );
+        }
         Files.createFile(zip);
         final Set<String> seen = new HashSet<>();
         final String classpath = System.getProperty("java.class.path");
@@ -181,17 +128,7 @@ final class Itself {
                     }
                     final ZipEntry entry = new ZipEntry(name);
                     stream.putNextEntry(entry);
-                    if ("META-INF/maven/plugin.xml".equals(name)) {
-                        Files.copy(
-                            this.update(
-                                file,
-                                zip.getParent().resolve("plugin.origin.xml")
-                            ),
-                            stream
-                        );
-                    } else {
-                        Files.copy(file, stream);
-                    }
+                    Files.copy(file, stream);
                     stream.closeEntry();
                     seen.add(name);
                 }
@@ -202,28 +139,6 @@ final class Itself {
             "JAR saved to %s (%d bytes)",
             zip, zip.toFile().length()
         );
-    }
-
-    /**
-     * Take the plugin.xml and create a new one, with updated info inside.
-     * @param desc The location of the original XML file
-     * @param temp The destination where a new version will be created
-     * @return The TEMP path
-     * @throws IOException If fails
-     */
-    private Path update(final Path desc, final Path temp) throws IOException {
-        Files.write(
-            temp,
-            new XMLDocument(
-                new Xembler(
-                    new Directives()
-                        .xpath("/plugin/groupId").strict(1).set(this.group)
-                        .xpath("/plugin/artifactId").strict(1).set(this.artifact)
-                        .xpath("/plugin/version").strict(1).set(this.version)
-                ).applyQuietly(new XMLDocument(desc).node())
-            ).toString().getBytes(StandardCharsets.UTF_8)
-        );
-        return temp;
     }
 
 }

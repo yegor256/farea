@@ -23,9 +23,9 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 -->
 <plugin>
-  <name>fake</name>
-  <groupId>test</groupId>
-  <artifactId>test</artifactId>
+  <name>farea</name>
+  <groupId>com.yegor256</groupId>
+  <artifactId>farea</artifactId>
   <version>1.0-SNAPSHOT</version>
   <requiredJavaVersion>1.8</requiredJavaVersion>
   <requiredMavenVersion>3.9.5</requiredMavenVersion>
