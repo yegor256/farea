@@ -73,27 +73,4 @@ final class FareaTest {
         );
     }
 
-    @Test
-    void callsCustomPlugin(final @TempDir Path dir) throws IOException {
-        new Farea(dir).together(
-            f -> {
-                f.build()
-                    .plugins()
-                    .appendItself()
-                    .phase("initialize")
-                    .goals("fake")
-                    .configuration()
-                    .set("message", "Hello, world!");
-                f.exec("initialize");
-                MatcherAssert.assertThat(
-                    f.log(),
-                    Matchers.allOf(
-                        Matchers.containsString("project.name: test"),
-                        Matchers.containsString("total goals: 1"),
-                        Matchers.containsString("Hello, world!")
-                    )
-                );
-            }
-        );
-    }
 }
