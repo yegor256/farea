@@ -62,7 +62,8 @@ import java.util.stream.Collectors;
  *     .appendItself()
  *     .goal("my-goal")
  *     .phase("test")
- *     .configuration("message", "Hello, world!");
+ *     .configuration()
+ *     .set("message", "Hello, world!");
  *   f.exec("test");
  * });</pre></code>
  *
