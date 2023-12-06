@@ -32,7 +32,6 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
@@ -86,13 +85,21 @@ final class Itself {
                 this.group, this.artifact, this.version
             )
         );
-        this.assembleJar(place.resolve(String.format("%s-0.0.0.jar", this.artifact)));
-        this.assemblePom(place.resolve(String.format("%s-0.0.0.pom", this.artifact)));
+        this.assembleJar(
+            place.resolve(
+                String.format("%s-%s.jar", this.artifact, this.version)
+            )
+        );
+        this.assemblePom(
+            place.resolve(
+                String.format("%s-%s.pom", this.artifact, this.version)
+            )
+        );
     }
 
     /**
      * Create a fake POM for the module.
-     * @param pom The location of the POM (pom.xml)
+     * @param pom The location of the POM (pom.xml) to create
      * @throws IOException If fails
      */
     private void assemblePom(final Path pom) throws IOException {
@@ -105,21 +112,32 @@ final class Itself {
                 )
             );
         }
-        final List<XML> deps = new XMLDocument(xml)
-            .registerNs("mvn", "http://maven.apache.org/POM/4.0.0")
-            .nodes("/mvn:project/mvn:dependencies/mvn:dependency");
+        final XML src = new XMLDocument(xml).registerNs(
+            "mvn", "http://maven.apache.org/POM/4.0.0"
+        );
         final Directives dirs = new Directives()
             .add("project")
             .add("modelVersion").set("4.0.0").up()
             .add("artifactId").set(this.artifact).up()
             .add("groupId").set(this.group).up()
             .add("version").set(this.version).up()
+            .add("properties").up()
             .add("dependencies");
-        for (final XML dep : deps) {
+        for (final XML dep : src.nodes("/mvn:project/mvn:dependencies/mvn:dependency")) {
             dirs.xpath("/project/dependencies")
                 .strict(1)
                 .add("dependency")
                 .append(dep.node());
+        }
+        for (final XML parent : src.nodes("/mvn:project/mvn:parent")) {
+            dirs.xpath("/project")
+                .add("parent")
+                .append(parent.node());
+        }
+        for (final XML prop : src.nodes("/mvn:project/mvn:properties")) {
+            dirs.xpath("/project/properties")
+                .strict(1)
+                .append(prop.node());
         }
         Files.write(
             pom,
