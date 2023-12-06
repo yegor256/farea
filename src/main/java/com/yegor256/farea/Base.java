@@ -28,6 +28,7 @@ import com.jcabi.xml.XMLDocument;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
+import java.util.List;
 
 /**
  * POM file (pom.xml) in the current directory, that belongs to the current project
@@ -63,7 +64,7 @@ final class Base {
      * @throws IOException If fails
      */
     public String groupId() throws IOException {
-        return this.xml().xpath("/mvn:project/mvn:groupId/text()").get(0);
+        return this.inherit("groupId");
     }
 
     /**
@@ -72,7 +73,7 @@ final class Base {
      * @throws IOException If fails
      */
     public String artifactId() throws IOException {
-        return this.xml().xpath("/mvn:project/mvn:artifactId/text()").get(0);
+        return this.inherit("artifactId");
     }
 
     /**
@@ -81,7 +82,7 @@ final class Base {
      * @throws IOException If fails
      */
     public String version() throws IOException {
-        return this.xml().xpath("/mvn:project/mvn:version/text()").get(0);
+        return this.inherit("version");
     }
 
     /**
@@ -101,6 +102,26 @@ final class Base {
         return new XMLDocument(this.pom).registerNs(
             "mvn", "http://maven.apache.org/POM/4.0.0"
         );
+    }
+
+    /**
+     * Take or inherit.
+     * @param tag The tag in pom.xml
+     * @return The value
+     * @throws IOException If fails
+     */
+    private String inherit(final String tag) throws IOException {
+        final List<String> vals = this.xml().xpath(
+            String.format("/mvn:project/mvn:%s/text()", tag)
+        );
+        if (vals.isEmpty()) {
+            vals.addAll(
+                this.xml().xpath(
+                    String.format("/mvn:project/mvn:parent/mvn:%s/text()", tag)
+                )
+            );
+        }
+        return vals.get(0);
     }
 
 }
