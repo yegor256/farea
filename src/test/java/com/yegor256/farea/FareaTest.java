@@ -43,7 +43,8 @@ final class FareaTest {
             f -> {
                 f.files()
                     .file("src/main/java/foo/Hello.java")
-                    .write("package foo; import org.cactoos.Input; class Hello {}");
+                    .write("package foo; import org.cactoos.Input; class Hello {}")
+                    .show();
                 f.dependencies()
                     .append("org.cactoos", "cactoos", "0.55.0");
                 f.exec("compile");

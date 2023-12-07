@@ -60,9 +60,10 @@ public final class Requisite {
     /**
      * Write to file.
      * @param content The content to write
+     * @return Itself
      * @throws IOException If fails
      */
-    public void write(final String content) throws IOException {
+    public Requisite write(final String content) throws IOException {
         final File parent = this.path().toFile().getParentFile();
         if (parent.mkdirs()) {
             Logger.debug(this, "Directory created at %s", parent);
@@ -83,6 +84,7 @@ public final class Requisite {
                 this.path(), this.path().toFile().length()
             );
         }
+        return this;
     }
 
     /**
@@ -94,6 +96,21 @@ public final class Requisite {
         return new String(
             Files.readAllBytes(this.path()),
             StandardCharsets.UTF_8
+        );
+    }
+
+    /**
+     * Show it in the log.
+     * @throws IOException If fails
+     */
+    public void show() throws IOException {
+        Logger.debug(
+            this, "The content of %s:%n  %s",
+            this.name,
+            this.content().replace(
+                System.lineSeparator(),
+                String.format("%s  ", System.lineSeparator())
+            )
         );
     }
 
