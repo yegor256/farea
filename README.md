@@ -18,7 +18,7 @@ It works perfectly, but it has two pretty annoying drawbacks:
 and
 2) It always starts the entire build from scratch, which makes it pretty slow.
 
-3) Farea suggests an alternative way, which is way less flexible, but much
+Farea suggests an alternative way, which is way less flexible, but much
 faster and JUnit-friendly.
 
 First, you add this to your `pom.xml`:
