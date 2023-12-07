@@ -44,13 +44,14 @@ final class PropertiesTest {
         new Properties(pom)
             .set("foo", "bar1")
             .set("foo", "bar2")
-            .set("another", "bar");
+            .set("another.property", "привет");
         MatcherAssert.assertThat(
             XhtmlMatchers.xhtml(pom.xml()),
             XhtmlMatchers.hasXPaths(
                 "//properties/foo[.='bar2']",
                 "//properties[count(foo)=1]",
-                "//properties[count(*)=2]"
+                "//properties[count(*)=2]",
+                "//properties/another.property[.='привет']"
             )
         );
     }

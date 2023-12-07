@@ -44,13 +44,16 @@ final class SimpleMojoTest {
         new Farea(dir).together(
             f -> {
                 f.files().file("src/main/resources/hello.txt").write("Hello!");
+                f.properties()
+                    .set("project.build.sourceEncoding", "UTF-8")
+                    .set("project.reporting.outputEncoding", "UTF-8");
                 f.build()
                     .plugins()
                     .appendItself(local)
                     .phase("initialize")
                     .goals("simple")
                     .configuration()
-                    .set("message", "Hello, world!");
+                    .set("message", "Hello, друг!");
                 f.exec(
                     String.format("-Dmaven.repo.local=%s", local),
                     "initialize"
@@ -58,7 +61,7 @@ final class SimpleMojoTest {
                 final String log = f.log();
                 Assertions.assertTrue(log.contains("project.name: test"));
                 Assertions.assertTrue(log.contains("total goals: 1"));
-                Assertions.assertTrue(log.contains("Hello, world!"));
+                Assertions.assertTrue(log.contains("Hello, друг!"));
             }
         );
     }
