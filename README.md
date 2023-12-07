@@ -71,8 +71,10 @@ class MyPluginTest {
 ```
 
 Here, a `.jar` with the entire classpath will be packaged and saved
-into `~/.md/repository/farea/farea/0.0.0/farea-0.0.0.jar`. Then, this
-synthetic plugin is used for testing.
+into the `~/.m2/repository/` directory. This is almost exactly what 
+the [`install`](https://maven.apache.org/plugins/maven-invoker-plugin/install-mojo.html) goal of the 
+[invoker plugin](https://maven.apache.org/plugins/maven-invoker-plugin/) would do if you use it for
+integration testing.
 
 ## How to Contribute
 
