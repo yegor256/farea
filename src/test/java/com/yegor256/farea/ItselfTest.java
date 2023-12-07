@@ -43,7 +43,7 @@ final class ItselfTest {
 
     @Test
     void deploysJarAndPom(final @TempDir Path dir) throws IOException {
-        new Itself(new Base(Paths.get("src/test/resources/fake-pom.xml"))).deploy(dir);
+        new Itself(new Base(Paths.get("src/test/resources/fake-pom.xml")), false).deploy(dir);
         MatcherAssert.assertThat(
             dir.resolve("g1/g2/a/1.1.1/a-1.1.1.jar").toFile().exists(),
             Matchers.is(true)

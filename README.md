@@ -88,6 +88,9 @@ the [`install`](https://maven.apache.org/plugins/maven-invoker-plugin/install-mo
 [invoker plugin](https://maven.apache.org/plugins/maven-invoker-plugin/) would do if you use it for
 integration testing.
 
+See how [antlr2ebnf-maven-plugin](https://github.com/yegor256/antlr2ebnf-maven-plugin)
+is using Farea.
+
 ## How to Contribute
 
 Fork repository, make changes, send us a 

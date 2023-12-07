@@ -48,6 +48,11 @@ final class Itself {
     private final Base base;
 
     /**
+     * Should it fail if plugin.xml is not in the classpath?
+     */
+    private final boolean careful;
+
+    /**
      * Ctor.
      */
     Itself() {
@@ -59,7 +64,17 @@ final class Itself {
      * @param pom Original pom.xml
      */
     Itself(final Base pom) {
+        this(pom, true);
+    }
+
+    /**
+     * Ctor.
+     * @param pom Original pom.xml
+     * @param crf Careful?
+     */
+    Itself(final Base pom, final boolean crf) {
         this.base = pom;
+        this.careful = crf;
     }
 
     /**
@@ -111,6 +126,7 @@ final class Itself {
         final Set<String> seen = new HashSet<>();
         final String classpath = System.getProperty("java.class.path");
         final String[] jars = classpath.split(File.pathSeparator);
+        boolean descripted = false;
         try (ZipOutputStream stream = new ZipOutputStream(Files.newOutputStream(zip))) {
             for (final String path : jars) {
                 final File jar = new File(path);
@@ -126,6 +142,7 @@ final class Itself {
                     if (seen.contains(name)) {
                         continue;
                     }
+                    descripted |= "META-INF/maven/plugin.xml".equals(name);
                     final ZipEntry entry = new ZipEntry(name);
                     stream.putNextEntry(entry);
                     Files.copy(file, stream);
@@ -133,6 +150,17 @@ final class Itself {
                     seen.add(name);
                 }
             }
+        }
+        if (!descripted && this.careful) {
+            throw new IllegalStateException(
+                String.join(
+                    " ",
+                    "There is no 'META-INF/maven/plugin.xml' file in the classpath.",
+                    "Most probably you haven't configured maven-plugin-plugin",
+                    "or the 'packaging' of your Maven project is not set to 'maven-plugin'.",
+                    "Normally, the 'META-INF/maven/plugin.xml' file is in the 'target/' directory."
+                )
+            );
         }
         Logger.debug(
             Itself.class,
