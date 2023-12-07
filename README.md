@@ -17,7 +17,8 @@ It works perfectly, but it has two pretty annoying drawbacks:
 1) It doesn't run from IDE (at least from IntelliJ IDEA),
 and
 2) It always starts the entire build from scratch, which makes it pretty slow.
-Farea suggests an alternative way, which is way less flexible, but much
+
+3) Farea suggests an alternative way, which is way less flexible, but much
 faster and JUnit-friendly.
 
 First, you add this to your `pom.xml`:
