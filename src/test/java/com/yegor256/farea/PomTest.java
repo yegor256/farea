@@ -30,6 +30,7 @@ import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
+import org.xembly.Directives;
 
 /**
  * Test case for {@link Pom}.
@@ -45,6 +46,23 @@ final class PomTest {
         MatcherAssert.assertThat(
             new XMLDocument(xml).toString(),
             Matchers.containsString("<modelVersion>")
+        );
+    }
+
+    @Test
+    void simplyModifies(final @TempDir Path dir) throws IOException {
+        final Path xml = dir.resolve("pom-1.xml");
+        final Pom pom = new Pom(xml);
+        pom.modify(
+            new Directives()
+                .xpath("/project")
+                .add("properties")
+                .add("test")
+                .set("привет!")
+        );
+        MatcherAssert.assertThat(
+            pom.xpath("/project/properties/test/text()").get(0),
+            Matchers.containsString("привет")
         );
     }
 
