@@ -10,7 +10,15 @@
 [![Hits-of-Code](https://hitsofcode.com/github/yegor256/farea)](https://hitsofcode.com/view/github/yegor256/farea)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](https://github.com/yegor256/farea/blob/master/LICENSE.txt)
 
-It's a fake Maven Reactor, helping you to unit test your custom Maven plugins.
+It's a fake Maven Reactor, helping you to integration-test your custom Maven plugins.
+There is a traditional way to do this: 
+[Maven Invoker Plugin](https://maven.apache.org/plugins/maven-invoker-plugin/index.html).
+It works perfectly, but it has two pretty annoying drawbacks:
+1) It doesn't run from IDE (at least from IntelliJ IDEA),
+and
+2) It always starts the entire build from scratch, which makes it pretty slow.
+Farea suggests an alternative way, which is way less flexible, but much
+faster and JUnit-friendly.
 
 First, you add this to your `pom.xml`:
 
@@ -46,8 +54,11 @@ class JavaCompilationTest {
 }
 ```
 
-You can add files to your project, configure `pom.xml`, execute some plugins,
-and then assert on what is created.
+This code will create a new `pom.xml` file in the temporary directory,
+create a temporary `Hello.java` file, write simple content into it,
+add a new `<dependency>` to the `pom.xml`, and then run `mvn test` in this
+temporary directory. The output of the build will be saved to `log.txt`,
+which is available through the call to `.log()` method.
 
 You can also test the plugin that you are developing, inside the same reactor:
 
