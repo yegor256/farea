@@ -76,6 +76,7 @@ import java.util.stream.Collectors;
  *
  * @since 0.0.1
  */
+@SuppressWarnings("PMD.TooManyMethods")
 public final class Farea {
 
     /**
@@ -143,6 +144,15 @@ public final class Farea {
      */
     public Requisites files() {
         return new Requisites(this.home);
+    }
+
+    /**
+     * Access to properties.
+     * @return Properties in the pom.xml
+     * @throws IOException If fails
+     */
+    public Properties properties() throws IOException {
+        return new Properties(this.pom());
     }
 
     /**

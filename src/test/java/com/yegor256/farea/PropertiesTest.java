@@ -23,50 +23,36 @@
  */
 package com.yegor256.farea;
 
+import com.jcabi.matchers.XhtmlMatchers;
 import java.io.IOException;
-import org.xembly.Directives;
+import java.nio.file.Path;
+import org.hamcrest.MatcherAssert;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
 
 /**
- * Properties of a project.
+ * Test case for {@link Properties}.
  *
- * @since 0.0.1
+ * @since 0.1.0
  */
-public final class Properties {
+final class PropertiesTest {
 
-    /**
-     * Location.
-     */
-    private final Pom pom;
-
-    /**
-     * Ctor.
-     * @param file The POM
-     */
-    Properties(final Pom file) {
-        this.pom = file;
-    }
-
-    /**
-     * Ctor.
-     * @param name The name
-     * @param value The value
-     * @return Properties
-     * @throws IOException If fails
-     */
-    public Properties set(final String name, final String value) throws IOException {
-        this.pom.modify(
-            new Directives()
-                .xpath("/project")
-                .addIf("properties")
-                .strict(1)
-                .xpath(name)
-                .remove()
-                .xpath("/project/properties")
-                .strict(1)
-                .add(name)
-                .set(value)
+    @Test
+    void setsUniqueProperty(final @TempDir Path dir) throws IOException {
+        final Path xml = dir.resolve("pom-1.xml");
+        final Pom pom = new Pom(xml);
+        new Properties(pom)
+            .set("foo", "bar1")
+            .set("foo", "bar2")
+            .set("another", "bar");
+        MatcherAssert.assertThat(
+            XhtmlMatchers.xhtml(pom.xml()),
+            XhtmlMatchers.hasXPaths(
+                "//properties/foo[.='bar2']",
+                "//properties[count(foo)=1]",
+                "//properties[count(*)=2]"
+            )
         );
-        return this;
     }
 
 }
