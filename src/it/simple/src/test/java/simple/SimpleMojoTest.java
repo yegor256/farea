@@ -61,7 +61,7 @@ final class SimpleMojoTest {
                 final String log = f.log();
                 Assertions.assertTrue(log.contains("project.name: test"));
                 Assertions.assertTrue(log.contains("total goals: 1"));
-                Assertions.assertTrue(log.contains("Hello, друг!"));
+                Assertions.assertTrue(log.contains("message: Hello, друг!"));
             }
         );
     }

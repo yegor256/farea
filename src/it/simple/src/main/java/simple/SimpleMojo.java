@@ -74,6 +74,10 @@ public final class SimpleMojo extends AbstractMojo {
                 "total goals: %d", this.session.getGoals().size()
             )
         );
-        this.getLog().info(this.message);
+        this.getLog().info(
+            String.format(
+                "message: %s", this.message
+            )
+        );
     }
 }
