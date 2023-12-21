@@ -187,11 +187,7 @@ public final class Farea {
         );
         Farea.log(
             String.format("Files at %s", this.home),
-            Files.walk(this.home)
-                .map(this.home::relativize)
-                .map(Path::toString)
-                .map(s -> String.format("/%s", s))
-                .collect(Collectors.joining("\n"))
+            this.walk()
         );
         new Jaxec()
             .with(Farea.mvn())
@@ -203,6 +199,10 @@ public final class Farea {
             .withStdout(ProcessBuilder.Redirect.to(log.toFile()))
             .exec();
         Farea.log("Maven stdout", new String(Files.readAllBytes(log), StandardCharsets.UTF_8));
+        Farea.log(
+            String.format("Files after execution at %s", this.home),
+            this.walk()
+        );
     }
 
     /**
@@ -212,6 +212,19 @@ public final class Farea {
      */
     public String log() throws IOException {
         return this.files().file("log.txt").content();
+    }
+
+    /**
+     * List of all files.
+     * @return List of files in the dir
+     * @throws IOException If fails
+     */
+    public String walk() throws IOException {
+        return Files.walk(this.home)
+            .map(this.home::relativize)
+            .map(Path::toString)
+            .map(s -> String.format("/%s", s))
+            .collect(Collectors.joining("\n"));
     }
 
     /**
