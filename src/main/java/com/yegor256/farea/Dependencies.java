@@ -24,6 +24,7 @@
 package com.yegor256.farea;
 
 import java.io.IOException;
+import java.nio.file.Path;
 import org.xembly.Directives;
 
 /**
@@ -66,6 +67,27 @@ public final class Dependencies {
                 .add("version").set(version).up()
         );
         return new Dependency(this.pom, group, artifact);
+    }
+
+    /**
+     * Add itself (the code in this classpath) to the Maven reactor.
+     * @return Itself as a dependency
+     * @throws IOException If fails
+     */
+    public Dependency appendItself() throws IOException {
+        return this.appendItself(new Local().path());
+    }
+
+    /**
+     * Add itself (the code in this classpath) to the Maven reactor.
+     * @param local Path of local Maven repo, usually "~/.m2/repository"
+     * @return Itself as a plugin
+     * @throws IOException If fails
+     */
+    public Dependency appendItself(final Path local) throws IOException {
+        final Base base = new Base();
+        new Itself(base, false).deploy(local);
+        return this.append(base.groupId(), base.artifactId(), base.version());
     }
 
 }
