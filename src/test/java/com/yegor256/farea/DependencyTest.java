@@ -43,6 +43,7 @@ final class DependencyTest {
         final Pom pom = new Pom(xml);
         new Dependencies(pom).append("g", "a", "1.0-SNAPSHOT").scope("test");
         MatcherAssert.assertThat(
+            "Sets dependency scope",
             XhtmlMatchers.xhtml(pom.xml()),
             XhtmlMatchers.hasXPaths(
                 "//dependency[groupId='g']",

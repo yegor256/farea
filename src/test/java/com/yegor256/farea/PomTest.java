@@ -44,6 +44,7 @@ final class PomTest {
         final Path xml = dir.resolve("pom.xml");
         new Pom(xml).init();
         MatcherAssert.assertThat(
+            "Prints correctly",
             new XMLDocument(xml).toString(),
             Matchers.containsString("<modelVersion>")
         );
@@ -61,6 +62,7 @@ final class PomTest {
                 .set("привет!")
         );
         MatcherAssert.assertThat(
+            "Simply modifies",
             pom.xpath("/project/properties/test/text()").get(0),
             Matchers.containsString("привет")
         );

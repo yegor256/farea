@@ -42,13 +42,20 @@ import org.junit.jupiter.api.io.TempDir;
 final class ItselfTest {
 
     @Test
-    void deploysJarAndPom(final @TempDir Path dir) throws IOException {
+    void deploysJar(final @TempDir Path dir) throws IOException {
         new Itself(new Base(Paths.get("src/test/resources/fake-pom.xml")), false).deploy(dir);
         MatcherAssert.assertThat(
+            "Resolves",
             dir.resolve("g1/g2/a/1.1.1/a-1.1.1.jar").toFile().exists(),
             Matchers.is(true)
         );
+    }
+
+    @Test
+    void deploysJarAndPom(final @TempDir Path dir) throws IOException {
+        new Itself(new Base(Paths.get("src/test/resources/fake-pom.xml")), false).deploy(dir);
         MatcherAssert.assertThat(
+            "Deploys JAR and POM",
             XhtmlMatchers.xhtml(
                 new String(
                     Files.readAllBytes(

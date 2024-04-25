@@ -46,6 +46,7 @@ final class PropertiesTest {
             .set("foo", "bar2")
             .set("another.property", "привет");
         MatcherAssert.assertThat(
+            "Sets unique property",
             XhtmlMatchers.xhtml(pom.xml()),
             XhtmlMatchers.hasXPaths(
                 "//properties/foo[.='bar2']",

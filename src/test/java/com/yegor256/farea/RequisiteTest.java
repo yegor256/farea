@@ -44,6 +44,7 @@ final class RequisiteTest {
         Files.write(dir.resolve(name), "".getBytes());
         new Requisite(dir, name).delete();
         MatcherAssert.assertThat(
+            "Deletes one file",
             dir.resolve(name).toFile().exists(),
             Matchers.is(false)
         );
@@ -56,6 +57,7 @@ final class RequisiteTest {
         Files.write(dir.resolve(name).resolve("file.txt"), "".getBytes());
         new Requisite(dir, name).delete();
         MatcherAssert.assertThat(
+            "Deletes one directory",
             dir.resolve(name).toFile().exists(),
             Matchers.is(false)
         );

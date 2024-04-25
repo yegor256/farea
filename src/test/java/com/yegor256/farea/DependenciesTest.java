@@ -43,6 +43,7 @@ final class DependenciesTest {
         final Pom pom = new Pom(xml);
         new Dependencies(pom).appendItself(dir);
         MatcherAssert.assertThat(
+            "Appends itself",
             XhtmlMatchers.xhtml(pom.xml()),
             XhtmlMatchers.hasXPaths(
                 "//dependencies/dependency[groupId='com.yegor256']",

@@ -49,6 +49,7 @@ final class FareaTest {
                     .append("org.cactoos", "cactoos", "0.55.0");
                 f.exec("compile");
                 MatcherAssert.assertThat(
+                    "Compiles simple project",
                     f.files().file("target/classes/foo/Hello.class").exists(),
                     Matchers.is(true)
                 );
@@ -67,6 +68,7 @@ final class FareaTest {
                     .set("skip", "true");
                 f.withOpt("--debug").exec("compile");
                 MatcherAssert.assertThat(
+                    "Calls simple plugin",
                     f.log(),
                     Matchers.containsString("BUILD SUCCESS")
                 );

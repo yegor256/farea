@@ -47,6 +47,7 @@ final class ConfigurationTest {
         new Plugins(pom).append("a", "0.0.0");
         new Configuration(pom, 1).set("foo", Arrays.asList("<one>", "two"));
         MatcherAssert.assertThat(
+            "Sets list as param",
             XhtmlMatchers.xhtml(pom.xml()),
             XhtmlMatchers.hasXPath("//configuration/foo/item[.='<one>']")
         );
@@ -59,6 +60,7 @@ final class ConfigurationTest {
         new Plugins(pom).append("xyz", "1.1.1");
         new Configuration(pom, 1).set("bar", new String[] {"\u0000", "beta"});
         MatcherAssert.assertThat(
+            "Sets array as param",
             XhtmlMatchers.xhtml(pom.xml()),
             XhtmlMatchers.hasXPath("//configuration/bar/item[.='\\u0000']")
         );
@@ -73,6 +75,7 @@ final class ConfigurationTest {
         map.put("test", 42);
         new Configuration(pom, 1).set("hello", map);
         MatcherAssert.assertThat(
+            "Sets map as param",
             XhtmlMatchers.xhtml(pom.xml()),
             XhtmlMatchers.hasXPath("//configuration/hello/test[.='42']")
         );
