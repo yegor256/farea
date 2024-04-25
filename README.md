@@ -1,3 +1,5 @@
+# Fake Maven Reactor, for Quick Unit Tests
+
 [![EO principles respected here](https://www.elegantobjects.org/badge.svg)](https://www.elegantobjects.org)
 [![DevOps By Rultor.com](http://www.rultor.com/b/yegor256/farea)](http://www.rultor.com/p/yegor256/farea)
 [![We recommend IntelliJ IDEA](https://www.elegantobjects.org/intellij-idea.svg)](https://www.jetbrains.com/idea/)
@@ -10,13 +12,15 @@
 [![Hits-of-Code](https://hitsofcode.com/github/yegor256/farea)](https://hitsofcode.com/view/github/yegor256/farea)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](https://github.com/yegor256/farea/blob/master/LICENSE.txt)
 
-It's a fake Maven Reactor, helping you to integration-test your custom Maven plugins.
+It's a fake Maven Reactor, helping you to integration-test 
+your custom Maven plugins.
 There is a traditional way to do this: 
-[Maven Invoker Plugin](https://maven.apache.org/plugins/maven-invoker-plugin/index.html).
+[Maven Invoker Plugin][invoker].
 It works perfectly, but it has two pretty annoying drawbacks:
 1) It doesn't run from IDE (at least from IntelliJ IDEA),
 and
-2) It always starts the entire build from scratch, which makes it pretty slow.
+2) It always starts the entire build from scratch, which makes 
+3) it pretty slow.
 
 Farea suggests an alternative way, which is way less flexible, but much
 faster and JUnit-friendly.
@@ -84,11 +88,12 @@ class MyPluginTest {
 
 Here, a `.jar` with the entire classpath will be packaged and saved
 into the `~/.m2/repository/` directory. This is almost exactly what 
-the [`install`](https://maven.apache.org/plugins/maven-invoker-plugin/install-mojo.html) goal of the 
-[invoker plugin](https://maven.apache.org/plugins/maven-invoker-plugin/) would do if you use it for
+the [`install`][install-mojo] goal of the 
+[invoker plugin][invoker] would do if you use it for
 integration testing.
 
-See how [antlr2ebnf-maven-plugin](https://github.com/yegor256/antlr2ebnf-maven-plugin)
+See how 
+[antlr2ebnf-maven-plugin](https://github.com/yegor256/antlr2ebnf-maven-plugin)
 is using Farea.
 
 ## How to Contribute
@@ -100,7 +105,10 @@ provided they don't violate our quality standards. To avoid frustration,
 before sending us your pull request please run full Maven build:
 
 ```bash
-$ mvn clean install -Pqulice
+mvn clean install -Pqulice
 ```
 
 You will need Maven 3.3+ and Java 11+.
+
+[invoker]: https://maven.apache.org/plugins/maven-invoker-plugin/index.html
+[install-mojo]: https://maven.apache.org/plugins/maven-invoker-plugin/install-mojo.html
