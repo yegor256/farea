@@ -70,7 +70,10 @@ public final class Plugin {
                 )
                 .strict(1)
                 .addIf("executions")
-                .addIf("execution")
+                .add("execution")
+                .add("id")
+                .xset("concat('farea-', count(../../execution))")
+                .up()
                 .addIf("phase")
                 .set(value)
         );
@@ -93,8 +96,8 @@ public final class Plugin {
             )
             .strict(1)
             .addIf("executions")
-            .addIf("execution")
-            .addIf("goals");
+            .add("execution")
+            .add("goals");
         for (final String goal : values) {
             dirs.add("goal").set(goal).up();
         }
