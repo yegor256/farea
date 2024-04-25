@@ -74,6 +74,12 @@ public final class Plugins {
                 .xpath("/project")
                 .addIf("build")
                 .addIf("plugins")
+                .xpath(
+                    String.format(
+                        "/project/build/plugins[not(plugin[groupId='%s' and artifactId='%s'])]",
+                        group, artifact
+                    )
+                )
                 .add("plugin")
                 .add("groupId").set(group).up()
                 .add("artifactId").set(artifact).up()
@@ -81,7 +87,14 @@ public final class Plugins {
         );
         return new Plugin(
             this.pom,
-            Integer.parseInt(this.pom.xpath("count(/project/build/plugins/plugin)").get(0))
+            Integer.parseInt(
+                this.pom.xpath(
+                    String.format(
+                        "count(/project/build/plugins/plugin[artifactId='%s' and groupId='%s']/preceding-sibling::*)+1",
+                        group, artifact
+                    )
+                ).get(0)
+            )
         );
     }
 
