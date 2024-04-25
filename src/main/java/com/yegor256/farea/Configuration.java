@@ -29,7 +29,7 @@ import org.xembly.Directives;
 import org.xembly.Xembler;
 
 /**
- * Configuration of a Plugin.
+ * Configuration of an Execution.
  *
  * @since 0.0.1
  */
@@ -41,18 +41,18 @@ public final class Configuration {
     private final Pom pom;
 
     /**
-     * Position of the plugin inside plugins.
+     * XPath for the "configuration" element.
      */
-    private final int pos;
+    private final String xpath;
 
     /**
      * Ctor.
      * @param file The POM
-     * @param position The position
+     * @param xpth The location of the parent element
      */
-    Configuration(final Pom file, final int position) {
+    Configuration(final Pom file, final String xpth) {
         this.pom = file;
-        this.pos = position;
+        this.xpath = xpth;
     }
 
     /**
@@ -65,12 +65,7 @@ public final class Configuration {
     @SuppressWarnings("unchecked")
     public Configuration set(final String key, final Object value) throws IOException {
         final Directives dirs = new Directives()
-            .xpath(
-                String.format(
-                    "/project/build/plugins/plugin[position()=%d]",
-                    this.pos
-                )
-            )
+            .xpath(this.xpath)
             .strict(1)
             .addIf("configuration")
             .addIf(key);

@@ -50,6 +50,7 @@ final class SimpleMojoTest {
                 f.build()
                     .plugins()
                     .appendItself(local)
+                    .execution("simple")
                     .phase("initialize")
                     .goals("simple")
                     .configuration()

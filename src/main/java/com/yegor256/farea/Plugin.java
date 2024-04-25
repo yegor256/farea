@@ -23,9 +23,6 @@
  */
 package com.yegor256.farea;
 
-import java.io.IOException;
-import org.xembly.Directives;
-
 /**
  * Plugin inside Plugin.
  *
@@ -54,55 +51,12 @@ public final class Plugin {
     }
 
     /**
-     * Set phase.
-     * @param value The Maven phase
-     * @return Config
-     * @throws IOException If fails
+     * Append new execution or get access to existing one.
+     * @param name The "id" of it
+     * @return Execution found or added
      */
-    public Plugin phase(final String value) throws IOException {
-        this.pom.modify(
-            new Directives()
-                .xpath(
-                    String.format(
-                        "/project/build/plugins/plugin[position()=%d]",
-                        this.pos
-                    )
-                )
-                .strict(1)
-                .addIf("executions")
-                .add("execution")
-                .add("id")
-                .xset("concat('farea-', count(../../execution))")
-                .up()
-                .addIf("phase")
-                .set(value)
-        );
-        return this;
-    }
-
-    /**
-     * Set phase.
-     * @param values The Maven goals (non-empty list)
-     * @return Config
-     * @throws IOException If fails
-     */
-    public Plugin goals(final String... values) throws IOException {
-        final Directives dirs = new Directives()
-            .xpath(
-                String.format(
-                    "/project/build/plugins/plugin[position()=%d]",
-                    this.pos
-                )
-            )
-            .strict(1)
-            .addIf("executions")
-            .add("execution")
-            .add("goals");
-        for (final String goal : values) {
-            dirs.add("goal").set(goal).up();
-        }
-        this.pom.modify(dirs);
-        return this;
+    public Execution execution(final String name) {
+        return new Execution(this.pom, this.pos, name);
     }
 
     /**
@@ -110,7 +64,13 @@ public final class Plugin {
      * @return Config
      */
     public Configuration configuration() {
-        return new Configuration(this.pom, this.pos);
+        return new Configuration(
+            this.pom,
+            String.format(
+                "/project/build/plugins/plugin[position()=%d]",
+                this.pos
+            )
+        );
     }
 
 }

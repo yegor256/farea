@@ -44,8 +44,11 @@ final class ConfigurationTest {
     void setsListAsParam(final @TempDir Path dir) throws IOException {
         final Path xml = dir.resolve("pom-1.xml");
         final Pom pom = new Pom(xml);
-        new Plugins(pom).append("a", "0.0.0");
-        new Configuration(pom, 1).set("foo", Arrays.asList("<one>", "two"));
+        new Plugins(pom).append("a", "0.0.0")
+            .execution("foo")
+            .phase("boom")
+            .configuration()
+            .set("foo", Arrays.asList("<one>", "two"));
         MatcherAssert.assertThat(
             "Sets list as param",
             XhtmlMatchers.xhtml(pom.xml()),
@@ -57,8 +60,11 @@ final class ConfigurationTest {
     void setsArrayAsParam(final @TempDir Path dir) throws IOException {
         final Path xml = dir.resolve("pom-2.xml");
         final Pom pom = new Pom(xml);
-        new Plugins(pom).append("xyz", "1.1.1");
-        new Configuration(pom, 1).set("bar", new String[] {"\u0000", "beta"});
+        new Plugins(pom).append("xyz", "1.1.1")
+            .execution("foo")
+            .phase("boom")
+            .configuration()
+            .set("bar", new String[] {"\u0000", "beta"});
         MatcherAssert.assertThat(
             "Sets array as param",
             XhtmlMatchers.xhtml(pom.xml()),
@@ -70,10 +76,13 @@ final class ConfigurationTest {
     void setsMapAsParam(final @TempDir Path dir) throws IOException {
         final Path xml = dir.resolve("pom-3.xml");
         final Pom pom = new Pom(xml);
-        new Plugins(pom).append("bbb", "1.2.3");
         final Map<String, Integer> map = new HashMap<>();
         map.put("test", 42);
-        new Configuration(pom, 1).set("hello", map);
+        new Plugins(pom).append("bbb", "1.2.3")
+            .execution("foo")
+            .phase("boom")
+            .configuration()
+            .set("hello", map);
         MatcherAssert.assertThat(
             "Sets map as param",
             XhtmlMatchers.xhtml(pom.xml()),

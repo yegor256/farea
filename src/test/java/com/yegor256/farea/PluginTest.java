@@ -42,12 +42,26 @@ final class PluginTest {
         final Path xml = dir.resolve("pom.xml");
         final Pom pom = new Pom(xml).init();
         final Plugin plugin = new Plugins(pom).append("g", "a", "0.0.1");
-        plugin.phase("first");
-        plugin.phase("second");
+        plugin.execution("foo").phase("first");
+        plugin.execution("bar").phase("second");
         MatcherAssert.assertThat(
             "Appends two executions",
             pom.xpath("/project/build/plugins/plugin/executions/execution/id/text()").size(),
             Matchers.equalTo(2)
+        );
+    }
+
+    @Test
+    void appendsGoalsExecutions(final @TempDir Path dir) throws IOException {
+        final Path xml = dir.resolve("pom.xml");
+        final Pom pom = new Pom(xml).init();
+        final Plugin plugin = new Plugins(pom).append("g", "a", "0.0.1");
+        plugin.execution("foo").phase("first").goals("x");
+        plugin.execution("bar").phase("second").goals("y");
+        MatcherAssert.assertThat(
+            "Appends only two executions",
+            pom.xpath("count(/project/build/plugins/plugin/executions/execution)").get(0),
+            Matchers.equalTo("2")
         );
     }
 
