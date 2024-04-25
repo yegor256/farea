@@ -65,4 +65,23 @@ final class PluginTest {
         );
     }
 
+    @Test
+    void addsConfiguration(final @TempDir Path dir) throws IOException {
+        final Path xml = dir.resolve("pom.xml");
+        final Pom pom = new Pom(xml).init();
+        new Plugins(pom)
+            .append("z", "z", "0.0.2")
+            .configuration()
+            .set("hey", "you");
+        new Plugins(pom)
+            .append("z", "z", "0.0.2")
+            .configuration()
+            .set("hey", "me");
+        MatcherAssert.assertThat(
+            "Sets plugin configuration",
+            pom.xpath("/project/build/plugins/plugin/configuration/hey/text()").get(0),
+            Matchers.equalTo("me")
+        );
+    }
+
 }
