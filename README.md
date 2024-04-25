@@ -16,9 +16,9 @@ It's a fake Maven Reactor, helping you to integration-test
 your custom Maven plugins.
 There is a traditional way to do this:
 [Maven Invoker Plugin][invoker].
-It works perfectly, but it has two pretty annoying 
+It works perfectly, but it has two pretty annoying
 drawbacks: 1) It doesn't run from IDE (at least from IntelliJ IDEA),
-and 2) It always starts the entire build from scratch, 
+and 2) It always starts the entire build from scratch,
 which makes 3) it pretty slow.
 
 Farea suggests an alternative way, which is way less flexible, but much
@@ -86,7 +86,7 @@ class MyPluginTest {
 ```
 
 Here, a `.jar` with the entire classpath will be packaged and saved
-into the `~/.m2/repository/` directory. This is almost exactly what 
+into the `~/.m2/repository/` directory. This is almost exactly what
 the [`install`][install-mojo] goal of the
 [invoker plugin][invoker] would do if you use it for
 integration testing.
