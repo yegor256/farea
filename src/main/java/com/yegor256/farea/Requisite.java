@@ -27,8 +27,11 @@ import com.jcabi.log.Logger;
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.SimpleFileVisitor;
+import java.nio.file.attribute.BasicFileAttributes;
 
 /**
  * File in Maven Reactor.
@@ -112,6 +115,45 @@ public final class Requisite {
                 String.format("%s  ", System.lineSeparator())
             )
         );
+    }
+
+    /**
+     * Deletes it (recursively, if it is a directory).
+     * @throws IOException If fails
+     */
+    public void delete() throws IOException {
+        final Path pth = this.path();
+        if (pth.toFile().isDirectory()) {
+            Files.walkFileTree(
+                pth,
+                new SimpleFileVisitor<Path>() {
+                    @Override
+                    public FileVisitResult visitFile(final Path file,
+                        final BasicFileAttributes attrs) throws IOException {
+                        Files.delete(file);
+                        return FileVisitResult.CONTINUE;
+                    }
+
+                    @Override
+                    public FileVisitResult postVisitDirectory(final Path dir,
+                        final IOException exc) throws IOException {
+                        Files.delete(dir);
+                        return FileVisitResult.CONTINUE;
+                    }
+                }
+            );
+            Logger.debug(this, "Directory deleted: %s", pth);
+        } else {
+            if (!pth.toFile().delete()) {
+                throw new IOException(
+                    String.format(
+                        "Failed to delete %s",
+                        pth
+                    )
+                );
+            }
+            Logger.debug(this, "File deleted: %s", pth);
+        }
     }
 
     /**
