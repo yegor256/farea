@@ -12,15 +12,14 @@
 [![Hits-of-Code](https://hitsofcode.com/github/yegor256/farea)](https://hitsofcode.com/view/github/yegor256/farea)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](https://github.com/yegor256/farea/blob/master/LICENSE.txt)
 
-It's a fake Maven Reactor, helping you to integration-test 
+It's a fake Maven Reactor, helping you to integration-test
 your custom Maven plugins.
-There is a traditional way to do this: 
+There is a traditional way to do this:
 [Maven Invoker Plugin][invoker].
-It works perfectly, but it has two pretty annoying drawbacks:
-1) It doesn't run from IDE (at least from IntelliJ IDEA),
-and
-2) It always starts the entire build from scratch, which makes 
-3) it pretty slow.
+It works perfectly, but it has two pretty annoying 
+drawbacks: 1) It doesn't run from IDE (at least from IntelliJ IDEA),
+and 2) It always starts the entire build from scratch, 
+which makes 3) it pretty slow.
 
 Farea suggests an alternative way, which is way less flexible, but much
 faster and JUnit-friendly.
@@ -35,7 +34,7 @@ First, you add this to your `pom.xml`:
 </dependency>
 ```
 
-Then, you use it like this, in your JUnit5 test 
+Then, you use it like this, in your JUnit5 test
 (obviously, you need to have `mvn` installed
 and available on `$PATH`):
 
@@ -88,17 +87,17 @@ class MyPluginTest {
 
 Here, a `.jar` with the entire classpath will be packaged and saved
 into the `~/.m2/repository/` directory. This is almost exactly what 
-the [`install`][install-mojo] goal of the 
+the [`install`][install-mojo] goal of the
 [invoker plugin][invoker] would do if you use it for
 integration testing.
 
-See how 
+See how
 [antlr2ebnf-maven-plugin](https://github.com/yegor256/antlr2ebnf-maven-plugin)
 is using Farea.
 
 ## How to Contribute
 
-Fork repository, make changes, send us a 
+Fork repository, make changes, send us a
 [pull request](https://www.yegor256.com/2014/04/15/github-guidelines.html).
 We will review your changes and apply them to the `master` branch shortly,
 provided they don't violate our quality standards. To avoid frustration,
