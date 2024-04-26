@@ -23,6 +23,7 @@
  */
 package com.yegor256.farea;
 
+import com.jcabi.matchers.XhtmlMatchers;
 import java.io.IOException;
 import java.nio.file.Path;
 import org.hamcrest.MatcherAssert;
@@ -61,6 +62,27 @@ final class PluginsTest {
             "No duplicates",
             pom.xpath("/project/build/plugins/plugin/groupId/text()").size(),
             Matchers.equalTo(1)
+        );
+    }
+
+    @Test
+    void addsTwoPluginsWithExecutions(final @TempDir Path dir) throws IOException {
+        final Path xml = dir.resolve("pom.xml");
+        final Pom pom = new Pom(xml).init();
+        new Plugins(pom)
+            .append("g", "a1", "0.0.1")
+            .execution("first")
+            .phase("f");
+        new Plugins(pom).append("g", "a2", "0.0.2")
+            .execution("second")
+            .phase("s");
+        MatcherAssert.assertThat(
+            "Two plugins with executions",
+            XhtmlMatchers.xhtml(pom.xml()),
+            XhtmlMatchers.hasXPaths(
+                "/project/build/plugins/plugin[artifactId='a1']/executions/execution[id='first']",
+                "/project/build/plugins/plugin[artifactId='a2']/executions/execution[id='second']"
+            )
         );
     }
 }

@@ -91,7 +91,7 @@ public final class Plugins {
                 this.pom.xpath(
                     String.format(
                         "count(/project/build/plugins/plugin[artifactId='%s' and groupId='%s']/preceding-sibling::*)+1",
-                        group, artifact
+                        artifact, group
                     )
                 ).get(0)
             )
