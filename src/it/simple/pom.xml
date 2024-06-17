@@ -31,7 +31,7 @@ SOFTWARE.
   <properties>
     <maven.compiler.source>11</maven.compiler.source>
     <maven.compiler.target>11</maven.compiler.target>
-    <maven.version>3.9.6</maven.version>
+    <maven.version>3.9.8</maven.version>
   </properties>
   <dependencies>
     <dependency>
