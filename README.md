@@ -76,7 +76,7 @@ class MyPluginTest {
                 .appendItself()
                 .execution()
                 .phase("test")
-                .goal("my-custom-goal")
+                .goals("my-custom-goal")
                 .configuration()
                 .set("message", "Hello, world!");
             f.exec("test");

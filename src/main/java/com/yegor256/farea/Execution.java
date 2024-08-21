@@ -76,7 +76,7 @@ public final class Execution {
     }
 
     /**
-     * Set phase.
+     * Set goals.
      * @param values The Maven goals (non-empty list)
      * @return Itself
      * @throws IOException If fails
