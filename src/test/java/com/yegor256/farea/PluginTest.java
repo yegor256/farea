@@ -56,7 +56,7 @@ final class PluginTest {
         final Path xml = dir.resolve("pom.xml");
         final Pom pom = new Pom(xml).init();
         final Plugin plugin = new Plugins(pom).append("g", "a", "0.0.1");
-        plugin.execution("foo").phase("first").goals("x");
+        plugin.execution().phase("first").goals("x");
         plugin.execution("bar").phase("second").goals("y");
         MatcherAssert.assertThat(
             "Appends only two executions",

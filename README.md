@@ -74,6 +74,7 @@ class MyPluginTest {
             f.build()
                 .plugins()
                 .appendItself()
+                .execution()
                 .phase("test")
                 .goal("my-custom-goal")
                 .configuration()

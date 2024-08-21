@@ -51,6 +51,14 @@ public final class Plugin {
     }
 
     /**
+     * Append new execution or get access to existing one (using default name).
+     * @return Execution found or added
+     */
+    public Execution execution() {
+        return this.execution("default");
+    }
+
+    /**
      * Append new execution or get access to existing one.
      * @param name The "id" of it
      * @return Execution found or added
