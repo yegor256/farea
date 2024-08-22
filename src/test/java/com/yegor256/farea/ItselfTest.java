@@ -42,7 +42,7 @@ import org.junit.jupiter.api.io.TempDir;
 final class ItselfTest {
 
     @Test
-    void deploysJar(final @TempDir Path dir) throws IOException {
+    void deploysJar(@TempDir final Path dir) throws IOException {
         new Itself(new Base(Paths.get("src/test/resources/fake-pom.xml")), false).deploy(dir);
         MatcherAssert.assertThat(
             "Resolves",
@@ -52,7 +52,7 @@ final class ItselfTest {
     }
 
     @Test
-    void deploysJarAndPom(final @TempDir Path dir) throws IOException {
+    void deploysJarAndPom(@TempDir final Path dir) throws IOException {
         new Itself(new Base(Paths.get("src/test/resources/fake-pom.xml")), false).deploy(dir);
         MatcherAssert.assertThat(
             "Deploys JAR and POM",

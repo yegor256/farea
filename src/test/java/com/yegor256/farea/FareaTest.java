@@ -38,7 +38,7 @@ import org.junit.jupiter.api.io.TempDir;
 final class FareaTest {
 
     @Test
-    void compilesSimpleProject(final @TempDir Path dir) throws IOException {
+    void compilesSimpleProject(@TempDir final Path dir) throws IOException {
         new Farea(dir).together(
             f -> {
                 f.files()
@@ -58,7 +58,7 @@ final class FareaTest {
     }
 
     @Test
-    void callsSimplePlugin(final @TempDir Path dir) throws IOException {
+    void callsSimplePlugin(@TempDir final Path dir) throws IOException {
         new Farea(dir).together(
             f -> {
                 f.build()

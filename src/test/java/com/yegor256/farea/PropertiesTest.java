@@ -38,7 +38,7 @@ import org.junit.jupiter.api.io.TempDir;
 final class PropertiesTest {
 
     @Test
-    void setsUniqueProperty(final @TempDir Path dir) throws IOException {
+    void setsUniqueProperty(@TempDir final Path dir) throws IOException {
         final Path xml = dir.resolve("pom-1.xml");
         final Pom pom = new Pom(xml);
         new Properties(pom)

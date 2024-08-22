@@ -41,7 +41,7 @@ import org.junit.jupiter.api.io.TempDir;
 final class ConfigurationTest {
 
     @Test
-    void setsListAsParam(final @TempDir Path dir) throws IOException {
+    void setsListAsParam(@TempDir final Path dir) throws IOException {
         final Path xml = dir.resolve("pom-1.xml");
         final Pom pom = new Pom(xml);
         new Plugins(pom).append("a", "0.0.0")
@@ -57,7 +57,7 @@ final class ConfigurationTest {
     }
 
     @Test
-    void setsArrayAsParam(final @TempDir Path dir) throws IOException {
+    void setsArrayAsParam(@TempDir final Path dir) throws IOException {
         final Path xml = dir.resolve("pom-2.xml");
         final Pom pom = new Pom(xml);
         new Plugins(pom).append("xyz", "1.1.1")
@@ -73,7 +73,7 @@ final class ConfigurationTest {
     }
 
     @Test
-    void setsMapAsParam(final @TempDir Path dir) throws IOException {
+    void setsMapAsParam(@TempDir final Path dir) throws IOException {
         final Path xml = dir.resolve("pom-3.xml");
         final Pom pom = new Pom(xml);
         final Map<String, Integer> map = new HashMap<>();

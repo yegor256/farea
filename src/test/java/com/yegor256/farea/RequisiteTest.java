@@ -39,7 +39,7 @@ import org.junit.jupiter.api.io.TempDir;
 final class RequisiteTest {
 
     @Test
-    void deletesOneFile(final @TempDir Path dir) throws IOException {
+    void deletesOneFile(@TempDir final Path dir) throws IOException {
         final String name = "foo.txt";
         Files.write(dir.resolve(name), "".getBytes());
         new Requisite(dir, name).delete();
@@ -51,7 +51,7 @@ final class RequisiteTest {
     }
 
     @Test
-    void deletesOneDirectory(final @TempDir Path dir) throws IOException {
+    void deletesOneDirectory(@TempDir final Path dir) throws IOException {
         final String name = "foo/bar/zzz";
         dir.resolve(name).toFile().mkdirs();
         Files.write(dir.resolve(name).resolve("file.txt"), "".getBytes());

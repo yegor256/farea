@@ -39,7 +39,7 @@ import org.junit.jupiter.api.io.TempDir;
 final class PluginsTest {
 
     @Test
-    void appendsOnce(final @TempDir Path dir) throws IOException {
+    void appendsOnce(@TempDir final Path dir) throws IOException {
         final Path xml = dir.resolve("pom.xml");
         final Pom pom = new Pom(xml).init();
         new Plugins(pom).append("g1", "a1", "0.0.0");
@@ -53,7 +53,7 @@ final class PluginsTest {
     }
 
     @Test
-    void avoidsDuplicates(final @TempDir Path dir) throws IOException {
+    void avoidsDuplicates(@TempDir final Path dir) throws IOException {
         final Path xml = dir.resolve("pom.xml");
         final Pom pom = new Pom(xml).init();
         new Plugins(pom).append("g", "a", "0.0.1");
@@ -66,7 +66,7 @@ final class PluginsTest {
     }
 
     @Test
-    void addsTwoPluginsWithExecutions(final @TempDir Path dir) throws IOException {
+    void addsTwoPluginsWithExecutions(@TempDir final Path dir) throws IOException {
         final Path xml = dir.resolve("pom.xml");
         final Pom pom = new Pom(xml).init();
         new Plugins(pom)

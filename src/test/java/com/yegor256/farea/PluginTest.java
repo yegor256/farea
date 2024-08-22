@@ -38,7 +38,7 @@ import org.junit.jupiter.api.io.TempDir;
 final class PluginTest {
 
     @Test
-    void appendsManyExecutions(final @TempDir Path dir) throws IOException {
+    void appendsManyExecutions(@TempDir final Path dir) throws IOException {
         final Path xml = dir.resolve("pom.xml");
         final Pom pom = new Pom(xml).init();
         final Plugin plugin = new Plugins(pom).append("g", "a", "0.0.1");
@@ -52,7 +52,7 @@ final class PluginTest {
     }
 
     @Test
-    void appendsGoalsExecutions(final @TempDir Path dir) throws IOException {
+    void appendsGoalsExecutions(@TempDir final Path dir) throws IOException {
         final Path xml = dir.resolve("pom.xml");
         final Pom pom = new Pom(xml).init();
         final Plugin plugin = new Plugins(pom).append("g", "a", "0.0.1");
@@ -66,7 +66,7 @@ final class PluginTest {
     }
 
     @Test
-    void addsConfiguration(final @TempDir Path dir) throws IOException {
+    void addsConfiguration(@TempDir final Path dir) throws IOException {
         final Path xml = dir.resolve("pom.xml");
         final Pom pom = new Pom(xml).init();
         new Plugins(pom)

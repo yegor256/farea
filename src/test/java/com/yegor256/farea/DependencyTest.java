@@ -38,7 +38,7 @@ import org.junit.jupiter.api.io.TempDir;
 final class DependencyTest {
 
     @Test
-    void setsDependencyScope(final @TempDir Path dir) throws IOException {
+    void setsDependencyScope(@TempDir final Path dir) throws IOException {
         final Path xml = dir.resolve("pom-1.xml");
         final Pom pom = new Pom(xml);
         new Dependencies(pom).append("g", "a", "1.0-SNAPSHOT").scope("test");

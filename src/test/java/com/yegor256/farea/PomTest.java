@@ -40,7 +40,7 @@ import org.xembly.Directives;
 final class PomTest {
 
     @Test
-    void printsCorrectly(final @TempDir Path dir) throws IOException {
+    void printsCorrectly(@TempDir final Path dir) throws IOException {
         final Path xml = dir.resolve("pom.xml");
         new Pom(xml).init();
         MatcherAssert.assertThat(
@@ -51,7 +51,18 @@ final class PomTest {
     }
 
     @Test
-    void simplyModifies(final @TempDir Path dir) throws IOException {
+    void rendersWithoutExtraSpaces(@TempDir final Path dir) throws IOException {
+        final Path xml = dir.resolve("pom.xml");
+        new Pom(xml).init().modify(new Directives().xpath("/project").add("properties"));
+        MatcherAssert.assertThat(
+            "Prints without spaces",
+            new XMLDocument(xml).toString(),
+            Matchers.containsString("<name>test</name>\n   <properties>\n      <maven")
+        );
+    }
+
+    @Test
+    void simplyModifies(@TempDir final Path dir) throws IOException {
         final Path xml = dir.resolve("pom-1.xml");
         final Pom pom = new Pom(xml);
         pom.modify(
