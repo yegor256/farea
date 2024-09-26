@@ -44,17 +44,17 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
 class JavaCompilationTest {
-    @Test
-    void worksAsExpected(@TempDir Path dir) {
-        new Farea(dir).together(f -> {
-            f.files()
-                .file("src/test/java/Hello.java")
-                .write("class Hello {}");
-            f.dependencies().append("org.cactoos", "cactoos", "0.55.0");
-            f.exec("compile");
-            assert (f.log().contains("SUCCESS"));
-        });
-    }
+  @Test
+  void worksAsExpected(@TempDir Path dir) {
+    new Farea(dir).together(f -> {
+      f.files()
+        .file("src/test/java/Hello.java")
+        .write("class Hello {}");
+      f.dependencies().append("org.cactoos", "cactoos", "0.55.0");
+      f.exec("compile");
+      assert (f.log().contains("SUCCESS"));
+    });
+  }
 }
 ```
 
@@ -68,21 +68,21 @@ You can also test the plugin that you are developing, inside the same reactor:
 
 ```java
 class MyPluginTest {
-    @Test
-    void worksAsExpected(@TempDir Path dir) {
-        new Farea(dir).together(f -> {
-            f.build()
-                .plugins()
-                .appendItself()
-                .execution()
-                .phase("test")
-                .goals("my-custom-goal")
-                .configuration()
-                .set("message", "Hello, world!");
-            f.exec("test");
-            assert (f.log().contains("SUCCESS"));
-        });
-    }
+  @Test
+  void worksAsExpected(@TempDir Path dir) {
+    new Farea(dir).together(f -> {
+      f.build()
+        .plugins()
+        .appendItself()
+        .execution()
+        .phase("test")
+        .goals("my-custom-goal")
+        .configuration()
+        .set("message", "Hello, world!");
+      f.exec("test");
+      assert (f.log().contains("SUCCESS"));
+    });
+  }
 }
 ```
 
