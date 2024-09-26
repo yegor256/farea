@@ -23,6 +23,7 @@
  */
 package com.yegor256.farea;
 
+import com.jcabi.matchers.XhtmlMatchers;
 import java.io.IOException;
 import java.nio.file.Path;
 import org.hamcrest.MatcherAssert;
@@ -81,6 +82,29 @@ final class PluginTest {
             "Sets plugin configuration",
             pom.xpath("/project/build/plugins/plugin/configuration/hey/text()").get(0),
             Matchers.equalTo("me")
+        );
+    }
+
+    @Test
+    void addsGoalsAndConfiguration(@TempDir final Path dir) throws IOException {
+        final Path xml = dir.resolve("pom.xml");
+        final Pom pom = new Pom(xml).init();
+        new Plugins(pom)
+            .appendItself()
+            .execution("default")
+            .phase("process-classes")
+            .goals("build", "optimize")
+            .goals("test")
+            .configuration()
+            .set("foo", "bar");
+        MatcherAssert.assertThat(
+            "Sets plugin configuration and goals",
+            XhtmlMatchers.xhtml(pom.xml()),
+            XhtmlMatchers.hasXPaths(
+                "/project/build/plugins/plugin/executions/execution[count(goals) = 1]",
+                "/project/build/plugins/plugin/executions/execution/goals[count(goal) = 3]",
+                "/project/build/plugins/plugin/executions/execution/configuration/foo[text() = 'bar']"
+            )
         );
     }
 

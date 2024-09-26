@@ -82,7 +82,10 @@ public final class Execution {
      * @throws IOException If fails
      */
     public Execution goals(final String... values) throws IOException {
-        final Directives dirs = this.into().add("goals");
+        final Directives dirs = this.into()
+            .addIf("goals")
+            .up()
+            .xpath("goals");
         for (final String goal : values) {
             dirs.add("goal").set(goal).up();
         }

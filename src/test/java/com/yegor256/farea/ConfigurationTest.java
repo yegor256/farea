@@ -76,7 +76,7 @@ final class ConfigurationTest {
     void setsMapAsParam(@TempDir final Path dir) throws IOException {
         final Path xml = dir.resolve("pom-3.xml");
         final Pom pom = new Pom(xml);
-        final Map<String, Integer> map = new HashMap<>();
+        final Map<String, Integer> map = new HashMap<>(0);
         map.put("test", 42);
         new Plugins(pom).append("bbb", "1.2.3")
             .execution("foo")
