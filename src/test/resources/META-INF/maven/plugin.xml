@@ -23,10 +23,10 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 -->
 <plugin>
-  <name>hone-maven-plugin</name>
-  <description>Optimisation of Java Bytecode via EOLANG</description>
-  <groupId>org.eolang</groupId>
-  <artifactId>hone-maven-plugin</artifactId>
+  <name>foo-maven-plugin</name>
+  <description>Unknown</description>
+  <groupId>com.yegor256</groupId>
+  <artifactId>foo-maven-plugin</artifactId>
   <version>1.0-SNAPSHOT</version>
-  <goalPrefix>hone</goalPrefix>
+  <goalPrefix>foo</goalPrefix>
 </plugin>
