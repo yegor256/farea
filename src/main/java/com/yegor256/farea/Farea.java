@@ -24,8 +24,10 @@
 package com.yegor256.farea;
 
 import com.jcabi.log.Logger;
+import com.jcabi.log.VerboseRunnable;
 import com.yegor256.Jaxec;
 import java.io.IOException;
+import java.io.RandomAccessFile;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -35,6 +37,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.Locale;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 
 /**
@@ -69,10 +72,10 @@ import java.util.stream.Collectors;
  *
  * <p>The class is thread-safe, which means that you can use it
  * in many parallel threads. However, if you don't use the
- * {@link Farea#together(Script)}, your threads may conflict at the level
+ * {@link Farea#together(Farea.Script)}, your threads may conflict at the level
  * of files in your local Maven repository,
  * inside the {@code ~/.m2/repository} directory. Thus, it is strongly
- * recommended to use {@link Farea#together(Script)}.</p>
+ * recommended to use {@link Farea#together(Farea.Script)}.</p>
  *
  * @since 0.0.1
  */
@@ -182,25 +185,31 @@ public final class Farea {
         this.pom().init();
         final Path log = this.home.resolve("log.txt");
         Farea.log(
-            String.format("pom.xml at %s", this.home),
+            Logger.format("pom.xml at %[file]s", this.home),
             this.pom().xml()
         );
         Farea.log(
-            String.format("Files at %s", this.home),
+            Logger.format("Files at %[file]s", this.home),
             this.walk()
         );
-        new Jaxec()
-            .with(Farea.mvn())
-            .with(this.opts)
-            .with(args)
-            .withHome(this.home)
-            .withCheck(false)
-            .withRedirect(true)
-            .withStdout(ProcessBuilder.Redirect.to(log.toFile()))
-            .exec();
+        Logger.debug(this, "Log stream redirected to %[file]s", log);
+        final AtomicBoolean finished = new AtomicBoolean(false);
+        final Thread terminal = new Thread(
+            new VerboseRunnable(
+                () -> {
+                    try {
+                        this.jaxec(args, log);
+                    } finally {
+                        finished.set(true);
+                    }
+                }
+            )
+        );
+        terminal.start();
+        this.tail(log, finished);
         Farea.log("Maven stdout", new String(Files.readAllBytes(log), StandardCharsets.UTF_8));
         Farea.log(
-            String.format("Files after execution at %s", this.home),
+            Logger.format("Files after execution at %[file]s", this.home),
             this.walk()
         );
     }
@@ -225,6 +234,68 @@ public final class Farea {
             .map(Path::toString)
             .map(s -> String.format("/%s", s))
             .collect(Collectors.joining("\n"));
+    }
+
+    /**
+     * Run Maven with these args, saving output to the log.
+     * @param args The args for the "mvn" command
+     * @param log The log file
+     */
+    private void jaxec(final String[] args, final Path log) {
+        new Jaxec()
+            .with(Farea.mvn())
+            .with(this.opts)
+            .with(args)
+            .withHome(this.home)
+            .withCheck(false)
+            .withRedirect(true)
+            .withStdout(ProcessBuilder.Redirect.to(log.toFile()))
+            .exec();
+    }
+
+    /**
+     * Tail log file.
+     * @param log The file
+     * @param finished When to stop
+     * @throws IOException If fails
+     */
+    private void tail(final Path log, final AtomicBoolean finished) throws IOException {
+        long pos = 0L;
+        while (!finished.get()) {
+            if (!log.toFile().exists()) {
+                continue;
+            }
+            try (RandomAccessFile reader = new RandomAccessFile(log.toFile(), "r")) {
+                final long length = log.toFile().length();
+                if (length < pos) {
+                    break;
+                }
+                if (length > pos) {
+                    reader.seek(pos);
+                    while (true) {
+                        final String line = reader.readLine();
+                        if (line == null) {
+                            break;
+                        }
+                        Logger.debug(this, line);
+                    }
+                    pos = reader.getFilePointer();
+                }
+            }
+            Farea.sleep();
+        }
+    }
+
+    /**
+     * Sleep a little bit.
+     */
+    private static void sleep() {
+        try {
+            Thread.sleep(1000L);
+        } catch (final InterruptedException ex) {
+            Thread.currentThread().interrupt();
+            throw new IllegalStateException(ex);
+        }
     }
 
     /**
