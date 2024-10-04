@@ -204,12 +204,7 @@ public final class Farea {
             this.jaxec(args, log);
         } finally {
             finished.set(true);
-            try {
-                terminal.join(10_000L, 0);
-            } catch (final InterruptedException ex) {
-                Thread.currentThread().interrupt();
-                throw new IllegalStateException(ex);
-            }
+            Farea.join(terminal);
         }
         Farea.log("Maven stdout", new String(Files.readAllBytes(log), StandardCharsets.UTF_8));
         Farea.log(
@@ -298,6 +293,19 @@ public final class Farea {
     private static void sleep() {
         try {
             Thread.sleep(1000L);
+        } catch (final InterruptedException ex) {
+            Thread.currentThread().interrupt();
+            throw new IllegalStateException(ex);
+        }
+    }
+
+    /**
+     * Join this thread.
+     * @param thread The thread to join
+     */
+    private static void join(final Thread thread) {
+        try {
+            thread.join(10_000L, 0);
         } catch (final InterruptedException ex) {
             Thread.currentThread().interrupt();
             throw new IllegalStateException(ex);
