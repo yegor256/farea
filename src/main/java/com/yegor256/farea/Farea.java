@@ -200,13 +200,16 @@ public final class Farea {
             )
         );
         terminal.start();
-        this.jaxec(args, log);
-        finished.set(true);
         try {
-            terminal.join(10_000L, 0);
-        } catch (final InterruptedException ex) {
-            Thread.currentThread().interrupt();
-            throw new IllegalStateException(ex);
+            this.jaxec(args, log);
+        } finally {
+            finished.set(true);
+            try {
+                terminal.join(10_000L, 0);
+            } catch (final InterruptedException ex) {
+                Thread.currentThread().interrupt();
+                throw new IllegalStateException(ex);
+            }
         }
         Farea.log("Maven stdout", new String(Files.readAllBytes(log), StandardCharsets.UTF_8));
         Farea.log(
