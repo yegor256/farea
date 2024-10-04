@@ -196,17 +196,12 @@ public final class Farea {
         final AtomicBoolean finished = new AtomicBoolean(false);
         final Thread terminal = new Thread(
             new VerboseRunnable(
-                () -> {
-                    try {
-                        this.jaxec(args, log);
-                    } finally {
-                        finished.set(true);
-                    }
-                }
+                () -> this.tail(log, finished)
             )
         );
         terminal.start();
-        this.tail(log, finished);
+        this.jaxec(args, log);
+        finished.set(true);
         Farea.log("Maven stdout", new String(Files.readAllBytes(log), StandardCharsets.UTF_8));
         Farea.log(
             Logger.format("Files after execution at %[file]s", this.home),
@@ -257,9 +252,10 @@ public final class Farea {
      * Tail log file.
      * @param log The file
      * @param finished When to stop
+     * @return Total number of bytes seen
      * @throws IOException If fails
      */
-    private void tail(final Path log, final AtomicBoolean finished) throws IOException {
+    private Long tail(final Path log, final AtomicBoolean finished) throws IOException {
         long pos = 0L;
         while (!finished.get()) {
             if (!log.toFile().exists()) {
@@ -284,6 +280,7 @@ public final class Farea {
             }
             Farea.sleep();
         }
+        return pos;
     }
 
     /**
