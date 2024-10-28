@@ -26,6 +26,7 @@ package com.yegor256.farea;
 import com.jcabi.log.Logger;
 import com.jcabi.log.VerboseRunnable;
 import com.yegor256.Jaxec;
+import java.io.File;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.nio.charset.StandardCharsets;
@@ -95,6 +96,15 @@ public final class Farea {
     /**
      * Ctor.
      * @param dir The home dir
+     * @since 0.1.0
+     */
+    public Farea(final File dir) {
+        this(dir.toPath());
+    }
+
+    /**
+     * Ctor.
+     * @param dir The home dir
      */
     public Farea(final Path dir) {
         this(
@@ -106,6 +116,36 @@ public final class Farea {
                 "--errors"
             )
         );
+    }
+
+    /**
+     * Ctor.
+     * @param dir The home dir
+     * @param mopts Maven opts
+     * @since 0.1.0
+     */
+    public Farea(final File dir, final Collection<String> mopts) {
+        this(dir.toPath(), mopts);
+    }
+
+    /**
+     * Ctor.
+     * @param dir The home dir
+     * @param mopts Maven opts
+     * @since 0.1.0
+     */
+    public Farea(final File dir, final String... mopts) {
+        this(dir, Arrays.asList(mopts));
+    }
+
+    /**
+     * Ctor.
+     * @param dir The home dir
+     * @param mopts Maven opts
+     * @since 0.1.0
+     */
+    public Farea(final Path dir, final String... mopts) {
+        this(dir, Arrays.asList(mopts));
     }
 
     /**
