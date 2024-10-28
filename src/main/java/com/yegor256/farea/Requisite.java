@@ -36,8 +36,20 @@ public interface Requisite {
      * @param content The content to write
      * @return Itself
      * @throws IOException If fails
+     * @since 0.2.0
      */
     Requisite write(byte[] content) throws IOException;
+
+    /**
+     * Write to file.
+     * @param content The content to write
+     * @return Itself
+     * @throws IOException If fails
+     * @deprecated This method will be deleted in future versions, better use
+     *  the one that accepts byte array
+     */
+    @Deprecated
+    Requisite write(String content) throws IOException;
 
     /**
      * Read content.

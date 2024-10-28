@@ -61,6 +61,12 @@ final class DtRequisite implements Requisite {
     }
 
     @Override
+    @Deprecated
+    public Requisite write(final String content) throws IOException {
+        return this.write(content.getBytes(StandardCharsets.UTF_8));
+    }
+
+    @Override
     public Requisite write(final byte[] content) throws IOException {
         final File parent = this.path().toFile().getParentFile();
         if (parent.mkdirs()) {
