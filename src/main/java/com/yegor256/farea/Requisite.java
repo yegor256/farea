@@ -69,7 +69,7 @@ public final class Requisite {
     public Requisite write(final String content) throws IOException {
         final File parent = this.path().toFile().getParentFile();
         if (parent.mkdirs()) {
-            Logger.debug(this, "Directory created at %s", parent);
+            Logger.debug(this, "Directory created at %[file]s", parent);
         }
         final boolean existed = this.path().toFile().exists();
         Files.write(
@@ -78,12 +78,12 @@ public final class Requisite {
         );
         if (existed) {
             Logger.debug(
-                this, "File replaced at %s (%d bytes)",
+                this, "File replaced at %[file]s (%[size]s)",
                 this.path(), this.path().toFile().length()
             );
         } else {
             Logger.debug(
-                this, "File created at %s (%d bytes)",
+                this, "File created at %[file]s (%[size]s)",
                 this.path(), this.path().toFile().length()
             );
         }
@@ -142,7 +142,7 @@ public final class Requisite {
                     }
                 }
             );
-            Logger.debug(this, "Directory deleted: %s", pth);
+            Logger.debug(this, "Directory deleted at %[file]s", pth);
         } else {
             if (!pth.toFile().delete()) {
                 throw new IOException(
@@ -152,7 +152,7 @@ public final class Requisite {
                     )
                 );
             }
-            Logger.debug(this, "File deleted: %s", pth);
+            Logger.debug(this, "File deleted at %[file]s", pth);
         }
     }
 

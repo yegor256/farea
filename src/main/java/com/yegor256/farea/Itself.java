@@ -118,7 +118,7 @@ final class Itself {
         }
         if (zip.toFile().getParentFile().mkdirs()) {
             Logger.debug(
-                this, "Directory created at %s",
+                this, "Directory created at %[file]s",
                 zip.toFile().getParentFile()
             );
         }
@@ -143,7 +143,7 @@ final class Itself {
         }
         Logger.debug(
             Itself.class,
-            "JAR saved to %s (%d bytes)",
+            "JAR saved to %[file]s (%d bytes)",
             zip, zip.toFile().length()
         );
     }
