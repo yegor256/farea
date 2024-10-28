@@ -31,28 +31,23 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
 /**
- * Test case for {@link Properties}.
+ * Test case for {@link DtDependencies}.
  *
  * @since 0.1.0
  */
-final class PropertiesTest {
+final class DtDependenciesTest {
 
     @Test
-    void setsUniqueProperty(@TempDir final Path dir) throws IOException {
+    void appendsItself(@TempDir final Path dir) throws IOException {
         final Path xml = dir.resolve("pom-1.xml");
         final Pom pom = new Pom(xml);
-        new Properties(pom)
-            .set("foo", "bar1")
-            .set("foo", "bar2")
-            .set("another.property", "привет");
+        new DtDependencies(pom).appendItself(dir);
         MatcherAssert.assertThat(
-            "Sets unique property",
+            "Appends itself",
             XhtmlMatchers.xhtml(pom.xml()),
             XhtmlMatchers.hasXPaths(
-                "//properties/foo[.='bar2']",
-                "//properties[count(foo)=1]",
-                "//properties[count(*)=2]",
-                "//properties/another.property[.='привет']"
+                "//dependencies/dependency[groupId='com.yegor256']",
+                "//dependencies/dependency[artifactId='farea']"
             )
         );
     }

@@ -25,28 +25,13 @@ package com.yegor256.farea;
 
 import java.io.IOException;
 import java.nio.file.Path;
-import org.xembly.Directives;
 
 /**
- * Dependencies inside Build.
+ * Dependencies.
  *
- * @since 0.0.1
+ * @since 0.1.0
  */
-public final class Dependencies {
-
-    /**
-     * Location.
-     */
-    private final Pom pom;
-
-    /**
-     * Ctor.
-     * @param file The POM
-     */
-    Dependencies(final Pom file) {
-        this.pom = file;
-    }
-
+public interface Dependencies {
     /**
      * Ctor.
      * @param group The group ID
@@ -55,28 +40,15 @@ public final class Dependencies {
      * @return Deps
      * @throws IOException If fails
      */
-    public Dependency append(final String group, final String artifact,
-        final String version) throws IOException {
-        this.pom.modify(
-            new Directives()
-                .xpath("/project")
-                .addIf("dependencies")
-                .add("dependency")
-                .add("groupId").set(group).up()
-                .add("artifactId").set(artifact).up()
-                .add("version").set(version).up()
-        );
-        return new Dependency(this.pom, group, artifact);
-    }
+    Dependency append(String group, String artifact,
+        String version) throws IOException;
 
     /**
      * Add itself (the code in this classpath) to the Maven reactor.
      * @return Itself as a dependency
      * @throws IOException If fails
      */
-    public Dependency appendItself() throws IOException {
-        return this.appendItself(new Local().path());
-    }
+    Dependency appendItself() throws IOException;
 
     /**
      * Add itself (the code in this classpath) to the Maven reactor.
@@ -84,10 +56,5 @@ public final class Dependencies {
      * @return Itself as a plugin
      * @throws IOException If fails
      */
-    public Dependency appendItself(final Path local) throws IOException {
-        final Base base = new Base();
-        new Itself(base, false).deploy(local);
-        return this.append(base.groupId(), base.artifactId(), base.version());
-    }
-
+    Dependency appendItself(Path local) throws IOException;
 }

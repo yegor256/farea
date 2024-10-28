@@ -32,17 +32,17 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
 /**
- * Test case for {@link Plugin}.
+ * Test case for {@link DtPlugin}.
  *
  * @since 0.1.0
  */
-final class PluginTest {
+final class DtPluginTest {
 
     @Test
     void appendsManyExecutions(@TempDir final Path dir) throws IOException {
         final Path xml = dir.resolve("pom.xml");
         final Pom pom = new Pom(xml).init();
-        final Plugin plugin = new Plugins(pom).append("g", "a", "0.0.1");
+        final Plugin plugin = new DtPlugins(pom).append("g", "a", "0.0.1");
         plugin.execution("foo").phase("first");
         plugin.execution("bar").phase("second");
         MatcherAssert.assertThat(
@@ -56,7 +56,7 @@ final class PluginTest {
     void appendsGoalsExecutions(@TempDir final Path dir) throws IOException {
         final Path xml = dir.resolve("pom.xml");
         final Pom pom = new Pom(xml).init();
-        final Plugin plugin = new Plugins(pom).append("g", "a", "0.0.1");
+        final Plugin plugin = new DtPlugins(pom).append("g", "a", "0.0.1");
         plugin.execution().phase("first").goals("x");
         plugin.execution("bar").phase("second").goals("y");
         MatcherAssert.assertThat(
@@ -70,11 +70,11 @@ final class PluginTest {
     void addsConfiguration(@TempDir final Path dir) throws IOException {
         final Path xml = dir.resolve("pom.xml");
         final Pom pom = new Pom(xml).init();
-        new Plugins(pom)
+        new DtPlugins(pom)
             .append("z", "z", "0.0.2")
             .configuration()
             .set("hey", "you");
-        new Plugins(pom)
+        new DtPlugins(pom)
             .append("z", "z", "0.0.2")
             .configuration()
             .set("hey", "me");
@@ -89,7 +89,7 @@ final class PluginTest {
     void addsGoalsAndConfiguration(@TempDir final Path dir) throws IOException {
         final Path xml = dir.resolve("pom.xml");
         final Pom pom = new Pom(xml).init();
-        new Plugins(pom)
+        new DtPlugins(pom)
             .appendItself()
             .execution("default")
             .phase("process-classes")

@@ -25,28 +25,13 @@ package com.yegor256.farea;
 
 import java.io.IOException;
 import java.nio.file.Path;
-import org.xembly.Directives;
 
 /**
- * Plugins inside Build.
+ * Plugins.
  *
- * @since 0.0.1
+ * @since 0.1.0
  */
-public final class Plugins {
-
-    /**
-     * Location.
-     */
-    private final Pom pom;
-
-    /**
-     * Ctor.
-     * @param file The POM
-     */
-    Plugins(final Pom file) {
-        this.pom = file;
-    }
-
+public interface Plugins {
     /**
      * Append Apache Maven plugin.
      * @param artifact The artifact ID
@@ -54,10 +39,8 @@ public final class Plugins {
      * @return Plugin just added
      * @throws IOException If fails
      */
-    public Plugin append(final String artifact,
-        final String version) throws IOException {
-        return this.append("org.apache.maven.plugins", artifact, version);
-    }
+    Plugin append(String artifact,
+        String version) throws IOException;
 
     /**
      * Append custom plugin.
@@ -67,45 +50,15 @@ public final class Plugins {
      * @return Plugin just added
      * @throws IOException If fails
      */
-    public Plugin append(final String group, final String artifact,
-        final String version) throws IOException {
-        this.pom.modify(
-            new Directives()
-                .xpath("/project")
-                .addIf("build")
-                .addIf("plugins")
-                .xpath(
-                    String.format(
-                        "/project/build/plugins[not(plugin[groupId='%s' and artifactId='%s'])]",
-                        group, artifact
-                    )
-                )
-                .add("plugin")
-                .add("groupId").set(group).up()
-                .add("artifactId").set(artifact).up()
-                .add("version").set(version).up()
-        );
-        return new Plugin(
-            this.pom,
-            Integer.parseInt(
-                this.pom.xpath(
-                    String.format(
-                        "count(/project/build/plugins/plugin[artifactId='%s' and groupId='%s']/preceding-sibling::*)+1",
-                        artifact, group
-                    )
-                ).get(0)
-            )
-        );
-    }
+    Plugin append(String group, String artifact,
+        String version) throws IOException;
 
     /**
      * Add itself (the code in this classpath) to the Maven reactor.
      * @return Itself as a plugin
      * @throws IOException If fails
      */
-    public Plugin appendItself() throws IOException {
-        return this.appendItself(new Local().path());
-    }
+    Plugin appendItself() throws IOException;
 
     /**
      * Add itself (the code in this classpath) to the Maven reactor.
@@ -113,10 +66,5 @@ public final class Plugins {
      * @return Itself as a plugin
      * @throws IOException If fails
      */
-    public Plugin appendItself(final Path local) throws IOException {
-        final Base base = new Base();
-        new Itself(base).deploy(local);
-        return this.append(base.groupId(), base.artifactId(), base.version());
-    }
-
+    Plugin appendItself(Path local) throws IOException;
 }

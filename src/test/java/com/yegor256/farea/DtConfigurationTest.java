@@ -34,17 +34,17 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
 /**
- * Test case for {@link Configuration}.
+ * Test case for {@link DtConfiguration}.
  *
  * @since 0.1.0
  */
-final class ConfigurationTest {
+final class DtConfigurationTest {
 
     @Test
     void setsListAsParam(@TempDir final Path dir) throws IOException {
         final Path xml = dir.resolve("pom-1.xml");
         final Pom pom = new Pom(xml);
-        new Plugins(pom).append("a", "0.0.0")
+        new DtPlugins(pom).append("a", "0.0.0")
             .execution("foo")
             .phase("boom")
             .configuration()
@@ -60,7 +60,7 @@ final class ConfigurationTest {
     void setsArrayAsParam(@TempDir final Path dir) throws IOException {
         final Path xml = dir.resolve("pom-2.xml");
         final Pom pom = new Pom(xml);
-        new Plugins(pom).append("xyz", "1.1.1")
+        new DtPlugins(pom).append("xyz", "1.1.1")
             .execution("foo")
             .phase("boom")
             .configuration()
@@ -78,7 +78,7 @@ final class ConfigurationTest {
         final Pom pom = new Pom(xml);
         final Map<String, Integer> map = new HashMap<>(0);
         map.put("test", 42);
-        new Plugins(pom).append("bbb", "1.2.3")
+        new DtPlugins(pom).append("bbb", "1.2.3")
             .execution("foo")
             .phase("boom")
             .configuration()

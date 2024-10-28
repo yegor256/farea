@@ -23,33 +23,38 @@
  */
 package com.yegor256.farea;
 
+import com.jcabi.matchers.XhtmlMatchers;
 import java.io.IOException;
+import java.nio.file.Path;
+import org.hamcrest.MatcherAssert;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
 
 /**
- * Execution.
+ * Test case for {@link DtProperties}.
  *
  * @since 0.1.0
  */
-public interface Execution {
-    /**
-     * Set phase.
-     * @param value The Maven execution
-     * @return Itself
-     * @throws IOException If fails
-     */
-    Execution phase(String value) throws IOException;
+final class DtPropertiesTest {
 
-    /**
-     * Set goals.
-     * @param values The Maven goals (non-empty list)
-     * @return Itself
-     * @throws IOException If fails
-     */
-    Execution goals(String... values) throws IOException;
+    @Test
+    void setsUniqueProperty(@TempDir final Path dir) throws IOException {
+        final Path xml = dir.resolve("pom-1.xml");
+        final Pom pom = new Pom(xml);
+        new DtProperties(pom)
+            .set("foo", "bar1")
+            .set("foo", "bar2")
+            .set("another.property", "привет");
+        MatcherAssert.assertThat(
+            "Sets unique property",
+            XhtmlMatchers.xhtml(pom.xml()),
+            XhtmlMatchers.hasXPaths(
+                "//properties/foo[.='bar2']",
+                "//properties[count(foo)=1]",
+                "//properties[count(*)=2]",
+                "//properties/another.property[.='привет']"
+            )
+        );
+    }
 
-    /**
-     * Get config.
-     * @return Config
-     */
-    Configuration configuration();
 }

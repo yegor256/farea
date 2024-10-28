@@ -24,56 +24,17 @@
 package com.yegor256.farea;
 
 import java.io.IOException;
-import org.xembly.Directives;
 
 /**
- * Dependency inside Dependencies.
+ * Dependency.
  *
- * @since 0.0.1
+ * @since 0.1.0
  */
-public final class Dependency {
-
-    /**
-     * Location.
-     */
-    private final Pom pom;
-
-    /**
-     * Group.
-     */
-    private final String group;
-
-    /**
-     * Artifact.
-     */
-    private final String artifact;
-
-    /**
-     * Ctor.
-     * @param file The POM
-     * @param grp GroupId
-     * @param art ArtifactId
-     */
-    Dependency(final Pom file, final String grp, final String art) {
-        this.pom = file;
-        this.group = grp;
-        this.artifact = art;
-    }
-
+public interface Dependency {
     /**
      * Set scope of it.
      * @param scp The scope
      * @throws IOException If fails
      */
-    public void scope(final String scp) throws IOException {
-        this.pom.modify(
-            new Directives().xpath(
-                String.format(
-                    "/project/dependencies/dependency[groupId='%s' and artifactId='%s']",
-                    this.group, this.artifact
-                )
-            ).addIf("scope").set(scp)
-        );
-    }
-
+    void scope(String scp) throws IOException;
 }

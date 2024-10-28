@@ -40,7 +40,7 @@ import org.xembly.Xembler;
  *
  * @since 0.0.1
  */
-public final class Pom {
+final class Pom {
 
     /**
      * Location.
@@ -82,7 +82,7 @@ public final class Pom {
                     .addIf("name")
                     .set("test")
             );
-            new Properties(this)
+            new DtProperties(this)
                 .set("maven.compiler.source", "11")
                 .set("maven.compiler.target", "11");
             Logger.debug(

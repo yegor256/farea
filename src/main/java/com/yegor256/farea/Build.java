@@ -24,31 +24,14 @@
 package com.yegor256.farea;
 
 /**
- * Build inside POM.
+ * Build.
  *
- * @since 0.0.1
+ * @since 0.1.0
  */
-public final class Build {
-
-    /**
-     * Location.
-     */
-    private final Pom pom;
-
-    /**
-     * Ctor.
-     * @param file The POM
-     */
-    Build(final Pom file) {
-        this.pom = file;
-    }
-
+public interface Build {
     /**
      * Get access to build.
      * @return Build
      */
-    public Plugins plugins() {
-        return new Plugins(this.pom);
-    }
-
+    Plugins plugins();
 }

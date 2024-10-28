@@ -24,61 +24,27 @@
 package com.yegor256.farea;
 
 /**
- * Plugin inside Plugin.
+ * Plugin.
  *
  * @since 0.0.1
  */
-public final class Plugin {
-
-    /**
-     * Location.
-     */
-    private final Pom pom;
-
-    /**
-     * Position in "plugins".
-     */
-    private final int pos;
-
-    /**
-     * Ctor.
-     * @param file The POM
-     * @param position The position
-     */
-    Plugin(final Pom file, final int position) {
-        this.pom = file;
-        this.pos = position;
-    }
-
+public interface Plugin {
     /**
      * Append new execution or get access to existing one (using default name).
      * @return Execution found or added
      */
-    public Execution execution() {
-        return this.execution("default");
-    }
+    Execution execution();
 
     /**
      * Append new execution or get access to existing one.
      * @param name The "id" of it
      * @return Execution found or added
      */
-    public Execution execution(final String name) {
-        return new Execution(this.pom, this.pos, name);
-    }
+    Execution execution(String name);
 
     /**
      * Get config.
      * @return Config
      */
-    public Configuration configuration() {
-        return new Configuration(
-            this.pom,
-            String.format(
-                "/project/build/plugins/plugin[position()=%d]",
-                this.pos
-            )
-        );
-    }
-
+    Configuration configuration();
 }

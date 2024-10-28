@@ -23,33 +23,29 @@
  */
 package com.yegor256.farea;
 
-import java.io.IOException;
-
 /**
- * Execution.
+ * Build inside POM.
  *
- * @since 0.1.0
+ * @since 0.0.1
  */
-public interface Execution {
-    /**
-     * Set phase.
-     * @param value The Maven execution
-     * @return Itself
-     * @throws IOException If fails
-     */
-    Execution phase(String value) throws IOException;
+final class DtBuild implements Build {
 
     /**
-     * Set goals.
-     * @param values The Maven goals (non-empty list)
-     * @return Itself
-     * @throws IOException If fails
+     * Location.
      */
-    Execution goals(String... values) throws IOException;
+    private final Pom pom;
 
     /**
-     * Get config.
-     * @return Config
+     * Ctor.
+     * @param file The POM
      */
-    Configuration configuration();
+    DtBuild(final Pom file) {
+        this.pom = file;
+    }
+
+    @Override
+    public Plugins plugins() {
+        return new DtPlugins(this.pom);
+    }
+
 }

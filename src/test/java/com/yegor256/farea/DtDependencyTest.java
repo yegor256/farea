@@ -23,33 +23,35 @@
  */
 package com.yegor256.farea;
 
+import com.jcabi.matchers.XhtmlMatchers;
 import java.io.IOException;
+import java.nio.file.Path;
+import org.hamcrest.MatcherAssert;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
 
 /**
- * Execution.
+ * Test case for {@link DtDependency}.
  *
  * @since 0.1.0
  */
-public interface Execution {
-    /**
-     * Set phase.
-     * @param value The Maven execution
-     * @return Itself
-     * @throws IOException If fails
-     */
-    Execution phase(String value) throws IOException;
+final class DtDependencyTest {
 
-    /**
-     * Set goals.
-     * @param values The Maven goals (non-empty list)
-     * @return Itself
-     * @throws IOException If fails
-     */
-    Execution goals(String... values) throws IOException;
+    @Test
+    void setsDependencyScope(@TempDir final Path dir) throws IOException {
+        final Path xml = dir.resolve("pom-1.xml");
+        final Pom pom = new Pom(xml);
+        new DtDependencies(pom).append("g", "a", "1.0-SNAPSHOT").scope("test");
+        MatcherAssert.assertThat(
+            "Sets dependency scope",
+            XhtmlMatchers.xhtml(pom.xml()),
+            XhtmlMatchers.hasXPaths(
+                "//dependency[groupId='g']",
+                "//dependency[artifactId='a']",
+                "//dependency[version='1.0-SNAPSHOT']",
+                "//dependency[scope='test']"
+            )
+        );
+    }
 
-    /**
-     * Get config.
-     * @return Config
-     */
-    Configuration configuration();
 }

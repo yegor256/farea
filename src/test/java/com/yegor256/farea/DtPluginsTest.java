@@ -32,17 +32,17 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
 /**
- * Test case for {@link Plugins}.
+ * Test case for {@link DtPlugins}.
  *
  * @since 0.1.0
  */
-final class PluginsTest {
+final class DtPluginsTest {
 
     @Test
     void appendsOnce(@TempDir final Path dir) throws IOException {
         final Path xml = dir.resolve("pom.xml");
         final Pom pom = new Pom(xml).init();
-        new Plugins(pom).append("g1", "a1", "0.0.0");
+        new DtPlugins(pom).append("g1", "a1", "0.0.0");
         MatcherAssert.assertThat(
             "Appends one plugin",
             pom.xpath(
@@ -56,8 +56,8 @@ final class PluginsTest {
     void avoidsDuplicates(@TempDir final Path dir) throws IOException {
         final Path xml = dir.resolve("pom.xml");
         final Pom pom = new Pom(xml).init();
-        new Plugins(pom).append("g", "a", "0.0.1");
-        new Plugins(pom).append("g", "a", "0.0.1");
+        new DtPlugins(pom).append("g", "a", "0.0.1");
+        new DtPlugins(pom).append("g", "a", "0.0.1");
         MatcherAssert.assertThat(
             "No duplicates",
             pom.xpath("/project/build/plugins/plugin/groupId/text()").size(),
@@ -69,11 +69,11 @@ final class PluginsTest {
     void addsTwoPluginsWithExecutions(@TempDir final Path dir) throws IOException {
         final Path xml = dir.resolve("pom.xml");
         final Pom pom = new Pom(xml).init();
-        new Plugins(pom)
+        new DtPlugins(pom)
             .append("g", "a1", "0.0.1")
             .execution("first")
             .phase("f");
-        new Plugins(pom).append("g", "a2", "0.0.2")
+        new DtPlugins(pom).append("g", "a2", "0.0.2")
             .execution("second")
             .phase("s");
         MatcherAssert.assertThat(

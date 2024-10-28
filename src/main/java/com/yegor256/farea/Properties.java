@@ -24,49 +24,19 @@
 package com.yegor256.farea;
 
 import java.io.IOException;
-import org.xembly.Directives;
 
 /**
- * Properties of a project.
+ * Properties.
  *
- * @since 0.0.1
+ * @since 0.1.0
  */
-public final class Properties {
-
+public interface Properties {
     /**
-     * Location.
-     */
-    private final Pom pom;
-
-    /**
-     * Ctor.
-     * @param file The POM
-     */
-    Properties(final Pom file) {
-        this.pom = file;
-    }
-
-    /**
-     * Ctor.
+     * Set one property.
      * @param name The name
      * @param value The value
      * @return Properties
      * @throws IOException If fails
      */
-    public Properties set(final String name, final String value) throws IOException {
-        this.pom.modify(
-            new Directives()
-                .xpath("/project")
-                .addIf("properties")
-                .strict(1)
-                .xpath(name)
-                .remove()
-                .xpath("/project/properties")
-                .strict(1)
-                .add(name)
-                .set(value)
-        );
-        return this;
-    }
-
+    Properties set(String name, String value) throws IOException;
 }

@@ -23,33 +23,50 @@
  */
 package com.yegor256.farea;
 
-import com.jcabi.matchers.XhtmlMatchers;
-import java.io.IOException;
-import java.nio.file.Path;
-import org.hamcrest.MatcherAssert;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.io.TempDir;
-
 /**
- * Test case for {@link Dependency}.
+ * Plugin inside Plugin.
  *
- * @since 0.1.0
+ * @since 0.0.1
  */
-final class DependencyTest {
+final class DtPlugin implements Plugin {
 
-    @Test
-    void setsDependencyScope(@TempDir final Path dir) throws IOException {
-        final Path xml = dir.resolve("pom-1.xml");
-        final Pom pom = new Pom(xml);
-        new Dependencies(pom).append("g", "a", "1.0-SNAPSHOT").scope("test");
-        MatcherAssert.assertThat(
-            "Sets dependency scope",
-            XhtmlMatchers.xhtml(pom.xml()),
-            XhtmlMatchers.hasXPaths(
-                "//dependency[groupId='g']",
-                "//dependency[artifactId='a']",
-                "//dependency[version='1.0-SNAPSHOT']",
-                "//dependency[scope='test']"
+    /**
+     * Location.
+     */
+    private final Pom pom;
+
+    /**
+     * Position in "plugins".
+     */
+    private final int pos;
+
+    /**
+     * Ctor.
+     * @param file The POM
+     * @param position The position
+     */
+    DtPlugin(final Pom file, final int position) {
+        this.pom = file;
+        this.pos = position;
+    }
+
+    @Override
+    public Execution execution() {
+        return this.execution("default");
+    }
+
+    @Override
+    public Execution execution(final String name) {
+        return new DtExecution(this.pom, this.pos, name);
+    }
+
+    @Override
+    public Configuration configuration() {
+        return new DtConfiguration(
+            this.pom,
+            String.format(
+                "/project/build/plugins/plugin[position()=%d]",
+                this.pos
             )
         );
     }

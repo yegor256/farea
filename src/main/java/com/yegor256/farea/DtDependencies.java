@@ -24,32 +24,54 @@
 package com.yegor256.farea;
 
 import java.io.IOException;
+import java.nio.file.Path;
+import org.xembly.Directives;
 
 /**
- * Execution.
+ * Dependencies inside Build.
  *
- * @since 0.1.0
+ * @since 0.0.1
  */
-public interface Execution {
-    /**
-     * Set phase.
-     * @param value The Maven execution
-     * @return Itself
-     * @throws IOException If fails
-     */
-    Execution phase(String value) throws IOException;
+final class DtDependencies implements Dependencies {
 
     /**
-     * Set goals.
-     * @param values The Maven goals (non-empty list)
-     * @return Itself
-     * @throws IOException If fails
+     * Location.
      */
-    Execution goals(String... values) throws IOException;
+    private final Pom pom;
 
     /**
-     * Get config.
-     * @return Config
+     * Ctor.
+     * @param file The POM
      */
-    Configuration configuration();
+    DtDependencies(final Pom file) {
+        this.pom = file;
+    }
+
+    @Override
+    public Dependency append(final String group, final String artifact,
+        final String version) throws IOException {
+        this.pom.modify(
+            new Directives()
+                .xpath("/project")
+                .addIf("dependencies")
+                .add("dependency")
+                .add("groupId").set(group).up()
+                .add("artifactId").set(artifact).up()
+                .add("version").set(version).up()
+        );
+        return new DtDependency(this.pom, group, artifact);
+    }
+
+    @Override
+    public Dependency appendItself() throws IOException {
+        return this.appendItself(new Local().path());
+    }
+
+    @Override
+    public Dependency appendItself(final Path local) throws IOException {
+        final Base base = new Base();
+        new Itself(base, false).deploy(local);
+        return this.append(base.groupId(), base.artifactId(), base.version());
+    }
+
 }

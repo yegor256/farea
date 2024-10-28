@@ -24,32 +24,52 @@
 package com.yegor256.farea;
 
 import java.io.IOException;
+import org.xembly.Directives;
 
 /**
- * Execution.
+ * Dependency inside Dependencies.
  *
- * @since 0.1.0
+ * @since 0.0.1
  */
-public interface Execution {
-    /**
-     * Set phase.
-     * @param value The Maven execution
-     * @return Itself
-     * @throws IOException If fails
-     */
-    Execution phase(String value) throws IOException;
+final class DtDependency implements Dependency {
 
     /**
-     * Set goals.
-     * @param values The Maven goals (non-empty list)
-     * @return Itself
-     * @throws IOException If fails
+     * Location.
      */
-    Execution goals(String... values) throws IOException;
+    private final Pom pom;
 
     /**
-     * Get config.
-     * @return Config
+     * Group.
      */
-    Configuration configuration();
+    private final String group;
+
+    /**
+     * Artifact.
+     */
+    private final String artifact;
+
+    /**
+     * Ctor.
+     * @param file The POM
+     * @param grp GroupId
+     * @param art ArtifactId
+     */
+    DtDependency(final Pom file, final String grp, final String art) {
+        this.pom = file;
+        this.group = grp;
+        this.artifact = art;
+    }
+
+    @Override
+    public void scope(final String scp) throws IOException {
+        this.pom.modify(
+            new Directives().xpath(
+                String.format(
+                    "/project/dependencies/dependency[groupId='%s' and artifactId='%s']",
+                    this.group, this.artifact
+                )
+            ).addIf("scope").set(scp)
+        );
+    }
+
 }

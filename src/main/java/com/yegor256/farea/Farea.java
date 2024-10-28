@@ -57,7 +57,7 @@ import java.util.stream.Collectors;
  * });</pre></code>
  *
  * <p>If you are developing/testing your own plugin, you should use
- * the {@link Plugins#appendItself()} method, which you access
+ * the {@link DtPlugins#appendItself()} method, which you access
  * through {@link Farea#build()} and then {@code .plugins()}:</p>
  *
  * <code><pre> new Farea(dir).together(f -> {
@@ -195,7 +195,7 @@ public final class Farea {
      * @throws IOException If fails
      */
     public Properties properties() throws IOException {
-        return new Properties(this.pom());
+        return new DtProperties(this.pom());
     }
 
     /**
@@ -204,7 +204,7 @@ public final class Farea {
      * @throws IOException If fails
      */
     public Build build() throws IOException {
-        return new Build(this.pom());
+        return new DtBuild(this.pom());
     }
 
     /**
@@ -213,7 +213,7 @@ public final class Farea {
      * @throws IOException If fails
      */
     public Dependencies dependencies() throws IOException {
-        return new Dependencies(this.pom());
+        return new DtDependencies(this.pom());
     }
 
     /**

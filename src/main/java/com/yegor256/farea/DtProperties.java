@@ -23,33 +23,44 @@
  */
 package com.yegor256.farea;
 
-import com.jcabi.matchers.XhtmlMatchers;
 import java.io.IOException;
-import java.nio.file.Path;
-import org.hamcrest.MatcherAssert;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.io.TempDir;
+import org.xembly.Directives;
 
 /**
- * Test case for {@link Dependencies}.
+ * Properties of a project.
  *
- * @since 0.1.0
+ * @since 0.0.1
  */
-final class DependenciesTest {
+final class DtProperties implements Properties {
 
-    @Test
-    void appendsItself(@TempDir final Path dir) throws IOException {
-        final Path xml = dir.resolve("pom-1.xml");
-        final Pom pom = new Pom(xml);
-        new Dependencies(pom).appendItself(dir);
-        MatcherAssert.assertThat(
-            "Appends itself",
-            XhtmlMatchers.xhtml(pom.xml()),
-            XhtmlMatchers.hasXPaths(
-                "//dependencies/dependency[groupId='com.yegor256']",
-                "//dependencies/dependency[artifactId='farea']"
-            )
+    /**
+     * Location.
+     */
+    private final Pom pom;
+
+    /**
+     * Ctor.
+     * @param file The POM
+     */
+    DtProperties(final Pom file) {
+        this.pom = file;
+    }
+
+    @Override
+    public Properties set(final String name, final String value) throws IOException {
+        this.pom.modify(
+            new Directives()
+                .xpath("/project")
+                .addIf("properties")
+                .strict(1)
+                .xpath(name)
+                .remove()
+                .xpath("/project/properties")
+                .strict(1)
+                .add(name)
+                .set(value)
         );
+        return this;
     }
 
 }

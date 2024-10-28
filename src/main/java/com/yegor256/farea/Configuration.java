@@ -24,37 +24,13 @@
 package com.yegor256.farea;
 
 import java.io.IOException;
-import java.util.Map;
-import org.xembly.Directives;
-import org.xembly.Xembler;
 
 /**
- * Configuration of an Execution.
+ * Configuration.
  *
- * @since 0.0.1
+ * @since 0.1.0
  */
-public final class Configuration {
-
-    /**
-     * Location.
-     */
-    private final Pom pom;
-
-    /**
-     * XPath for the "configuration" element.
-     */
-    private final String xpath;
-
-    /**
-     * Ctor.
-     * @param file The POM
-     * @param xpth The location of the parent element
-     */
-    Configuration(final Pom file, final String xpth) {
-        this.pom = file;
-        this.xpath = xpth;
-    }
-
+public interface Configuration {
     /**
      * Get config.
      * @param key The key
@@ -62,31 +38,5 @@ public final class Configuration {
      * @return Config
      * @throws IOException If fails
      */
-    @SuppressWarnings("unchecked")
-    public Configuration set(final String key, final Object value) throws IOException {
-        final Directives dirs = new Directives()
-            .xpath(this.xpath)
-            .strict(1)
-            .addIf("configuration")
-            .addIf(key);
-        if (value instanceof Iterable) {
-            for (final Object item : Iterable.class.cast(value)) {
-                dirs.add("item").set(Xembler.escape(item.toString())).up();
-            }
-        } else if (value instanceof Map) {
-            for (final Object entry : Map.class.cast(value).entrySet()) {
-                final Map.Entry<Object, Object> ent = Map.Entry.class.cast(entry);
-                dirs.add(ent.getKey()).set(Xembler.escape(ent.getValue().toString())).up();
-            }
-        } else if (value instanceof Object[]) {
-            for (final Object item : Object[].class.cast(value)) {
-                dirs.add("item").set(Xembler.escape(item.toString())).up();
-            }
-        } else {
-            dirs.set(value);
-        }
-        this.pom.modify(dirs);
-        return this;
-    }
-
+    Configuration set(String key, Object value) throws IOException;
 }
