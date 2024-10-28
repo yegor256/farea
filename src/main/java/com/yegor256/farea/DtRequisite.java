@@ -61,7 +61,7 @@ final class DtRequisite implements Requisite {
     }
 
     @Override
-    public Requisite write(final String content) throws IOException {
+    public Requisite write(final byte[] content) throws IOException {
         final File parent = this.path().toFile().getParentFile();
         if (parent.mkdirs()) {
             Logger.debug(this, "Directory created at %[file]s", parent);
@@ -69,7 +69,7 @@ final class DtRequisite implements Requisite {
         final boolean existed = this.path().toFile().exists();
         Files.write(
             this.path(),
-            content.getBytes(StandardCharsets.UTF_8)
+            content
         );
         if (existed) {
             Logger.debug(

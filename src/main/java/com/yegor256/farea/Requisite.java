@@ -37,7 +37,7 @@ public interface Requisite {
      * @return Itself
      * @throws IOException If fails
      */
-    Requisite write(String content) throws IOException;
+    Requisite write(byte[] content) throws IOException;
 
     /**
      * Read content.

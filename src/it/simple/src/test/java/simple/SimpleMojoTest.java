@@ -43,7 +43,7 @@ final class SimpleMojoTest {
         final Path local = Paths.get(System.getProperty("maven.repo.local"));
         new Farea(dir).together(
             f -> {
-                f.files().file("src/main/resources/hello.txt").write("Hello!");
+                f.files().file("src/main/resources/hello.txt").write("Hello!".getBytes());
                 f.properties()
                     .set("project.build.sourceEncoding", "UTF-8")
                     .set("project.reporting.outputEncoding", "UTF-8");
