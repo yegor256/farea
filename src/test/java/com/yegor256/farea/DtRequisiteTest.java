@@ -32,17 +32,17 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
 /**
- * Test case for {@link Requisite}.
+ * Test case for {@link DtRequisite}.
  *
  * @since 0.1.0
  */
-final class RequisiteTest {
+final class DtRequisiteTest {
 
     @Test
     void deletesOneFile(@TempDir final Path dir) throws IOException {
         final String name = "foo.txt";
         Files.write(dir.resolve(name), "".getBytes());
-        new Requisite(dir, name).delete();
+        new DtRequisite(dir, name).delete();
         MatcherAssert.assertThat(
             "Deletes one file",
             dir.resolve(name).toFile().exists(),
@@ -55,7 +55,7 @@ final class RequisiteTest {
         final String name = "foo/bar/zzz";
         dir.resolve(name).toFile().mkdirs();
         Files.write(dir.resolve(name).resolve("file.txt"), "".getBytes());
-        new Requisite(dir, name).delete();
+        new DtRequisite(dir, name).delete();
         MatcherAssert.assertThat(
             "Deletes one directory",
             dir.resolve(name).toFile().exists(),

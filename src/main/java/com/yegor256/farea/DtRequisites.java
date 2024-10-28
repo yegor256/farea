@@ -23,44 +23,31 @@
  */
 package com.yegor256.farea;
 
-import java.io.IOException;
+import java.nio.file.Path;
 
 /**
- * Requisite.
+ * Files in Maven Reactor.
  *
- * @since 0.2.0
+ * @since 0.0.1
  */
-public interface Requisite {
-    /**
-     * Write to file.
-     * @param content The content to write
-     * @return Itself
-     * @throws IOException If fails
-     */
-    Requisite write(String content) throws IOException;
+final class DtRequisites implements Requisites {
 
     /**
-     * Read content.
-     * @return The content of the file
-     * @throws IOException If fails
+     * Home.
      */
-    String content() throws IOException;
+    private final Path home;
 
     /**
-     * Show it in the log.
-     * @throws IOException If fails
+     * Ctor.
+     * @param dir The home dir
      */
-    void show() throws IOException;
+    DtRequisites(final Path dir) {
+        this.home = dir;
+    }
 
-    /**
-     * Deletes it (recursively, if it is a directory).
-     * @throws IOException If fails
-     */
-    void delete() throws IOException;
+    @Override
+    public Requisite file(final String name) {
+        return new DtRequisite(this.home, name);
+    }
 
-    /**
-     * Check existence.
-     * @return TRUE if file exists
-     */
-    boolean exists();
 }

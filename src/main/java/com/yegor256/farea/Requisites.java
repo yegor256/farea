@@ -23,35 +23,16 @@
  */
 package com.yegor256.farea;
 
-import java.nio.file.Path;
-
 /**
- * Files in Maven Reactor.
+ * Requisites.
  *
- * @since 0.0.1
+ * @since 0.2.0
  */
-public final class Requisites {
-
-    /**
-     * Home.
-     */
-    private final Path home;
-
-    /**
-     * Ctor.
-     * @param dir The home dir
-     */
-    Requisites(final Path dir) {
-        this.home = dir;
-    }
-
+public interface Requisites {
     /**
      * Access to a single file.
      * @param name File name
      * @return File in home
      */
-    public Requisite file(final String name) {
-        return new Requisite(this.home, name);
-    }
-
+    Requisite file(String name);
 }
