@@ -51,6 +51,17 @@ final class PomTest {
     }
 
     @Test
+    void createsDirectoryIfAbsent(@TempDir final Path dir) throws IOException {
+        final Path xml = dir.resolve("a/b/c/pom.xml");
+        new Pom(xml).init();
+        MatcherAssert.assertThat(
+            "Directory created",
+            dir.resolve("a/b/c").toFile().exists(),
+            Matchers.is(true)
+        );
+    }
+
+    @Test
     void rendersWithoutExtraSpaces(@TempDir final Path dir) throws IOException {
         final Path xml = dir.resolve("pom.xml");
         new Pom(xml).init().modify(new Directives().xpath("/project").add("properties"));

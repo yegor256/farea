@@ -109,6 +109,12 @@ public final class Pom {
      * @throws IOException If fails
      */
     void modify(final Iterable<Directive> dirs) throws IOException {
+        if (this.path.toFile().getParentFile().mkdirs()) {
+            Logger.debug(
+                this, "Directory created at %[file]s",
+                this.path.toFile().getParentFile()
+            );
+        }
         Files.write(
             this.path,
             new XMLDocument(
