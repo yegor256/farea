@@ -31,7 +31,7 @@ import java.nio.file.Paths;
  *
  * @since 0.0.1
  */
-public final class Local {
+final class Local {
 
     /**
      * User home.
@@ -41,7 +41,7 @@ public final class Local {
     /**
      * Ctor.
      */
-    public Local() {
+    Local() {
         this.user = Paths.get(System.getProperty("user.home"));
     }
 
