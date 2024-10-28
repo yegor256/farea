@@ -143,8 +143,8 @@ final class Itself {
         }
         Logger.debug(
             Itself.class,
-            "JAR saved to %[file]s (%d bytes)",
-            zip, zip.toFile().length()
+            "JAR saved to %[file]s (%[size]s, %d files, %d jars)",
+            zip, zip.toFile().length(), seen.size(), jars.length
         );
     }
 
@@ -153,7 +153,7 @@ final class Itself {
      * @param zip The ZIP file
      * @param seen Seen already
      * @param jars JARs to package
-     * @return TRUE if descripted
+     * @return TRUE if descripted (has "plugin.xml" file inside)
      * @throws IOException If fails
      */
     private static boolean zip(final Path zip, final Set<String> seen,
