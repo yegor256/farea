@@ -51,7 +51,7 @@ import java.util.stream.Collectors;
  * <code><pre> new Farea(dir).together(f -> {
  *   f.files()
  *     .file("src/test/java/Hello.java")
- *     .write("class Hello {}");
+ *     .write("class Hello {}".getBytes());
  *   f.exec("compile");
  *   assert(f.log().contains("SUCCESS"));
  * });</pre></code>

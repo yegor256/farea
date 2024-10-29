@@ -49,7 +49,7 @@ class JavaCompilationTest {
     new Farea(dir).together(f -> {
       f.files()
         .file("src/test/java/Hello.java")
-        .write("class Hello {}");
+        .write("class Hello {}".getBytes());
       f.dependencies().append("org.cactoos", "cactoos", "0.55.0");
       f.exec("compile");
       assert (f.log().contains("SUCCESS"));
