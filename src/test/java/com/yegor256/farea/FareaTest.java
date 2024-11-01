@@ -43,8 +43,7 @@ final class FareaTest {
             f -> {
                 f.files()
                     .file("src/main/java/foo/Hello.java")
-                    .write("package foo; import org.cactoos.Input; class Hello {}".getBytes())
-                    .show();
+                    .write("package foo; import org.cactoos.Input; class Hello {}".getBytes());
                 f.dependencies()
                     .append("org.cactoos", "cactoos", "0.55.0");
                 f.exec("compile");
@@ -93,4 +92,18 @@ final class FareaTest {
         );
     }
 
+    @Test
+    void cleansNonExistingDir(@TempDir final Path dir) throws IOException {
+        new Farea(dir.resolve("non-existing")).together(
+            f -> {
+                f.clean();
+                f.properties().set("something-else", "42 42");
+                MatcherAssert.assertThat(
+                    "Directory exists after cleaning",
+                    f.files().file("pom.xml").exists(),
+                    Matchers.is(true)
+                );
+            }
+        );
+    }
 }

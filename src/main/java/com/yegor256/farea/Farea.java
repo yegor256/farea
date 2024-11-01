@@ -166,6 +166,7 @@ public final class Farea {
      * @throws IOException If fails
      */
     public Farea clean() throws IOException {
+        this.home.toFile().mkdirs();
         try (Stream<Path> dir = Files.walk(this.home)) {
             dir
                 .map(Path::toFile)

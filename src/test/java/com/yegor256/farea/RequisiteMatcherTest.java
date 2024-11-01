@@ -42,8 +42,7 @@ final class RequisiteMatcherTest {
             f -> {
                 f.files()
                     .log()
-                    .write("hello world BUILD SUCCESS maybe".getBytes())
-                    .show();
+                    .write("hello world BUILD SUCCESS maybe".getBytes());
                 MatcherAssert.assertThat(
                     "matches the log",
                     f.files().log(),
@@ -59,8 +58,7 @@ final class RequisiteMatcherTest {
             f -> {
                 f.files()
                     .log()
-                    .write("hello world BUILD FAILURE maybe".getBytes())
-                    .show();
+                    .write("hello world BUILD FAILURE maybe".getBytes());
                 MatcherAssert.assertThat(
                     "matches the log",
                     f.files().log(),
