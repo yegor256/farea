@@ -76,4 +76,21 @@ final class FareaTest {
         );
     }
 
+    @Test
+    void cleans(@TempDir final Path dir) throws IOException {
+        new Farea(dir).together(
+            f -> {
+                f.dependencies().append("foo", "foo", "0.0.0");
+                f.clean();
+                f.dependencies().append("foo", "foo", "0.0.0");
+                f.exec("initialize");
+                MatcherAssert.assertThat(
+                    "Builds clean pom.xml",
+                    f.files().log(),
+                    new RequisiteMatcher().without("WARNING")
+                );
+            }
+        );
+    }
+
 }

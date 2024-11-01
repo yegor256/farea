@@ -36,10 +36,12 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.Locale;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * Fake Maven Reactor.
@@ -156,6 +158,21 @@ public final class Farea {
     public Farea(final Path dir, final Collection<String> mopts) {
         this.home = dir;
         this.opts = Collections.unmodifiableCollection(mopts);
+    }
+
+    /**
+     * Clean the reactor, remove all files from it.
+     * @return Itself
+     * @throws IOException If fails
+     */
+    public Farea clean() throws IOException {
+        try (Stream<Path> dir = Files.walk(this.home)) {
+            dir
+                .map(Path::toFile)
+                .sorted(Comparator.reverseOrder())
+                .forEach(File::delete);
+        }
+        return this;
     }
 
     /**

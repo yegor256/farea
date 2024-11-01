@@ -101,7 +101,7 @@ final class DtRequisite implements Requisite {
 
     @Override
     public void show() throws IOException {
-        Logger.debug(
+        Logger.info(
             this, "The content of %s:%n  %s",
             this.name,
             this.content().replace(
