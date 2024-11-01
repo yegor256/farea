@@ -69,8 +69,8 @@ final class FareaTest {
                 f.withOpt("--debug").exec("compile");
                 MatcherAssert.assertThat(
                     "Calls simple plugin",
-                    f.log(),
-                    Matchers.containsString("BUILD SUCCESS")
+                    f.files().log(),
+                    RequisiteMatcher.SUCCESS
                 );
             }
         );

@@ -23,36 +23,50 @@
  */
 package com.yegor256.farea;
 
+import java.io.IOException;
 import java.nio.file.Path;
+import org.hamcrest.MatcherAssert;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
 
 /**
- * Files in Maven Reactor.
+ * Test case for {@link RequisiteMatcher}.
  *
- * @since 0.0.1
+ * @since 0.1.0
  */
-final class DtRequisites implements Requisites {
+final class RequisiteMatcherTest {
 
-    /**
-     * Home.
-     */
-    private final Path home;
-
-    /**
-     * Ctor.
-     * @param dir The home dir
-     */
-    DtRequisites(final Path dir) {
-        this.home = dir;
+    @Test
+    void matchesSimpleRequisite(@TempDir final Path dir) throws IOException {
+        new Farea(dir).together(
+            f -> {
+                f.files()
+                    .log()
+                    .write("hello world BUILD SUCCESS maybe".getBytes())
+                    .show();
+                MatcherAssert.assertThat(
+                    "matches the log",
+                    f.files().log(),
+                    RequisiteMatcher.SUCCESS
+                );
+            }
+        );
     }
 
-    @Override
-    public Requisite log() {
-        return this.file("log.txt");
+    @Test
+    void matchesNegativeLog(@TempDir final Path dir) throws IOException {
+        new Farea(dir).together(
+            f -> {
+                f.files()
+                    .log()
+                    .write("hello world BUILD FAILURE maybe".getBytes())
+                    .show();
+                MatcherAssert.assertThat(
+                    "matches the log",
+                    f.files().log(),
+                    RequisiteMatcher.FAILURE
+                );
+            }
+        );
     }
-
-    @Override
-    public Requisite file(final String name) {
-        return new DtRequisite(this.home, name);
-    }
-
 }

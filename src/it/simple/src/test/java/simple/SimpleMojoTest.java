@@ -59,7 +59,7 @@ final class SimpleMojoTest {
                     String.format("-Dmaven.repo.local=%s", local),
                     "initialize"
                 );
-                final String log = f.log();
+                final String log = f.files().log().content();
                 Assertions.assertTrue(log.contains("project.name: test"));
                 Assertions.assertTrue(log.contains("total goals: 1"));
                 Assertions.assertTrue(log.contains("message: Hello, друг!"));

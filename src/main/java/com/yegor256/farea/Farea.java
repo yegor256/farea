@@ -218,6 +218,11 @@ public final class Farea {
 
     /**
      * Execute with command line arguments.
+     *
+     * <p>If Maven fails, this method will <b>NOT</b> throw any exceptions. Instead,
+     * you should check the contents of the log printed by Maven, with the
+     * help of the {@link #log()} method.</p>
+     *
      * @param args Command line arguments
      * @throws IOException If fails
      */
@@ -258,8 +263,8 @@ public final class Farea {
      * @return Files in home
      * @throws IOException If fails
      */
-    public String log() throws IOException {
-        return this.files().file("log.txt").content();
+    public Requisite log() throws IOException {
+        return new DtRequisite(this.home, "log.txt");
     }
 
     /**
