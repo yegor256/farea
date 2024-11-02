@@ -40,6 +40,8 @@ and available on `$PATH`):
 
 ```java
 import com.yegor256.farea.Farea;
+import org.hamcrest.MatcherAssert;
+import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
@@ -52,7 +54,11 @@ class JavaCompilationTest {
         .write("class Hello {}".getBytes());
       f.dependencies().append("org.cactoos", "cactoos", "0.55.0");
       f.exec("compile");
-      assert (f.log().contains("SUCCESS"));
+        MatcherAssert.assertThat(
+            "Compiles without any issues",
+            f.files().log(),
+            RequisiteMatcher.SUCCESS
+        );
     });
   }
 }
@@ -80,7 +86,7 @@ class MyPluginTest {
         .configuration()
         .set("message", "Hello, world!");
       f.exec("test");
-      assert (f.log().contains("SUCCESS"));
+      assert f.files().log().contains("SUCCESS");
     });
   }
 }
