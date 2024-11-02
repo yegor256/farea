@@ -54,11 +54,11 @@ class JavaCompilationTest {
         .write("class Hello {}".getBytes());
       f.dependencies().append("org.cactoos", "cactoos", "0.55.0");
       f.exec("compile");
-        MatcherAssert.assertThat(
-            "Compiles without any issues",
-            f.files().log(),
-            RequisiteMatcher.SUCCESS
-        );
+      MatcherAssert.assertThat(
+        "Compiles without any issues",
+        f.files().log(),
+        RequisiteMatcher.SUCCESS
+      );
     });
   }
 }
