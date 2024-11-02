@@ -115,13 +115,17 @@ public final class RequisiteMatcher extends BaseMatcher<Requisite> {
     public void describeTo(final Description desc) {
         desc.appendText(
             String.format(
-                "Maven log with %d mandatory part(s) inside and without %d part(s)",
+                "Maven log with %d mandatory part(s) inside and without %d part(s), but ",
                 this.positive.size(), this.negative.size()
             )
         );
+        int idx = 0;
         for (final String msg : this.failures) {
-            desc.appendText(" ");
+            if (idx > 0) {
+                desc.appendText(" and ");
+            }
             desc.appendText(msg);
+            ++idx;
         }
     }
 
