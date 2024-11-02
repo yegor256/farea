@@ -80,6 +80,7 @@ public interface Requisite {
     /**
      * Get its path.
      * @return Absolute path of it
+     * @since 0.5.0
      */
     Path path();
 }
