@@ -24,6 +24,7 @@
 package com.yegor256.farea;
 
 import java.io.IOException;
+import java.nio.file.Path;
 
 /**
  * Requisite.
@@ -75,4 +76,10 @@ public interface Requisite {
      * @return TRUE if file exists
      */
     boolean exists();
+
+    /**
+     * Get its path.
+     * @return Absolute path of it
+     */
+    Path path();
 }

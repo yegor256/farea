@@ -152,11 +152,8 @@ final class DtRequisite implements Requisite {
         return this.path().toFile().exists();
     }
 
-    /**
-     * Absolute path of it.
-     * @return The path
-     */
-    private Path path() {
+    @Override
+    public Path path() {
         return this.home.resolve(this.name);
     }
 
