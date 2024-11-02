@@ -30,7 +30,7 @@ First, you add this to your `pom.xml`:
 <dependency>
   <groupId>com.yegor256</groupId>
   <artifactId>farea</artifactId>
-  <version>0.4.0</version>
+  <version>0.5.0</version>
 </dependency>
 ```
 
