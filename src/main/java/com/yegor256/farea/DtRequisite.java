@@ -94,17 +94,18 @@ final class DtRequisite implements Requisite {
     }
 
     @Override
-    public Requisite copy(final Path src) throws IOException {
+    public Requisite save(final Path src) throws IOException {
         if (src.toFile().isDirectory()) {
             final Collection<Path> sources = Files.walk(src)
                 .filter(file -> !file.toFile().isDirectory())
                 .collect(Collectors.toList());
             final Requisites reqs = new DtRequisites(this.home);
-            final int total = 0;
+            int total = 0;
             for (final Path file : sources) {
                 reqs
                     .file(String.format("%s/%s", this.home, src.relativize(file)))
                     .write(Files.readAllBytes(file));
+                ++total;
             }
             Logger.debug(
                 this, "Copied %d file(s) to %[file]s",

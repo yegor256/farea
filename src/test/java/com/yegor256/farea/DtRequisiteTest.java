@@ -43,10 +43,22 @@ final class DtRequisiteTest {
         Files.write(src.resolve("one.txt"), "".getBytes());
         src.resolve("a/b/c/d").toFile().mkdirs();
         Files.write(src.resolve("a/b/c/d/two.txt"), "".getBytes());
-        new DtRequisite(farea, "new").copy(src);
+        new DtRequisite(farea, "new").save(src);
         MatcherAssert.assertThat(
             "copied two files",
             farea.resolve("a/b/c/d/two.txt").toFile().exists(),
+            Matchers.is(true)
+        );
+    }
+
+    @Test
+    void copiesFile(@TempDir final Path src, @TempDir final Path farea) throws IOException {
+        final Path path = src.resolve("one.txt");
+        Files.write(path, "".getBytes());
+        new DtRequisite(farea, "a/b/c/new.txt").save(path).show();
+        MatcherAssert.assertThat(
+            "copied one file only",
+            farea.resolve("a/b/c/new.txt").toFile().exists(),
             Matchers.is(true)
         );
     }

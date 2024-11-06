@@ -58,7 +58,7 @@ public interface Requisite {
      * @return Itself
      * @throws IOException If fails
      */
-    Requisite copy(Path src) throws IOException;
+    Requisite save(Path src) throws IOException;
 
     /**
      * Read content.
