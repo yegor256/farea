@@ -39,6 +39,19 @@ import org.junit.jupiter.api.io.TempDir;
 final class DtRequisiteTest {
 
     @Test
+    void copiesDirectory(@TempDir final Path src, @TempDir final Path farea) throws IOException {
+        Files.write(src.resolve("one.txt"), "".getBytes());
+        src.resolve("a/b/c/d").toFile().mkdirs();
+        Files.write(src.resolve("a/b/c/d/two.txt"), "".getBytes());
+        new DtRequisite(farea, "new").copy(src);
+        MatcherAssert.assertThat(
+            "copied two files",
+            farea.resolve("a/b/c/d/two.txt").toFile().exists(),
+            Matchers.is(true)
+        );
+    }
+
+    @Test
     void deletesOneFile(@TempDir final Path dir) throws IOException {
         final String name = "foo.txt";
         Files.write(dir.resolve(name), "".getBytes());

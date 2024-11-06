@@ -32,6 +32,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
+import java.util.Collection;
+import java.util.stream.Collectors;
 
 /**
  * File in Maven Reactor.
@@ -87,6 +89,29 @@ final class DtRequisite implements Requisite {
                 this, "File created at %[file]s (%[size]s)",
                 this.path(), this.path().toFile().length()
             );
+        }
+        return this;
+    }
+
+    @Override
+    public Requisite copy(final Path src) throws IOException {
+        if (src.toFile().isDirectory()) {
+            final Collection<Path> sources = Files.walk(src)
+                .filter(file -> !file.toFile().isDirectory())
+                .collect(Collectors.toList());
+            final Requisites reqs = new DtRequisites(this.home);
+            final int total = 0;
+            for (final Path file : sources) {
+                reqs
+                    .file(String.format("%s/%s", this.home, src.relativize(file)))
+                    .write(Files.readAllBytes(file));
+            }
+            Logger.debug(
+                this, "Copied %d file(s) to %[file]s",
+                total, this.path()
+            );
+        } else {
+            this.write(Files.readAllBytes(src));
         }
         return this;
     }

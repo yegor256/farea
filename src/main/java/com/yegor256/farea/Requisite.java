@@ -53,6 +53,14 @@ public interface Requisite {
     Requisite write(String content) throws IOException;
 
     /**
+     * Create requisite by copying it from an existing file (or directory).
+     * @param src The file/directory to copy from
+     * @return Itself
+     * @throws IOException If fails
+     */
+    Requisite copy(Path src) throws IOException;
+
+    /**
      * Read content.
      * @return The content of the file
      * @throws IOException If fails
