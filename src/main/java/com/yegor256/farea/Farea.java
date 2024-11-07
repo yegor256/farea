@@ -294,7 +294,7 @@ public final class Farea {
         return Files.walk(this.home)
             .map(this.home::relativize)
             .map(Path::toString)
-            .map(s -> String.format("/%s", s))
+            .map(s -> String.format("%s", s))
             .collect(Collectors.joining("\n"));
     }
 
