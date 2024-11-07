@@ -129,7 +129,7 @@ final class DtRequisite implements Requisite {
     public void show() throws IOException {
         if (this.path().toFile().isDirectory()) {
             Logger.info(
-                this, "The content of the '%s' directory:%n  %s",
+                this, "The content of the %[file]s directory:%n  %s",
                 this.name,
                 Files.walk(this.path())
                     .map(this.home::relativize)
@@ -139,7 +139,7 @@ final class DtRequisite implements Requisite {
             );
         } else {
             Logger.info(
-                this, "The content of '%s':%n  %s",
+                this, "The content of %[file]s:%n  %s",
                 this.name,
                 this.content().replace(
                     System.lineSeparator(),
