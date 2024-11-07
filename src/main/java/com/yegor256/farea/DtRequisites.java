@@ -23,6 +23,7 @@
  */
 package com.yegor256.farea;
 
+import java.io.IOException;
 import java.nio.file.Path;
 
 /**
@@ -43,6 +44,11 @@ final class DtRequisites implements Requisites {
      */
     DtRequisites(final Path dir) {
         this.home = dir;
+    }
+
+    @Override
+    public void show() throws IOException {
+        this.file(".").show();
     }
 
     @Override

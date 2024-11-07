@@ -49,4 +49,16 @@ final class DtRequisitesTest {
             Matchers.is(false)
         );
     }
+
+    @Test
+    void showsAllAsTree(@TempDir final Path dir) throws IOException {
+        final String name = "foo.txt";
+        Files.write(dir.resolve(name), "".getBytes());
+        new DtRequisites(dir).show();
+        MatcherAssert.assertThat(
+            "the file stays",
+            dir.resolve(name).toFile().exists(),
+            Matchers.is(true)
+        );
+    }
 }

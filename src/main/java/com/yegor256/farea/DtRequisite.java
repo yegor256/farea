@@ -127,14 +127,26 @@ final class DtRequisite implements Requisite {
 
     @Override
     public void show() throws IOException {
-        Logger.info(
-            this, "The content of %s:%n  %s",
-            this.name,
-            this.content().replace(
-                System.lineSeparator(),
-                String.format("%s  ", System.lineSeparator())
-            )
-        );
+        if (this.path().toFile().isDirectory()) {
+            Logger.info(
+                this, "The content of the '%s' directory:%n  %s",
+                this.name,
+                Files.walk(this.path())
+                    .map(this.home::relativize)
+                    .map(Path::toString)
+                    .map(s -> String.format("/%s", s))
+                    .collect(Collectors.joining("\n  "))
+            );
+        } else {
+            Logger.info(
+                this, "The content of '%s':%n  %s",
+                this.name,
+                this.content().replace(
+                    System.lineSeparator(),
+                    String.format("%s  ", System.lineSeparator())
+                )
+            );
+        }
     }
 
     @Override
