@@ -32,6 +32,7 @@ SOFTWARE.
     <module>multi-plugin</module>
   </modules>
   <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <maven.compiler.source>11</maven.compiler.source>
     <maven.compiler.target>11</maven.compiler.target>
     <maven.version>3.9.9</maven.version>
