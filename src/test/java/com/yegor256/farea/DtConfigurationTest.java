@@ -46,11 +46,11 @@ final class DtConfigurationTest {
         final Pom pom = new Pom(xml);
         pom.init();
         new DtConfiguration(pom, "/project")
-            .set("something", "привет!");
+            .set("something", "привет! <test");
         MatcherAssert.assertThat(
             "Sets unicode as value",
             XhtmlMatchers.xhtml(pom.xml()),
-            XhtmlMatchers.hasXPath("/project/configuration/something[.='привет!']")
+            XhtmlMatchers.hasXPath("/project/configuration/something[.='привет! <test']")
         );
     }
 

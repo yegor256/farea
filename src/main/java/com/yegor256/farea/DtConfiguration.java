@@ -77,7 +77,7 @@ final class DtConfiguration implements Configuration {
                 dirs.add("item").set(Xembler.escape(item.toString())).up();
             }
         } else {
-            dirs.set(value);
+            dirs.set(Xembler.escape(value.toString()));
         }
         this.pom.modify(dirs);
         return this;
