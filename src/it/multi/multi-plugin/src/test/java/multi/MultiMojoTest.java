@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package simple;
+package multi;
 
 import com.yegor256.farea.Farea;
 import java.io.IOException;
@@ -32,11 +32,11 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
 /**
- * Test case for {@link SimpleMojo}.
+ * Test case for {@link MultiMojo}.
  *
  * @since 0.1.0
  */
-final class SimpleMojoTest {
+final class MultiMojoTest {
 
     @Test
     void callsCustomPlugin(final @TempDir Path dir) throws IOException {
@@ -50,9 +50,9 @@ final class SimpleMojoTest {
                 f.build()
                     .plugins()
                     .appendItself(local)
-                    .execution("simple")
+                    .execution("multi")
                     .phase("initialize")
-                    .goals("simple")
+                    .goals("multi")
                     .configuration()
                     .set("message", "Hello, друг!");
                 f.exec(

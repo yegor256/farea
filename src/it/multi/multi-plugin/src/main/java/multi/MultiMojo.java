@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package simple;
+package multi;
 
 import org.apache.maven.execution.MavenSession;
 import org.apache.maven.plugin.AbstractMojo;
@@ -32,12 +32,12 @@ import org.apache.maven.project.MavenProject;
 import org.slf4j.impl.StaticLoggerBinder;
 
 /**
- * Simple Maven mojo.
+ * Maven mojo.
  *
  * @since 0.1.0
  */
-@Mojo(name = "simple", defaultPhase = LifecyclePhase.INITIALIZE)
-public final class SimpleMojo extends AbstractMojo {
+@Mojo(name = "multi", defaultPhase = LifecyclePhase.INITIALIZE)
+public final class MultiMojo extends AbstractMojo {
 
     /**
      * Maven project.
