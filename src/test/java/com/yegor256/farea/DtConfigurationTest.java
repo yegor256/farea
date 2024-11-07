@@ -41,6 +41,20 @@ import org.junit.jupiter.api.io.TempDir;
 final class DtConfigurationTest {
 
     @Test
+    void setsUtfStringAsParam(@TempDir final Path dir) throws IOException {
+        final Path xml = dir.resolve("pom-fake.xml");
+        final Pom pom = new Pom(xml);
+        pom.init();
+        new DtConfiguration(pom, "/project")
+            .set("something", "привет!");
+        MatcherAssert.assertThat(
+            "Sets unicode as value",
+            XhtmlMatchers.xhtml(pom.xml()),
+            XhtmlMatchers.hasXPath("/project/configuration/something[.='привет!']")
+        );
+    }
+
+    @Test
     void setsListAsParam(@TempDir final Path dir) throws IOException {
         final Path xml = dir.resolve("pom-1.xml");
         final Pom pom = new Pom(xml);
