@@ -159,6 +159,12 @@ SOFTWARE.
       <version>3.15.1</version>
       <scope>test</scope>
     </dependency>
+    <dependency>
+      <groupId>com.yegor256</groupId>
+      <artifactId>jping</artifactId>
+      <version>0.0.3</version>
+      <scope>test</scope>
+    </dependency>
   </dependencies>
   <profiles>
     <profile>

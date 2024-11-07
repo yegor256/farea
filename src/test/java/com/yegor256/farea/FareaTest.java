@@ -23,11 +23,13 @@
  */
 package com.yegor256.farea;
 
+import com.yegor256.WeAreOnline;
 import java.io.IOException;
 import java.nio.file.Path;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.io.TempDir;
 
 /**
@@ -35,6 +37,7 @@ import org.junit.jupiter.api.io.TempDir;
  *
  * @since 0.1.0
  */
+@ExtendWith(WeAreOnline.class)
 final class FareaTest {
 
     @Test
