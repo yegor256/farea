@@ -54,4 +54,25 @@ final class DtDependencyTest {
         );
     }
 
+    @Test
+    void setsDependencyClassifier(@TempDir final Path dir) throws IOException {
+        final Path xml = dir.resolve("pom-2.xml");
+        final Pom pom = new Pom(xml);
+        new DtDependencies(pom)
+            .append("foo", "bar", "0.0.1")
+            .scope("provided")
+            .classifier("jar");
+        MatcherAssert.assertThat(
+            "Sets dependency classifier",
+            XhtmlMatchers.xhtml(pom.xml()),
+            XhtmlMatchers.hasXPaths(
+                "//dependency[groupId='foo']",
+                "//dependency[artifactId='bar']",
+                "//dependency[version='0.0.1']",
+                "//dependency[scope='provided']",
+                "//dependency[classifier='jar']"
+            )
+        );
+    }
+
 }

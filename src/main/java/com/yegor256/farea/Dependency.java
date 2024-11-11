@@ -33,8 +33,17 @@ import java.io.IOException;
 public interface Dependency {
     /**
      * Set scope of it.
-     * @param scp The scope
+     * @param scope The scope
+     * @return Itself
      * @throws IOException If fails
      */
-    void scope(String scp) throws IOException;
+    Dependency scope(String scope) throws IOException;
+
+    /**
+     * Set classifier of it.
+     * @param classifier The scope
+     * @return Itself
+     * @throws IOException If fails
+     */
+    Dependency classifier(String classifier) throws IOException;
 }

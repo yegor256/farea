@@ -61,7 +61,7 @@ final class DtDependency implements Dependency {
     }
 
     @Override
-    public void scope(final String scp) throws IOException {
+    public Dependency scope(final String scp) throws IOException {
         this.pom.modify(
             new Directives().xpath(
                 String.format(
@@ -70,6 +70,20 @@ final class DtDependency implements Dependency {
                 )
             ).addIf("scope").set(scp)
         );
+        return this;
+    }
+
+    @Override
+    public Dependency classifier(final String classifier) throws IOException {
+        this.pom.modify(
+            new Directives().xpath(
+                String.format(
+                    "/project/dependencies/dependency[groupId='%s' and artifactId='%s']",
+                    this.group, this.artifact
+                )
+            ).addIf("classifier").set(classifier)
+        );
+        return this;
     }
 
 }
