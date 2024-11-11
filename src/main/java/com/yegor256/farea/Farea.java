@@ -55,7 +55,7 @@ import java.util.stream.Stream;
  *     .file("src/test/java/Hello.java")
  *     .write("class Hello {}".getBytes());
  *   f.exec("compile");
- *   assert(f.log().contains("SUCCESS"));
+ *   assert(f.log().content().contains("SUCCESS"));
  * });</pre></code>
  *
  * <p>If you are developing/testing your own plugin, you should use
@@ -177,7 +177,7 @@ public final class Farea {
     }
 
     /**
-     * With an extra option.
+     * With an extra command-line option.
      * @param opt The option to add
      * @return Itself
      */
@@ -189,14 +189,17 @@ public final class Farea {
     }
 
     /**
-     * Run it all together in one thread-safe script.
+     * Run it all together.
+     *
+     * <p>This method doesn't guarantee thread-safety. If you run it
+     * with the same directory, most probably there will be problems, because
+     * of conflicts between running Maven processes.</p>
+     *
      * @param script The script to run
      * @throws IOException If fails
      */
     public void together(final Farea.Script script) throws IOException {
-        synchronized (Farea.class) {
-            script.run(this);
-        }
+        script.run(this);
     }
 
     /**
