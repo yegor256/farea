@@ -55,7 +55,7 @@ import java.util.stream.Stream;
  *     .file("src/test/java/Hello.java")
  *     .write("class Hello {}".getBytes());
  *   f.exec("compile");
- *   assert(f.log().content().contains("SUCCESS"));
+ *   assert(f.files().log().content().contains("SUCCESS"));
  * });</pre></code>
  *
  * <p>If you are developing/testing your own plugin, you should use

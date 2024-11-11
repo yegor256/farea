@@ -40,6 +40,7 @@ and available on `$PATH`):
 
 ```java
 import com.yegor256.farea.Farea;
+import com.yegor256.farea.RequisiteMatcher;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;

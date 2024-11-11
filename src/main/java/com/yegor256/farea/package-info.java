@@ -31,24 +31,26 @@
  * <code><pre> new Farea(dir).together(f -> {
  *   f.files()
  *     .file("src/test/java/Hello.java")
- *     .write("class Hello {}");
+ *     .write("class Hello {}".getBytes());
  *   f.dependencies()
  *     .append("org.cactoos", "cactoos", "0.55.0")
- *     .scope("test");
+ *     .scope("test")
+ *     .classifier("jar");
  *   f.build()
  *     .plugins()
  *     .append("com.qulice", "qulice-maven-plugin", "0.22.0")
  *     .configuration()
  *     .set("excludes", new String[] {"checkstyle:/src"});
  *   f.exec("install");
- *   assert(f.log().contains("SUCCESS"));
+ *   assert(f.files().log().contains("SUCCESS"));
  * });</pre></code>
  *
- * <p>The logging is sent to
+ * <p>The logging is sent to the
  * <a href="https://www.slf4j.org/">Slf4j logging facility</a>,
  * which you can redirect to Log4j or any other
  * logging engine. Log events are sent to the
- * <code>com.yegor256.farea.Farea</code> and <code>com.jcabi.log</code>packages.</p>
+ * {@code com.yegor256.farea.Farea} and {@code com.jcabi.log}
+ * packages.</p>
  *
  * @since 0.0.1
  */
