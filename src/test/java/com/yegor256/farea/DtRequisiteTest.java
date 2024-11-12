@@ -23,23 +23,26 @@
  */
 package com.yegor256.farea;
 
+import com.yegor256.Mktmp;
+import com.yegor256.MktmpResolver;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.io.TempDir;
+import org.junit.jupiter.api.extension.ExtendWith;
 
 /**
  * Test case for {@link DtRequisite}.
  *
  * @since 0.1.0
  */
+@ExtendWith(MktmpResolver.class)
 final class DtRequisiteTest {
 
     @Test
-    void copiesDirectory(@TempDir final Path src, @TempDir final Path farea) throws IOException {
+    void copiesDirectory(@Mktmp final Path src, @Mktmp final Path farea) throws IOException {
         Files.write(src.resolve("one.txt"), "".getBytes());
         src.resolve("a/b/c/d").toFile().mkdirs();
         Files.write(src.resolve("a/b/c/d/two.txt"), "".getBytes());
@@ -52,7 +55,7 @@ final class DtRequisiteTest {
     }
 
     @Test
-    void copiesFile(@TempDir final Path src, @TempDir final Path farea) throws IOException {
+    void copiesFile(@Mktmp final Path src, @Mktmp final Path farea) throws IOException {
         final Path path = src.resolve("one.txt");
         Files.write(path, "".getBytes());
         new DtRequisite(farea, "a/b/c/new.txt").save(path).show();
@@ -64,7 +67,7 @@ final class DtRequisiteTest {
     }
 
     @Test
-    void deletesOneFile(@TempDir final Path dir) throws IOException {
+    void deletesOneFile(@Mktmp final Path dir) throws IOException {
         final String name = "foo.txt";
         Files.write(dir.resolve(name), "".getBytes());
         new DtRequisite(dir, name).delete();
@@ -76,7 +79,7 @@ final class DtRequisiteTest {
     }
 
     @Test
-    void deletesOneDirectory(@TempDir final Path dir) throws IOException {
+    void deletesOneDirectory(@Mktmp final Path dir) throws IOException {
         final String name = "foo/bar/zzz";
         dir.resolve(name).toFile().mkdirs();
         Files.write(dir.resolve(name).resolve("file.txt"), "".getBytes());

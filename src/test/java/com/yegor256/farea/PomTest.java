@@ -24,12 +24,14 @@
 package com.yegor256.farea;
 
 import com.jcabi.xml.XMLDocument;
+import com.yegor256.Mktmp;
+import com.yegor256.MktmpResolver;
 import java.io.IOException;
 import java.nio.file.Path;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.io.TempDir;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.xembly.Directives;
 
 /**
@@ -37,10 +39,11 @@ import org.xembly.Directives;
  *
  * @since 0.1.0
  */
+@ExtendWith(MktmpResolver.class)
 final class PomTest {
 
     @Test
-    void printsCorrectly(@TempDir final Path dir) throws IOException {
+    void printsCorrectly(@Mktmp final Path dir) throws IOException {
         final Path xml = dir.resolve("pom.xml");
         new Pom(xml).init();
         MatcherAssert.assertThat(
@@ -51,7 +54,7 @@ final class PomTest {
     }
 
     @Test
-    void createsDirectoryIfAbsent(@TempDir final Path dir) throws IOException {
+    void createsDirectoryIfAbsent(@Mktmp final Path dir) throws IOException {
         final Path xml = dir.resolve("a/b/c/pom.xml");
         new Pom(xml).init();
         MatcherAssert.assertThat(
@@ -62,7 +65,7 @@ final class PomTest {
     }
 
     @Test
-    void rendersWithoutExtraSpaces(@TempDir final Path dir) throws IOException {
+    void rendersWithoutExtraSpaces(@Mktmp final Path dir) throws IOException {
         final Path xml = dir.resolve("pom.xml");
         new Pom(xml).init().modify(new Directives().xpath("/project").add("properties"));
         MatcherAssert.assertThat(
@@ -73,7 +76,7 @@ final class PomTest {
     }
 
     @Test
-    void simplyModifies(@TempDir final Path dir) throws IOException {
+    void simplyModifies(@Mktmp final Path dir) throws IOException {
         final Path xml = dir.resolve("pom-1.xml");
         final Pom pom = new Pom(xml);
         pom.modify(

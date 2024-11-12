@@ -24,6 +24,8 @@
 package com.yegor256.farea;
 
 import com.jcabi.matchers.XhtmlMatchers;
+import com.yegor256.Mktmp;
+import com.yegor256.MktmpResolver;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.Arrays;
@@ -31,17 +33,18 @@ import java.util.HashMap;
 import java.util.Map;
 import org.hamcrest.MatcherAssert;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.io.TempDir;
+import org.junit.jupiter.api.extension.ExtendWith;
 
 /**
  * Test case for {@link DtConfiguration}.
  *
  * @since 0.1.0
  */
+@ExtendWith(MktmpResolver.class)
 final class DtConfigurationTest {
 
     @Test
-    void setsUtfStringAsParam(@TempDir final Path dir) throws IOException {
+    void setsUtfStringAsParam(@Mktmp final Path dir) throws IOException {
         final Path xml = dir.resolve("pom-fake.xml");
         final Pom pom = new Pom(xml);
         pom.init();
@@ -55,7 +58,7 @@ final class DtConfigurationTest {
     }
 
     @Test
-    void setsListAsParam(@TempDir final Path dir) throws IOException {
+    void setsListAsParam(@Mktmp final Path dir) throws IOException {
         final Path xml = dir.resolve("pom-1.xml");
         final Pom pom = new Pom(xml);
         new DtPlugins(pom).append("a", "0.0.0")
@@ -71,7 +74,7 @@ final class DtConfigurationTest {
     }
 
     @Test
-    void setsArrayAsParam(@TempDir final Path dir) throws IOException {
+    void setsArrayAsParam(@Mktmp final Path dir) throws IOException {
         final Path xml = dir.resolve("pom-2.xml");
         final Pom pom = new Pom(xml);
         new DtPlugins(pom).append("xyz", "1.1.1")
@@ -87,7 +90,7 @@ final class DtConfigurationTest {
     }
 
     @Test
-    void setsMapAsParam(@TempDir final Path dir) throws IOException {
+    void setsMapAsParam(@Mktmp final Path dir) throws IOException {
         final Path xml = dir.resolve("pom-3.xml");
         final Pom pom = new Pom(xml);
         final Map<String, Integer> map = new HashMap<>(0);

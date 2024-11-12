@@ -23,21 +23,24 @@
  */
 package com.yegor256.farea;
 
+import com.yegor256.Mktmp;
+import com.yegor256.MktmpResolver;
 import java.io.IOException;
 import java.nio.file.Path;
 import org.hamcrest.MatcherAssert;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.io.TempDir;
+import org.junit.jupiter.api.extension.ExtendWith;
 
 /**
  * Test case for {@link RequisiteMatcher}.
  *
  * @since 0.1.0
  */
+@ExtendWith(MktmpResolver.class)
 final class RequisiteMatcherTest {
 
     @Test
-    void matchesSimpleRequisite(@TempDir final Path dir) throws IOException {
+    void matchesSimpleRequisite(@Mktmp final Path dir) throws IOException {
         new Farea(dir).together(
             f -> {
                 f.files()
@@ -53,7 +56,7 @@ final class RequisiteMatcherTest {
     }
 
     @Test
-    void matchesNegativeLog(@TempDir final Path dir) throws IOException {
+    void matchesNegativeLog(@Mktmp final Path dir) throws IOException {
         new Farea(dir).together(
             f -> {
                 f.files()

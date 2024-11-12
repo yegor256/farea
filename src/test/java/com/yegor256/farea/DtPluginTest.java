@@ -24,22 +24,25 @@
 package com.yegor256.farea;
 
 import com.jcabi.matchers.XhtmlMatchers;
+import com.yegor256.Mktmp;
+import com.yegor256.MktmpResolver;
 import java.io.IOException;
 import java.nio.file.Path;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.io.TempDir;
+import org.junit.jupiter.api.extension.ExtendWith;
 
 /**
  * Test case for {@link DtPlugin}.
  *
  * @since 0.1.0
  */
+@ExtendWith(MktmpResolver.class)
 final class DtPluginTest {
 
     @Test
-    void appendsManyExecutions(@TempDir final Path dir) throws IOException {
+    void appendsManyExecutions(@Mktmp final Path dir) throws IOException {
         final Path xml = dir.resolve("pom.xml");
         final Pom pom = new Pom(xml).init();
         final Plugin plugin = new DtPlugins(pom).append("g", "a", "0.0.1");
@@ -53,7 +56,7 @@ final class DtPluginTest {
     }
 
     @Test
-    void appendsGoalsExecutions(@TempDir final Path dir) throws IOException {
+    void appendsGoalsExecutions(@Mktmp final Path dir) throws IOException {
         final Path xml = dir.resolve("pom.xml");
         final Pom pom = new Pom(xml).init();
         final Plugin plugin = new DtPlugins(pom).append("g", "a", "0.0.1");
@@ -67,7 +70,7 @@ final class DtPluginTest {
     }
 
     @Test
-    void addsConfiguration(@TempDir final Path dir) throws IOException {
+    void addsConfiguration(@Mktmp final Path dir) throws IOException {
         final Path xml = dir.resolve("pom.xml");
         final Pom pom = new Pom(xml).init();
         new DtPlugins(pom)
@@ -86,7 +89,7 @@ final class DtPluginTest {
     }
 
     @Test
-    void addsGoalsAndConfiguration(@TempDir final Path dir) throws IOException {
+    void addsGoalsAndConfiguration(@Mktmp final Path dir) throws IOException {
         final Path xml = dir.resolve("pom.xml");
         final Pom pom = new Pom(xml).init();
         new DtPlugins(pom)

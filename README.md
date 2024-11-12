@@ -48,7 +48,7 @@ import org.junit.jupiter.api.io.TempDir;
 
 class JavaCompilationTest {
   @Test
-  void worksAsExpected(@TempDir Path dir) {
+  void worksAsExpected(@Mktmp Path dir) {
     new Farea(dir).together(f -> {
       f.files()
         .file("src/test/java/Hello.java")
@@ -76,7 +76,7 @@ You can also test the plugin that you are developing, inside the same reactor:
 ```java
 class MyPluginTest {
   @Test
-  void worksAsExpected(@TempDir Path dir) {
+  void worksAsExpected(@Mktmp Path dir) {
     new Farea(dir).together(f -> {
       f.build()
         .plugins()

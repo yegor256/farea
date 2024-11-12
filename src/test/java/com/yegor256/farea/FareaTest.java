@@ -23,6 +23,8 @@
  */
 package com.yegor256.farea;
 
+import com.yegor256.Mktmp;
+import com.yegor256.MktmpResolver;
 import com.yegor256.WeAreOnline;
 import java.io.IOException;
 import java.nio.file.Path;
@@ -30,7 +32,6 @@ import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.jupiter.api.io.TempDir;
 
 /**
  * Test case for {@link Farea}.
@@ -38,10 +39,11 @@ import org.junit.jupiter.api.io.TempDir;
  * @since 0.1.0
  */
 @ExtendWith(WeAreOnline.class)
+@ExtendWith(MktmpResolver.class)
 final class FareaTest {
 
     @Test
-    void compilesSimpleProject(@TempDir final Path dir) throws IOException {
+    void compilesSimpleProject(@Mktmp final Path dir) throws IOException {
         new Farea(dir).together(
             f -> {
                 f.files()
@@ -60,7 +62,7 @@ final class FareaTest {
     }
 
     @Test
-    void callsSimplePlugin(@TempDir final Path dir) throws IOException {
+    void callsSimplePlugin(@Mktmp final Path dir) throws IOException {
         new Farea(dir).together(
             f -> {
                 f.build()
@@ -80,7 +82,7 @@ final class FareaTest {
     }
 
     @Test
-    void cleans(@TempDir final Path dir) throws IOException {
+    void cleans(@Mktmp final Path dir) throws IOException {
         new Farea(dir).together(
             f -> {
                 f.dependencies().append("foo", "foo", "0.0.0");
@@ -97,7 +99,22 @@ final class FareaTest {
     }
 
     @Test
-    void cleansNonExistingDir(@TempDir final Path dir) throws IOException {
+    void cleansNonExistingDir(@Mktmp final Path dir) throws IOException {
+        new Farea(dir.resolve("non-existing")).together(
+            f -> {
+                f.clean();
+                f.properties().set("something-else", "42 42");
+                MatcherAssert.assertThat(
+                    "Directory exists after cleaning",
+                    f.files().file("pom.xml").exists(),
+                    Matchers.is(true)
+                );
+            }
+        );
+    }
+
+    @Test
+    void buildsInManyThreads(@Mktmp final Path dir) throws IOException {
         new Farea(dir.resolve("non-existing")).together(
             f -> {
                 f.clean();

@@ -24,21 +24,24 @@
 package com.yegor256.farea;
 
 import com.jcabi.matchers.XhtmlMatchers;
+import com.yegor256.Mktmp;
+import com.yegor256.MktmpResolver;
 import java.io.IOException;
 import java.nio.file.Path;
 import org.hamcrest.MatcherAssert;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.io.TempDir;
+import org.junit.jupiter.api.extension.ExtendWith;
 
 /**
  * Test case for {@link DtDependency}.
  *
  * @since 0.1.0
  */
+@ExtendWith(MktmpResolver.class)
 final class DtDependencyTest {
 
     @Test
-    void setsDependencyScope(@TempDir final Path dir) throws IOException {
+    void setsDependencyScope(@Mktmp final Path dir) throws IOException {
         final Path xml = dir.resolve("pom-1.xml");
         final Pom pom = new Pom(xml);
         new DtDependencies(pom).append("g", "a", "1.0-SNAPSHOT").scope("test");
@@ -55,7 +58,7 @@ final class DtDependencyTest {
     }
 
     @Test
-    void setsDependencyClassifier(@TempDir final Path dir) throws IOException {
+    void setsDependencyClassifier(@Mktmp final Path dir) throws IOException {
         final Path xml = dir.resolve("pom-2.xml");
         final Pom pom = new Pom(xml);
         new DtDependencies(pom)
