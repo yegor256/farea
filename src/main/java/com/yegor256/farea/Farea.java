@@ -459,7 +459,7 @@ public final class Farea {
          * @param code The exit code of Maven build
          */
         public BuildFailureException(final int code) {
-            super("build failed");
+            super(String.format("build failed with exit code 0x%04x", code));
             this.exit = code;
         }
 
