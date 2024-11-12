@@ -45,7 +45,7 @@ import java.util.stream.Stream;
 /**
  * Fake Maven Reactor.
  *
- * <p>Run it like this to test a simple Java compilation
+ * <p>Run it like this, to test a simple Java compilation
  * (here, the {@code dir} is a temporary directory where Maven
  * project will be created and executed):</p>
  *
