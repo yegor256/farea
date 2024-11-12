@@ -68,7 +68,8 @@ final class FareaTest {
                     .append("maven-compiler-plugin", "3.11.0")
                     .configuration()
                     .set("skip", "true");
-                f.withOpt("--debug").exec("compile");
+                f.withOpt("--debug");
+                f.exec("compile");
                 MatcherAssert.assertThat(
                     "Calls simple plugin",
                     f.files().log(),

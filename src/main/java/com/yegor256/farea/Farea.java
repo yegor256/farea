@@ -35,7 +35,6 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.Locale;
@@ -157,35 +156,31 @@ public final class Farea {
      */
     public Farea(final Path dir, final Collection<String> mopts) {
         this.home = dir;
-        this.opts = Collections.unmodifiableCollection(mopts);
+        this.opts = new ArrayList<>(mopts);
     }
 
     /**
      * Clean the reactor, remove all files from it.
-     * @return Itself
      * @throws IOException If fails
      */
-    public Farea clean() throws IOException {
-        this.home.toFile().mkdirs();
+    public void clean() throws IOException {
+        if (this.home.toFile().mkdirs()) {
+            Logger.debug(this, "Directory created at %[file]s", this.home);
+        }
         try (Stream<Path> dir = Files.walk(this.home)) {
             dir
                 .map(Path::toFile)
                 .sorted(Comparator.reverseOrder())
                 .forEach(File::delete);
         }
-        return this;
     }
 
     /**
      * With an extra command-line option.
      * @param opt The option to add
-     * @return Itself
      */
-    public Farea withOpt(final String opt) {
-        final Collection<String> after = new ArrayList<>(this.opts.size() + 1);
-        after.addAll(this.opts);
-        after.add(opt);
-        return new Farea(this.home, after);
+    public void withOpt(final String opt) {
+        this.opts.add(opt);
     }
 
     /**
