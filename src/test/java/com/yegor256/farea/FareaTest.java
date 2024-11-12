@@ -49,7 +49,7 @@ final class FareaTest {
                     .write("package foo; import org.cactoos.Input; class Hello {}".getBytes());
                 f.dependencies()
                     .append("org.cactoos", "cactoos", "0.55.0");
-                f.exec("compile");
+                f.execQuiet("compile");
                 MatcherAssert.assertThat(
                     "Compiles simple project",
                     f.files().file("target/classes/foo/Hello.class").exists(),

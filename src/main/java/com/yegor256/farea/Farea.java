@@ -242,7 +242,24 @@ public final class Farea {
      *
      * <p>If Maven fails, this method will <b>NOT</b> throw any exceptions. Instead,
      * you should check the contents of the log printed by Maven, with the
-     * help of the {@link #log()} method.</p>
+     * help of the {@link #log()} method. Otherwise, use the {@link #exec(String...)}
+     * method, it will throw in case of build failure.</p>
+     *
+     * @param args Command line arguments
+     * @throws IOException If fails
+     */
+    public void execQuiet(final String... args) throws IOException {
+        try {
+            this.exec(args);
+        } catch (final Farea.BuildFailureException ex) {
+            Logger.debug(this, "Build failed with exit code 0x%04x", ex.getCode());
+        }
+    }
+
+    /**
+     * Execute with command line arguments.
+     *
+     * <p>If Maven fails, this method will throw an exception.</p>
      *
      * @param args Command line arguments
      * @throws IOException If fails
@@ -266,8 +283,9 @@ public final class Farea {
             )
         );
         terminal.start();
+        final int code;
         try {
-            this.jaxec(args, log);
+            code = this.jaxec(args, log);
         } finally {
             finished.set(true);
             Farea.join(terminal);
@@ -277,6 +295,9 @@ public final class Farea {
             Logger.format("Files after execution at %[file]s", this.home),
             this.walk()
         );
+        if (code != 0) {
+            throw new Farea.BuildFailureException(code);
+        }
     }
 
     /**
@@ -305,9 +326,10 @@ public final class Farea {
      * Run Maven with these args, saving output to the log.
      * @param args The args for the "mvn" command
      * @param log The log file
+     * @return Shell exit code
      */
-    private void jaxec(final String[] args, final Path log) {
-        new Jaxec()
+    private int jaxec(final String[] args, final Path log) {
+        return new Jaxec()
             .with(Farea.mvn())
             .with(this.opts)
             .with(args)
@@ -315,7 +337,8 @@ public final class Farea {
             .withCheck(false)
             .withRedirect(true)
             .withStdout(ProcessBuilder.Redirect.to(log.toFile()))
-            .exec();
+            .exec()
+            .code();
     }
 
     /**
@@ -418,6 +441,40 @@ public final class Farea {
                 String.format("%s  ", System.lineSeparator())
             )
         );
+    }
+
+    /**
+     * When build fails.
+     *
+     * @since 0.9.0
+     */
+    public static final class BuildFailureException extends IOException {
+        /**
+         * Serialization marker.
+         */
+        private static final long serialVersionUID = 5188162404688529763L;
+
+        /**
+         * The exit code.
+         */
+        private final int exit;
+
+        /**
+         * Ctor.
+         * @param code The exit code of Maven build
+         */
+        public BuildFailureException(final int code) {
+            super("build failed");
+            this.exit = code;
+        }
+
+        /**
+         * Get the code.
+         * @return The code
+         */
+        public int getCode() {
+            return this.exit;
+        }
     }
 
     /**
