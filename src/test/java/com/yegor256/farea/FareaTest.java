@@ -23,13 +23,16 @@
  */
 package com.yegor256.farea;
 
+import com.jcabi.matchers.XhtmlMatchers;
 import com.yegor256.Mktmp;
 import com.yegor256.MktmpResolver;
 import com.yegor256.WeAreOnline;
 import java.io.IOException;
 import java.nio.file.Path;
+import org.cactoos.experimental.Threads;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
@@ -115,16 +118,23 @@ final class FareaTest {
 
     @Test
     void buildsInManyThreads(@Mktmp final Path dir) throws IOException {
-        new Farea(dir.resolve("non-existing")).together(
-            f -> {
-                f.clean();
-                f.properties().set("something-else", "42 42");
-                MatcherAssert.assertThat(
-                    "Directory exists after cleaning",
-                    f.files().file("pom.xml").exists(),
-                    Matchers.is(true)
+        new Threads<>(
+            Runtime.getRuntime().availableProcessors(),
+            () -> {
+                new Farea(dir).together(
+                    f -> {
+                        f.properties().set("something", "foo-bar");
+                        f.dependencies().appendItself();
+                        f.exec("test");
+                    }
                 );
+                return 0;
             }
+        ).forEach(x -> Assertions.assertEquals(0, x));
+        MatcherAssert.assertThat(
+            "the pom.xml is correctly created",
+            new Farea(dir).files().file("pom.xml").content(),
+            XhtmlMatchers.hasXPaths("/project/properties/something[.='foo-bar']")
         );
     }
 }

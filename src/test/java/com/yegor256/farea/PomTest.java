@@ -23,13 +23,19 @@
  */
 package com.yegor256.farea;
 
+import com.jcabi.matchers.XhtmlMatchers;
 import com.jcabi.xml.XMLDocument;
 import com.yegor256.Mktmp;
 import com.yegor256.MktmpResolver;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.concurrent.atomic.AtomicInteger;
+import org.cactoos.experimental.Threads;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.xembly.Directives;
@@ -93,4 +99,32 @@ final class PomTest {
         );
     }
 
+    @Test
+    void modifiesInManyThreads(@Mktmp final Path dir) throws IOException {
+        final Path xml = dir.resolve("pom-1.xml");
+        final Pom pom = new Pom(xml);
+        final AtomicInteger count = new AtomicInteger();
+        final int threads = Runtime.getRuntime().availableProcessors();
+        new Threads<>(
+            threads,
+            () -> {
+                pom.init();
+                pom.modify(
+                    new Directives()
+                        .xpath("/project")
+                        .add("properties")
+                        .add(String.format("foo-%d", count.addAndGet(1)))
+                        .set("yes!")
+                );
+                return 0;
+            }
+        ).forEach(x -> Assertions.assertEquals(0, x));
+        MatcherAssert.assertThat(
+            "the pom.xml has all modifications",
+            new String(Files.readAllBytes(xml), StandardCharsets.UTF_8),
+            XhtmlMatchers.hasXPaths(
+                String.format("/project/properties[count(*)=%d]", count.get())
+            )
+        );
+    }
 }

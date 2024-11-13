@@ -118,6 +118,12 @@ SOFTWARE.
       <scope>test</scope>
     </dependency>
     <dependency>
+      <groupId>org.cactoos</groupId>
+      <artifactId>cactoos</artifactId>
+      <version>0.56.1</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
       <groupId>net.sf.saxon</groupId>
       <artifactId>Saxon-HE</artifactId>
       <version>12.5</version>
@@ -168,7 +174,7 @@ SOFTWARE.
     <dependency>
       <groupId>com.yegor256</groupId>
       <artifactId>mktmp</artifactId>
-      <version>0.0.3</version>
+      <version>0.0.4</version>
       <scope>test</scope>
     </dependency>
   </dependencies>
