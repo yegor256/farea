@@ -60,4 +60,21 @@ final class DtPropertiesTest {
         );
     }
 
+    @Test
+    void setsInManyThreads(@Mktmp final Path dir) throws IOException {
+        final Path xml = dir.resolve("pom-2.xml");
+        final Pom pom = new Pom(xml);
+        MatcherAssert.assertThat(
+            "the pom.xml has all modifications",
+            XhtmlMatchers.xhtml(
+                new Jointly<>(
+                    thread -> {
+                        new DtProperties(pom).set(String.format("foo-%d", thread), "bar");
+                        return pom;
+                    }
+                ).made(10).xml()
+            ),
+            XhtmlMatchers.hasXPaths("/project/properties[count(*[starts-with(name(), 'foo-')])=10]")
+        );
+    }
 }

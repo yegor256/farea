@@ -46,7 +46,10 @@ final class ItselfTest {
 
     @Test
     void deploysJar(@Mktmp final Path dir) throws IOException {
-        new Itself(new Base(Paths.get("src/test/resources/fake-pom.xml")), false).deploy(dir);
+        new Itself(
+            new Base(Paths.get("src/test/resources/fake-pom.xml")),
+            false
+        ).deploy(dir);
         MatcherAssert.assertThat(
             "Resolves",
             dir.resolve("g1/g2/a/1.1.1/a-1.1.1.jar").toFile().exists(),
@@ -56,7 +59,10 @@ final class ItselfTest {
 
     @Test
     void deploysJarAndPom(@Mktmp final Path dir) throws IOException {
-        new Itself(new Base(Paths.get("src/test/resources/fake-pom.xml")), false).deploy(dir);
+        new Itself(
+            new Base(Paths.get("src/test/resources/fake-pom.xml")),
+            false
+        ).deploy(dir);
         MatcherAssert.assertThat(
             "Deploys JAR and POM",
             XhtmlMatchers.xhtml(
@@ -74,4 +80,21 @@ final class ItselfTest {
         );
     }
 
+    @Test
+    void deploysInManyThreads(@Mktmp final Path dir) {
+        final Itself itself = new Itself(
+            new Base(Paths.get("src/test/resources/fake-pom.xml")),
+            false
+        );
+        MatcherAssert.assertThat(
+            "the JAR deploys in many threads",
+            new Jointly<>(
+                thread -> {
+                    itself.deploy(dir);
+                    return itself;
+                }
+            ).made(),
+            Matchers.notNullValue()
+        );
+    }
 }

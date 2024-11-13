@@ -32,7 +32,9 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.concurrent.atomic.AtomicInteger;
+import org.cactoos.Scalar;
 import org.cactoos.experimental.Threads;
+import org.cactoos.iterable.Repeated;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Assertions;
@@ -107,23 +109,32 @@ final class PomTest {
         final int threads = Runtime.getRuntime().availableProcessors();
         new Threads<>(
             threads,
-            () -> {
-                pom.init();
-                pom.modify(
-                    new Directives()
-                        .xpath("/project")
-                        .add("properties")
-                        .add(String.format("foo-%d", count.addAndGet(1)))
-                        .set("yes!")
-                );
-                return 0;
-            }
+            new Repeated<Scalar<?>>(
+                threads,
+                () -> {
+                    pom.init();
+                    pom.modify(
+                        new Directives()
+                            .xpath("/project")
+                            .addIf("bar")
+                            .strict(1)
+                            .add(String.format("foo-%d", count.addAndGet(1)))
+                            .set("yes!")
+                    );
+                    return 0;
+                }
+            )
         ).forEach(x -> Assertions.assertEquals(0, x));
         MatcherAssert.assertThat(
+            "all threads counted",
+            count.get(),
+            Matchers.equalTo(threads)
+        );
+        MatcherAssert.assertThat(
             "the pom.xml has all modifications",
-            new String(Files.readAllBytes(xml), StandardCharsets.UTF_8),
+            XhtmlMatchers.xhtml(new String(Files.readAllBytes(xml), StandardCharsets.UTF_8)),
             XhtmlMatchers.hasXPaths(
-                String.format("/project/properties[count(*)=%d]", count.get())
+                String.format("/project/bar[count(*)=%d]", threads)
             )
         );
     }

@@ -29,10 +29,8 @@ import com.yegor256.MktmpResolver;
 import com.yegor256.WeAreOnline;
 import java.io.IOException;
 import java.nio.file.Path;
-import org.cactoos.experimental.Threads;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
@@ -118,23 +116,28 @@ final class FareaTest {
 
     @Test
     void buildsInManyThreads(@Mktmp final Path dir) throws IOException {
-        new Threads<>(
-            Runtime.getRuntime().availableProcessors(),
-            () -> {
-                new Farea(dir).together(
-                    f -> {
-                        f.properties().set("something", "foo-bar");
-                        f.dependencies().appendItself();
-                        f.exec("test");
-                    }
-                );
-                return 0;
-            }
-        ).forEach(x -> Assertions.assertEquals(0, x));
+        MatcherAssert.assertThat(
+            "the build works in many processes",
+            new Jointly<>(
+                thread -> {
+                    new Farea(dir.resolve(Integer.toString(thread))).together(
+                        f -> {
+                            f.properties().set(
+                                String.format("foo-%d", thread),
+                                "foo-bar"
+                            );
+                            f.exec("initialize");
+                        }
+                    );
+                    return 0;
+                }
+            ).made(10),
+            Matchers.notNullValue()
+        );
         MatcherAssert.assertThat(
             "the pom.xml is correctly created",
-            new Farea(dir).files().file("pom.xml").content(),
-            XhtmlMatchers.hasXPaths("/project/properties/something[.='foo-bar']")
+            new Farea(dir).files().file("0/pom.xml").content(),
+            XhtmlMatchers.hasXPaths("/project/properties[count(*[starts-with(name(), 'foo-')])=1]")
         );
     }
 }

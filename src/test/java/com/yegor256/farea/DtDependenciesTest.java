@@ -55,4 +55,21 @@ final class DtDependenciesTest {
         );
     }
 
+    @Test
+    void appendsItselfInManyThreads(@Mktmp final Path dir) throws IOException {
+        final Path xml = dir.resolve("pom-2.xml");
+        final Pom pom = new Pom(xml);
+        MatcherAssert.assertThat(
+            "the pom.xml has all modifications",
+            XhtmlMatchers.xhtml(
+                new Jointly<>(
+                    thread -> {
+                        new DtDependencies(pom).appendItself(dir);
+                        return pom;
+                    }
+                ).made(10).xml()
+            ),
+            XhtmlMatchers.hasXPaths("/project/dependencies[count(dependency)=10]")
+        );
+    }
 }

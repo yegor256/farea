@@ -38,6 +38,8 @@ import org.xembly.Xembler;
 /**
  * POM file.
  *
+ * <p>The class is thread-safe.</p>
+ *
  * @since 0.0.1
  */
 final class Pom {
@@ -56,20 +58,23 @@ final class Pom {
     }
 
     /**
-     * Show its XML content.
+     * Read and return its XML content.
+     *
      * @return The XML
      * @throws IOException If fails
      */
-    public String xml() throws IOException {
+    String xml() throws IOException {
         return this.before().toString();
     }
 
     /**
-     * Ctor.
+     * Initialize it, making sure it looks like a default {@code pom.xml}
+     * for Apache Maven.
+     *
      * @return Itself
      * @throws IOException If fails
      */
-    public Pom init() throws IOException {
+    Pom init() throws IOException {
         if (!this.path.toFile().exists()) {
             this.modify(
                 new Directives()
@@ -104,7 +109,10 @@ final class Pom {
     }
 
     /**
-     * Ctor.
+     * Modify POM with the provided Xembly directives.
+     *
+     * <p>This method is thread-safe.</p>
+     *
      * @param dirs Directives
      * @throws IOException If fails
      */
@@ -115,12 +123,14 @@ final class Pom {
                 this.path.toFile().getParentFile()
             );
         }
-        Files.write(
-            this.path,
-            new XMLDocument(
-                new Xembler(dirs).applyQuietly(this.before().node())
-            ).toString().getBytes(StandardCharsets.UTF_8)
-        );
+        synchronized (this.path) {
+            Files.write(
+                this.path,
+                new XMLDocument(
+                    new Xembler(dirs).applyQuietly(this.before().node())
+                ).toString().getBytes(StandardCharsets.UTF_8)
+            );
+        }
     }
 
     /**

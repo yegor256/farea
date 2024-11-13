@@ -94,17 +94,19 @@ final class Itself {
             "%s-%s",
             this.base.artifactId(), this.base.version()
         );
-        this.assembleJar(
-            place.resolve(
-                String.format("%s.jar", name)
-            )
-        );
-        Files.write(
-            place.resolve(
-                String.format("%s.pom", name)
-            ),
-            this.base.xml().toString().getBytes(StandardCharsets.UTF_8)
-        );
+        synchronized (Itself.class) {
+            this.assembleJar(
+                place.resolve(
+                    String.format("%s.jar", name)
+                )
+            );
+            Files.write(
+                place.resolve(
+                    String.format("%s.pom", name)
+                ),
+                this.base.xml().toString().getBytes(StandardCharsets.UTF_8)
+            );
+        }
     }
 
     /**
