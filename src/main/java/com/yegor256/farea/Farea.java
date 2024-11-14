@@ -263,14 +263,18 @@ public final class Farea {
     public void exec(final String... args) throws IOException {
         this.pom().init();
         final Path log = this.home.resolve("log.txt");
-        Farea.log(
-            Logger.format("pom.xml at %[file]s", this.home),
-            this.pom().xml()
-        );
-        Farea.log(
-            Logger.format("Files at %[file]s", this.home),
-            this.walk()
-        );
+        if (Logger.isDebugEnabled(Farea.class)) {
+            Farea.log(
+                Level.FINER,
+                Logger.format("pom.xml at %[file]s", this.home),
+                this.pom().xml()
+            );
+            Farea.log(
+                Level.FINER,
+                Logger.format("Files at %[file]s", this.home),
+                this.walk()
+            );
+        }
         Logger.debug(this, "Log stream redirected to %[file]s", log);
         final AtomicBoolean finished = new AtomicBoolean(false);
         final Thread terminal = new Thread(
@@ -286,11 +290,18 @@ public final class Farea {
             finished.set(true);
             Farea.join(terminal);
         }
-        Farea.log("Maven stdout", new String(Files.readAllBytes(log), StandardCharsets.UTF_8));
-        Farea.log(
-            Logger.format("Files after execution at %[file]s", this.home),
-            this.walk()
-        );
+        if (Logger.isDebugEnabled(Farea.class)) {
+            Farea.log(
+                Level.FINER,
+                "Maven stdout",
+                new String(Files.readAllBytes(log), StandardCharsets.UTF_8)
+            );
+            Farea.log(
+                Level.FINER,
+                Logger.format("Files after execution at %[file]s", this.home),
+                this.walk()
+            );
+        }
         if (code != 0) {
             Farea.log(
                 Level.WARNING, "The stdout of the failed Maven build",
@@ -424,15 +435,6 @@ public final class Farea {
             cmd.add("mvn");
         }
         return cmd;
-    }
-
-    /**
-     * Log with indentation.
-     * @param intro The intro message
-     * @param body The body
-     */
-    private static void log(final String intro, final String body) {
-        Farea.log(Level.FINER, intro, body);
     }
 
     /**
