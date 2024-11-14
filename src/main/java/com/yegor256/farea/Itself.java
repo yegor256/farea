@@ -235,13 +235,15 @@ final class Itself {
                     Runtime.getRuntime().addShutdownHook(
                         new Thread(
                             () -> {
-                                try (Stream<Path> files = Files.walk(temp)) {
-                                    files
-                                        .map(Path::toFile)
-                                        .sorted(Comparator.reverseOrder())
-                                        .forEach(File::delete);
-                                } catch (final IOException ex) {
-                                    throw new IllegalArgumentException(ex);
+                                if (temp.toFile().exists()) {
+                                    try (Stream<Path> files = Files.walk(temp)) {
+                                        files
+                                            .map(Path::toFile)
+                                            .sorted(Comparator.reverseOrder())
+                                            .forEach(File::delete);
+                                    } catch (final IOException ex) {
+                                        throw new IllegalArgumentException(ex);
+                                    }
                                 }
                             }
                         )
