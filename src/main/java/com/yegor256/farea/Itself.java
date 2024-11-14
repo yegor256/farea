@@ -29,9 +29,11 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 import org.xembly.Directives;
@@ -241,10 +243,25 @@ final class Itself {
      * @return The path
      */
     private Path temp(final String version) {
-        return this.home
+        final Path temp = this.home
             .resolve("target")
             .resolve("farea")
             .resolve(version);
+        Runtime.getRuntime().addShutdownHook(
+            new Thread(
+                () -> {
+                    try (Stream<Path> files = Files.walk(temp)) {
+                        files
+                            .map(Path::toFile)
+                            .sorted(Comparator.reverseOrder())
+                            .forEach(File::delete);
+                    } catch (final IOException ex) {
+                        throw new IllegalArgumentException(ex);
+                    }
+                }
+            )
+        );
+        return temp;
     }
 
 }
