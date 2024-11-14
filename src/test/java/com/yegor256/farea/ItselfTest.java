@@ -45,30 +45,34 @@ import org.junit.jupiter.api.extension.ExtendWith;
 final class ItselfTest {
 
     @Test
-    void deploysJar(@Mktmp final Path dir) throws IOException {
-        new Itself(
+    void deploysJar(@Mktmp final Path dir, @Mktmp final Path repos) throws IOException {
+        final String version = new Itself(
+            dir,
             new Base(Paths.get("src/test/resources/fake-pom.xml")),
             false
-        ).deploy(dir);
+        ).deploy(repos);
         MatcherAssert.assertThat(
             "Resolves",
-            dir.resolve("g1/g2/a/1.1.1/a-1.1.1.jar").toFile().exists(),
+            repos.resolve(
+                String.format("g1/g2/a/%s/a-%1$s.jar", version)
+            ).toFile().exists(),
             Matchers.is(true)
         );
     }
 
     @Test
-    void deploysJarAndPom(@Mktmp final Path dir) throws IOException {
-        new Itself(
+    void deploysJarAndPom(@Mktmp final Path dir, @Mktmp final Path repos) throws IOException {
+        final String version = new Itself(
+            dir,
             new Base(Paths.get("src/test/resources/fake-pom.xml")),
             false
-        ).deploy(dir);
+        ).deploy(repos);
         MatcherAssert.assertThat(
             "Deploys JAR and POM",
             XhtmlMatchers.xhtml(
                 new String(
                     Files.readAllBytes(
-                        dir.resolve("g1/g2/a/1.1.1/a-1.1.1.pom")
+                        repos.resolve(String.format("g1/g2/a/%s/a-%1$s.pom", version))
                     ),
                     StandardCharsets.UTF_8
                 )
@@ -81,8 +85,9 @@ final class ItselfTest {
     }
 
     @Test
-    void deploysInManyThreads(@Mktmp final Path dir) {
+    void deploysInManyThreads(@Mktmp final Path dir, @Mktmp final Path repos) {
         final Itself itself = new Itself(
+            dir,
             new Base(Paths.get("src/test/resources/fake-pom.xml")),
             false
         );
@@ -90,7 +95,7 @@ final class ItselfTest {
             "the JAR deploys in many threads",
             new Jointly<>(
                 thread -> {
-                    itself.deploy(dir);
+                    itself.deploy(repos);
                     return itself;
                 }
             ).made(),

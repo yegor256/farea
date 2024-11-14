@@ -61,7 +61,7 @@ final class DtConfigurationTest {
     void setsListAsParam(@Mktmp final Path dir) throws IOException {
         final Path xml = dir.resolve("pom-1.xml");
         final Pom pom = new Pom(xml);
-        new DtPlugins(pom).append("a", "0.0.0")
+        new DtPlugins(dir, pom).append("a", "0.0.0")
             .execution("foo")
             .phase("boom")
             .configuration()
@@ -77,7 +77,7 @@ final class DtConfigurationTest {
     void setsArrayAsParam(@Mktmp final Path dir) throws IOException {
         final Path xml = dir.resolve("pom-2.xml");
         final Pom pom = new Pom(xml);
-        new DtPlugins(pom).append("xyz", "1.1.1")
+        new DtPlugins(dir, pom).append("xyz", "1.1.1")
             .execution("foo")
             .phase("boom")
             .configuration()
@@ -95,7 +95,7 @@ final class DtConfigurationTest {
         final Pom pom = new Pom(xml);
         final Map<String, Integer> map = new HashMap<>(0);
         map.put("test", 42);
-        new DtPlugins(pom).append("bbb", "1.2.3")
+        new DtPlugins(dir, pom).append("bbb", "1.2.3")
             .execution("foo")
             .phase("boom")
             .configuration()

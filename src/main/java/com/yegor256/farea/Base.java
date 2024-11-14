@@ -32,8 +32,12 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
- * POM file (pom.xml) in the current directory, that belongs to the current project
- * under test.
+ * An abstraction of the POM file ({@code pom.xml}) in the current directory,
+ * that belongs to the current project under the test.
+ *
+ * <p>This is not the POM that is generated for the tests. Instead, it's
+ * the POM that stays in the project being tested. This POM is used in order
+ * to generate test POMs and even the "itself" JAR (by the {@link Itself}).</p>
  *
  * @since 0.0.1
  */

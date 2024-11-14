@@ -35,15 +35,22 @@ import org.xembly.Directives;
 final class DtDependencies implements Dependencies {
 
     /**
+     * Home of the project.
+     */
+    private final Path home;
+
+    /**
      * Location.
      */
     private final Pom pom;
 
     /**
      * Ctor.
+     * @param dir The location of the project directory
      * @param file The POM
      */
-    DtDependencies(final Pom file) {
+    DtDependencies(final Path dir, final Pom file) {
+        this.home = dir;
         this.pom = file;
     }
 
@@ -70,7 +77,7 @@ final class DtDependencies implements Dependencies {
     @Override
     public Dependency appendItself(final Path local) throws IOException {
         final Base base = new Base();
-        new Itself(base, false).deploy(local);
+        new Itself(this.home, base, false).deploy(local);
         return this.append(base.groupId(), base.artifactId(), base.version());
     }
 

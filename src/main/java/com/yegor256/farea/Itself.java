@@ -34,6 +34,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
+import org.xembly.Directives;
 
 /**
  * This classpath classes packaged as a plugin.
@@ -41,6 +42,11 @@ import java.util.zip.ZipOutputStream;
  * @since 0.0.1
  */
 final class Itself {
+
+    /**
+     * Directory of Maven project.
+     */
+    private final Path home;
 
     /**
      * Original POM, of the current project.
@@ -54,25 +60,29 @@ final class Itself {
 
     /**
      * Ctor.
+     * @param dir The directory of the Maven project
      */
-    Itself() {
-        this(new Base());
+    Itself(final Path dir) {
+        this(dir, new Base());
     }
 
     /**
      * Ctor.
+     * @param dir The directory of the Maven project
      * @param pom Original pom.xml
      */
-    Itself(final Base pom) {
-        this(pom, true);
+    Itself(final Path dir, final Base pom) {
+        this(dir, pom, true);
     }
 
     /**
      * Ctor.
+     * @param dir The directory of the Maven project
      * @param pom Original pom.xml
      * @param crf Careful?
      */
-    Itself(final Base pom, final boolean crf) {
+    Itself(final Path dir, final Base pom, final boolean crf) {
+        this.home = dir;
         this.base = pom;
         this.careful = crf;
     }
@@ -80,22 +90,24 @@ final class Itself {
     /**
      * Deploy it to local Maven repository.
      * @param local Path of local Maven repo, usually "~/.m2/repository"
+     * @return The {@code version} of a new Maven dependency just deployed
      * @throws IOException If fails
      */
-    public void deploy(final Path local) throws IOException {
+    public String deploy(final Path local) throws IOException {
+        final String version = this.next();
         final Path place = local.resolve(
             String.format(
                 "%s/%s/%s",
                 this.base.groupId().replace(".", "/"),
-                this.base.artifactId(), this.base.version()
+                this.base.artifactId(), version
             )
         );
         final String name = String.format(
-            "%s-%s",
-            this.base.artifactId(), this.base.version()
+            "%s-%s", this.base.artifactId(), version
         );
         synchronized (Itself.class) {
             this.assembleJar(
+                version,
                 place.resolve(
                     String.format("%s.jar", name)
                 )
@@ -107,14 +119,16 @@ final class Itself {
                 this.base.xml().toString().getBytes(StandardCharsets.UTF_8)
             );
         }
+        return version;
     }
 
     /**
      * Zip the entire module into a JAR.
+     * @param version Version of the JAR to use
      * @param zip The location of the JAR
      * @throws IOException If fails
      */
-    private void assembleJar(final Path zip) throws IOException {
+    private void assembleJar(final String version, final Path zip) throws IOException {
         if (zip.toFile().exists()) {
             Files.delete(zip);
         }
@@ -125,10 +139,10 @@ final class Itself {
             );
         }
         Files.createFile(zip);
-        final Set<String> seen = new HashSet<>();
+        final Set<String> seen = new HashSet<>(0);
         final String classpath = System.getProperty("java.class.path");
         final String[] jars = classpath.split(File.pathSeparator);
-        if (!Itself.zip(zip, seen, jars) && this.careful) {
+        if (!this.zip(version, zip, seen, jars) && this.careful) {
             throw new IllegalStateException(
                 String.join(
                     " ",
@@ -152,13 +166,16 @@ final class Itself {
 
     /**
      * Package it in a single ZIP.
+     * @param version Version of the JAR to use
      * @param zip The ZIP file
      * @param seen Seen already
      * @param jars JARs to package
      * @return TRUE if descripted (has "plugin.xml" file inside)
      * @throws IOException If fails
+     * @checkstyle ParameterNumberCheck (10 lines)
      */
-    private static boolean zip(final Path zip, final Set<String> seen,
+    @SuppressWarnings("PMD.CognitiveComplexity")
+    private boolean zip(final String version, final Path zip, final Set<String> seen,
         final String... jars) throws IOException {
         boolean descripted = false;
         try (ZipOutputStream stream = new ZipOutputStream(Files.newOutputStream(zip))) {
@@ -176,16 +193,58 @@ final class Itself {
                     if (seen.contains(name)) {
                         continue;
                     }
-                    descripted |= "META-INF/maven/plugin.xml".equals(name);
                     final ZipEntry entry = new ZipEntry(name);
                     stream.putNextEntry(entry);
-                    Files.copy(file, stream);
+                    if ("META-INF/maven/plugin.xml".equals(name)) {
+                        final Path descriptor = this.temp(version).resolve("plugin.xml");
+                        Files.copy(file, descriptor);
+                        new Pom(descriptor).modify(
+                            new Directives()
+                                .xpath("/plugin/version")
+                                .strict(1)
+                                .set(version)
+                        );
+                        Files.copy(descriptor, stream);
+                        descripted = true;
+                    } else {
+                        Files.copy(file, stream);
+                    }
                     stream.closeEntry();
                     seen.add(name);
                 }
             }
         }
         return descripted;
+    }
+
+    /**
+     * Create new version.
+     * @return The version
+     * @throws IOException If fails
+     */
+    private String next() throws IOException {
+        while (true) {
+            final String version = String.format(
+                "%s-farea-%08x", this.base.version(), System.nanoTime()
+            );
+            synchronized (Itself.class) {
+                if (this.temp(version).toFile().mkdirs()) {
+                    return version;
+                }
+            }
+        }
+    }
+
+    /**
+     * Make a temp directory for this version.
+     * @param version The version
+     * @return The path
+     */
+    private Path temp(final String version) {
+        return this.home
+            .resolve("target")
+            .resolve("farea")
+            .resolve(version);
     }
 
 }

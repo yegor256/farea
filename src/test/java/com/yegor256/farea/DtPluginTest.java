@@ -45,7 +45,7 @@ final class DtPluginTest {
     void appendsManyExecutions(@Mktmp final Path dir) throws IOException {
         final Path xml = dir.resolve("pom.xml");
         final Pom pom = new Pom(xml).init();
-        final Plugin plugin = new DtPlugins(pom).append("g", "a", "0.0.1");
+        final Plugin plugin = new DtPlugins(dir, pom).append("g", "a", "0.0.1");
         plugin.execution("foo").phase("first");
         plugin.execution("bar").phase("second");
         MatcherAssert.assertThat(
@@ -59,7 +59,7 @@ final class DtPluginTest {
     void appendsGoalsExecutions(@Mktmp final Path dir) throws IOException {
         final Path xml = dir.resolve("pom.xml");
         final Pom pom = new Pom(xml).init();
-        final Plugin plugin = new DtPlugins(pom).append("g", "a", "0.0.1");
+        final Plugin plugin = new DtPlugins(dir, pom).append("g", "a", "0.0.1");
         plugin.execution().phase("first").goals("x");
         plugin.execution("bar").phase("second").goals("y");
         MatcherAssert.assertThat(
@@ -73,11 +73,11 @@ final class DtPluginTest {
     void addsConfiguration(@Mktmp final Path dir) throws IOException {
         final Path xml = dir.resolve("pom.xml");
         final Pom pom = new Pom(xml).init();
-        new DtPlugins(pom)
+        new DtPlugins(dir, pom)
             .append("z", "z", "0.0.2")
             .configuration()
             .set("hey", "you");
-        new DtPlugins(pom)
+        new DtPlugins(dir, pom)
             .append("z", "z", "0.0.2")
             .configuration()
             .set("hey", "me");
@@ -92,7 +92,7 @@ final class DtPluginTest {
     void addsGoalsAndConfiguration(@Mktmp final Path dir) throws IOException {
         final Path xml = dir.resolve("pom.xml");
         final Pom pom = new Pom(xml).init();
-        new DtPlugins(pom)
+        new DtPlugins(dir, pom)
             .appendItself()
             .execution("default")
             .phase("process-classes")

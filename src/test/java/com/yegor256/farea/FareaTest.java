@@ -126,12 +126,15 @@ final class FareaTest {
                                 String.format("foo-%d", thread),
                                 "foo-bar"
                             );
-                            f.exec("initialize");
+                            f.files().file("src/main/java/Foo.java")
+                                .write("class Foo {}".getBytes());
+                            f.dependencies().appendItself();
+                            f.exec("compile");
                         }
                     );
                     return 0;
                 }
-            ).made(10),
+            ).made(),
             Matchers.notNullValue()
         );
         MatcherAssert.assertThat(

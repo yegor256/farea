@@ -35,15 +35,22 @@ import org.xembly.Directives;
 final class DtPlugins implements Plugins {
 
     /**
+     * Home of the project.
+     */
+    private final Path home;
+
+    /**
      * Location.
      */
     private final Pom pom;
 
     /**
      * Ctor.
+     * @param dir The location of the project directory
      * @param file The POM
      */
-    DtPlugins(final Pom file) {
+    DtPlugins(final Path dir, final Pom file) {
+        this.home = dir;
         this.pom = file;
     }
 
@@ -93,8 +100,10 @@ final class DtPlugins implements Plugins {
     @Override
     public Plugin appendItself(final Path local) throws IOException {
         final Base base = new Base();
-        new Itself(base).deploy(local);
-        return this.append(base.groupId(), base.artifactId(), base.version());
+        return this.append(
+            base.groupId(), base.artifactId(),
+            new Itself(this.home, base).deploy(local)
+        );
     }
 
 }

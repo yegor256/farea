@@ -220,7 +220,7 @@ public final class Farea {
      * @throws IOException If fails
      */
     public Build build() throws IOException {
-        return new DtBuild(this.pom());
+        return new DtBuild(this.home, this.pom());
     }
 
     /**
@@ -229,7 +229,7 @@ public final class Farea {
      * @throws IOException If fails
      */
     public Dependencies dependencies() throws IOException {
-        return new DtDependencies(this.pom());
+        return new DtDependencies(this.home, this.pom());
     }
 
     /**

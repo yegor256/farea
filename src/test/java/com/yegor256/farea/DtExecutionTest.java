@@ -44,7 +44,7 @@ final class DtExecutionTest {
     void setsManyGoals(@Mktmp final Path dir) throws IOException {
         final Path xml = dir.resolve("pom.xml");
         final Pom pom = new Pom(xml).init();
-        final Plugin plugin = new DtPlugins(pom).append("g", "a", "0.0.1");
+        final Plugin plugin = new DtPlugins(dir, pom).append("g", "a", "0.0.1");
         final Execution exec = plugin.execution("foo");
         exec.goals("abc");
         exec.goals("cde");

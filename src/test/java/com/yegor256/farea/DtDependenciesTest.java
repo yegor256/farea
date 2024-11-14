@@ -44,7 +44,7 @@ final class DtDependenciesTest {
     void appendsItself(@Mktmp final Path dir) throws IOException {
         final Path xml = dir.resolve("pom-1.xml");
         final Pom pom = new Pom(xml);
-        new DtDependencies(pom).appendItself(dir);
+        new DtDependencies(dir, pom).appendItself(dir);
         MatcherAssert.assertThat(
             "Appends itself",
             XhtmlMatchers.xhtml(pom.xml()),
@@ -64,7 +64,7 @@ final class DtDependenciesTest {
             XhtmlMatchers.xhtml(
                 new Jointly<>(
                     thread -> {
-                        new DtDependencies(pom).appendItself(dir);
+                        new DtDependencies(dir, pom).appendItself(dir);
                         return pom;
                     }
                 ).made(10).xml()

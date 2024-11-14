@@ -44,7 +44,7 @@ final class DtDependencyTest {
     void setsDependencyScope(@Mktmp final Path dir) throws IOException {
         final Path xml = dir.resolve("pom-1.xml");
         final Pom pom = new Pom(xml);
-        new DtDependencies(pom).append("g", "a", "1.0-SNAPSHOT").scope("test");
+        new DtDependencies(dir, pom).append("g", "a", "1.0-SNAPSHOT").scope("test");
         MatcherAssert.assertThat(
             "Sets dependency scope",
             XhtmlMatchers.xhtml(pom.xml()),
@@ -61,7 +61,7 @@ final class DtDependencyTest {
     void setsDependencyClassifier(@Mktmp final Path dir) throws IOException {
         final Path xml = dir.resolve("pom-2.xml");
         final Pom pom = new Pom(xml);
-        new DtDependencies(pom)
+        new DtDependencies(dir, pom)
             .append("foo", "bar", "0.0.1")
             .scope("provided")
             .classifier("jar");

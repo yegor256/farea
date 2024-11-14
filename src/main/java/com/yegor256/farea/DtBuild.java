@@ -23,6 +23,8 @@
  */
 package com.yegor256.farea;
 
+import java.nio.file.Path;
+
 /**
  * Build inside POM.
  *
@@ -31,21 +33,28 @@ package com.yegor256.farea;
 final class DtBuild implements Build {
 
     /**
+     * Home of the project.
+     */
+    private final Path home;
+
+    /**
      * Location.
      */
     private final Pom pom;
 
     /**
      * Ctor.
+     * @param dir The location of the project directory
      * @param file The POM
      */
-    DtBuild(final Pom file) {
+    DtBuild(final Path dir, final Pom file) {
+        this.home = dir;
         this.pom = file;
     }
 
     @Override
     public Plugins plugins() {
-        return new DtPlugins(this.pom);
+        return new DtPlugins(this.home, this.pom);
     }
 
 }
