@@ -39,6 +39,7 @@ import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.Locale;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.logging.Level;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -291,6 +292,10 @@ public final class Farea {
             this.walk()
         );
         if (code != 0) {
+            Farea.log(
+                Level.WARNING, "The stdout of the failed Maven build",
+                new String(Files.readAllBytes(log), StandardCharsets.UTF_8)
+            );
             throw new Farea.BuildFailureException(code);
         }
     }
@@ -427,7 +432,18 @@ public final class Farea {
      * @param body The body
      */
     private static void log(final String intro, final String body) {
-        Logger.debug(
+        Farea.log(Level.FINER, intro, body);
+    }
+
+    /**
+     * Log with indentation.
+     * @param level Logging level
+     * @param intro The intro message
+     * @param body The body
+     */
+    private static void log(final Level level, final String intro, final String body) {
+        Logger.log(
+            level,
             Farea.class,
             "%s:%n  %s",
             intro,
