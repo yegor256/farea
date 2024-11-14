@@ -304,6 +304,11 @@ public final class Farea {
         }
         if (code != 0) {
             Farea.log(
+                Level.WARNING,
+                Logger.format("The pom.xml at %[file]s after the failed build", this.home),
+                this.pom().xml()
+            );
+            Farea.log(
                 Level.WARNING, "The stdout of the failed Maven build",
                 new String(Files.readAllBytes(log), StandardCharsets.UTF_8)
             );

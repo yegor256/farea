@@ -77,8 +77,10 @@ final class DtDependencies implements Dependencies {
     @Override
     public Dependency appendItself(final Path local) throws IOException {
         final Base base = new Base();
-        new Itself(this.home, base, false).deploy(local);
-        return this.append(base.groupId(), base.artifactId(), base.version());
+        return this.append(
+            base.groupId(), base.artifactId(),
+            new Itself(this.home, base, false).deploy(local)
+        );
     }
 
 }
