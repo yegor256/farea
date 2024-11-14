@@ -230,7 +230,22 @@ final class Itself {
                 "%s-farea-%08x", this.base.version(), System.nanoTime()
             );
             synchronized (Itself.class) {
-                if (this.temp(version).toFile().mkdirs()) {
+                final Path temp = this.temp(version);
+                if (temp.toFile().mkdirs()) {
+                    Runtime.getRuntime().addShutdownHook(
+                        new Thread(
+                            () -> {
+                                try (Stream<Path> files = Files.walk(temp)) {
+                                    files
+                                        .map(Path::toFile)
+                                        .sorted(Comparator.reverseOrder())
+                                        .forEach(File::delete);
+                                } catch (final IOException ex) {
+                                    throw new IllegalArgumentException(ex);
+                                }
+                            }
+                        )
+                    );
                     return version;
                 }
             }
@@ -243,25 +258,10 @@ final class Itself {
      * @return The path
      */
     private Path temp(final String version) {
-        final Path temp = this.home
+        return this.home
             .resolve("target")
             .resolve("farea")
             .resolve(version);
-        Runtime.getRuntime().addShutdownHook(
-            new Thread(
-                () -> {
-                    try (Stream<Path> files = Files.walk(temp)) {
-                        files
-                            .map(Path::toFile)
-                            .sorted(Comparator.reverseOrder())
-                            .forEach(File::delete);
-                    } catch (final IOException ex) {
-                        throw new IllegalArgumentException(ex);
-                    }
-                }
-            )
-        );
-        return temp;
     }
 
 }
