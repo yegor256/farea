@@ -52,13 +52,28 @@ final class FareaTest {
                     .write("package foo; import org.cactoos.Input; class Hello {}".getBytes());
                 f.dependencies()
                     .append("org.cactoos", "cactoos", "0.55.0");
-                f.execQuiet("compile");
                 MatcherAssert.assertThat(
-                    "Compiles simple project",
-                    f.files().file("target/classes/foo/Hello.class").exists(),
-                    Matchers.is(true)
+                    "exit code is zero",
+                    f.execQuiet("compile"),
+                    Matchers.equalTo(0)
                 );
             }
+        );
+        MatcherAssert.assertThat(
+            "Compiles simple project",
+            dir.resolve("target/classes/foo/Hello.class").toFile().exists(),
+            Matchers.is(true)
+        );
+    }
+
+    @Test
+    void failsGracefully(@Mktmp final Path dir) throws IOException {
+        new Farea(dir).together(
+            f -> MatcherAssert.assertThat(
+                "exit code is NON zero",
+                f.execQuiet("wrong-goal"),
+                Matchers.not(Matchers.equalTo(0))
+            )
         );
     }
 

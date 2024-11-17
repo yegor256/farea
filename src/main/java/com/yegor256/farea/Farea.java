@@ -239,17 +239,23 @@ public final class Farea {
      * <p>If Maven fails, this method will <b>NOT</b> throw any exceptions. Instead,
      * you should check the contents of the log printed by Maven, with the
      * help of the {@link #log()} method. Otherwise, use the {@link #exec(String...)}
-     * method, it will throw in case of build failure.</p>
+     * method, it will throw in case of build failure. You can also check
+     * the returned integer, which would be equal to the exit code of the Maven
+     * process (zero means success, while anything else means an error).</p>
      *
      * @param args Command line arguments
+     * @return Exit code of the Maven process
      * @throws IOException If fails
      */
-    public void execQuiet(final String... args) throws IOException {
+    public int execQuiet(final String... args) throws IOException {
+        int code = 0;
         try {
             this.exec(args);
         } catch (final Farea.BuildFailureException ex) {
             Logger.debug(this, "Build failed with exit code 0x%04x", ex.getCode());
+            code = ex.getCode();
         }
+        return code;
     }
 
     /**
