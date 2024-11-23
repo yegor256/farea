@@ -30,6 +30,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
@@ -51,6 +52,19 @@ final class DtRequisiteTest {
             "copied two files",
             farea.resolve("new/a/b/c/d/two.txt").toFile().exists(),
             Matchers.is(true)
+        );
+    }
+
+    @Test
+    void copiesDirectoryIntoFile(@Mktmp final Path src,
+        @Mktmp final Path farea) throws IOException {
+        src.resolve("d").toFile().mkdirs();
+        Files.write(src.resolve("d/foo.txt"), "".getBytes());
+        new DtRequisite(farea, "boo.txt").write("hello".getBytes());
+        Assertions.assertThrows(
+            IOException.class,
+            () -> new DtRequisite(farea, "boo.txt").save(src),
+            "should not allow copying directory into file"
         );
     }
 
