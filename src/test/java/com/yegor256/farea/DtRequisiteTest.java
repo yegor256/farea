@@ -49,7 +49,22 @@ final class DtRequisiteTest {
         new DtRequisite(farea, "new").save(src);
         MatcherAssert.assertThat(
             "copied two files",
-            farea.resolve("a/b/c/d/two.txt").toFile().exists(),
+            farea.resolve("new/a/b/c/d/two.txt").toFile().exists(),
+            Matchers.is(true)
+        );
+    }
+
+    @Test
+    void copiesDirectoryIntoExistingDirectory(@Mktmp final Path src,
+        @Mktmp final Path farea) throws IOException {
+        src.resolve("a/b").toFile().mkdirs();
+        Files.write(src.resolve("a/b/foo.txt"), "".getBytes());
+        new DtRequisite(farea, "one/two").save(src);
+        Files.write(src.resolve("a/b/bar.txt"), "".getBytes());
+        new DtRequisite(farea, "one/two").save(src);
+        MatcherAssert.assertThat(
+            "copied second file too",
+            farea.resolve("one/two/a/b/bar.txt").toFile().exists(),
             Matchers.is(true)
         );
     }
