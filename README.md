@@ -99,6 +99,45 @@ the [`install`][install-mojo] goal of the
 [invoker plugin][invoker] would do if you use it for
 integration testing.
 
+It is recommended to add this to your `pom.xml`, in order
+to enable interactive test runs right from the IDE:
+
+```xml
+<project>
+  <build>
+    <plugins>
+      [...]
+      <plugin>
+        <artifactId>maven-resources-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>copy-descriptor</id>
+            <phase>process-classes</phase>
+            <goals>
+              <goal>copy-resources</goal>
+            </goals>
+            <configuration>
+              <outputDirectory>${project.build.directory}</outputDirectory>
+              <resources>
+                <resource>
+                  <directory>${project.build.outputDirectory}/META-INF/maven</directory>
+                  <includes>
+                    <include>plugin.xml</include>
+                  </includes>
+                </resource>
+              </resources>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+</project>
+```
+
+This will make sure the `META-INF/maven/plugin.xml` is not destroyed
+in the `target/classes` by the IDE before the next test run.
+
 See how
 [antlr2ebnf-maven-plugin](https://github.com/yegor256/antlr2ebnf-maven-plugin)
 is using Farea.
