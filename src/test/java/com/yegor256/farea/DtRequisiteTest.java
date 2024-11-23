@@ -60,11 +60,12 @@ final class DtRequisiteTest {
         src.resolve("a/b").toFile().mkdirs();
         Files.write(src.resolve("a/b/foo.txt"), "".getBytes());
         new DtRequisite(farea, "one/two").save(src);
-        Files.write(src.resolve("a/b/bar.txt"), "".getBytes());
+        src.resolve("a/c").toFile().mkdirs();
+        Files.write(src.resolve("a/c/bar.txt"), "".getBytes());
         new DtRequisite(farea, "one/two").save(src);
         MatcherAssert.assertThat(
             "copied second file too",
-            farea.resolve("one/two/a/b/bar.txt").toFile().exists(),
+            farea.resolve("one/two/a/c/bar.txt").toFile().exists(),
             Matchers.is(true)
         );
     }
