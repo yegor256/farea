@@ -29,6 +29,7 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Set;
@@ -169,9 +170,9 @@ final class Itself {
     /**
      * Package it in a single ZIP.
      * @param version Version of the JAR to use
-     * @param zip The ZIP file
-     * @param seen Seen already
-     * @param jars JARs to package
+     * @param zip The ZIP file to create
+     * @param seen List of entries seen already
+     * @param jars JARs to package into the ZIP (including the "target/classes/" directory)
      * @return TRUE if descripted (has "plugin.xml" file inside)
      * @throws IOException If fails
      * @checkstyle ParameterNumberCheck (10 lines)
@@ -198,15 +199,7 @@ final class Itself {
                     final ZipEntry entry = new ZipEntry(name);
                     stream.putNextEntry(entry);
                     if ("META-INF/maven/plugin.xml".equals(name)) {
-                        final Path descriptor = this.temp(version).resolve("plugin.xml");
-                        Files.copy(file, descriptor);
-                        new Pom(descriptor).modify(
-                            new Directives()
-                                .xpath("/plugin/version")
-                                .strict(1)
-                                .set(version)
-                        );
-                        Files.copy(descriptor, stream);
+                        this.copyDescriptor(file, version, stream);
                         descripted = true;
                     } else {
                         Files.copy(file, stream);
@@ -215,8 +208,35 @@ final class Itself {
                     seen.add(name);
                 }
             }
+            if (!descripted) {
+                final Path dup = Paths.get("target/plugin.xml");
+                if (dup.toFile().exists()) {
+                    this.copyDescriptor(dup, version, stream);
+                    Logger.debug(Itself.class, "The %[file]s copied into the JAR", dup);
+                }
+            }
         }
         return descripted;
+    }
+
+    /**
+     * Copy "plugin.xml" into the ZIP.
+     * @param file Location of the "plugin.xml"
+     * @param version The version of itself
+     * @param stream The ZIP
+     * @throws IOException If fails
+     */
+    private void copyDescriptor(final Path file, final String version,
+        final ZipOutputStream stream) throws IOException {
+        final Path descriptor = this.temp(version).resolve("plugin.xml");
+        Files.copy(file, descriptor);
+        new Pom(descriptor).modify(
+            new Directives()
+                .xpath("/plugin/version")
+                .strict(1)
+                .set(version)
+        );
+        Files.copy(descriptor, stream);
     }
 
     /**
