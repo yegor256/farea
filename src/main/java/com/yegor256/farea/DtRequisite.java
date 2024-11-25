@@ -96,7 +96,7 @@ final class DtRequisite implements Requisite {
     @Override
     public Requisite save(final Path src) throws IOException {
         if (src.toFile().isDirectory()) {
-            final Path target = this.home.resolve(this.name);
+            final Path target = this.path();
             final Collection<Path> sources = Files.walk(src)
                 .filter(file -> !file.toFile().isDirectory())
                 .collect(Collectors.toList());
@@ -110,7 +110,7 @@ final class DtRequisite implements Requisite {
             }
             Logger.debug(
                 this, "Copied %d file(s) to %[file]s",
-                total, this.path()
+                total, target
             );
         } else {
             this.write(Files.readAllBytes(src));
