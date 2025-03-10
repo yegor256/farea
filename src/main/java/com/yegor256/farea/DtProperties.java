@@ -20,11 +20,26 @@ final class DtProperties implements Properties {
     private final Pom pom;
 
     /**
+     * Element.
+     */
+    private final String element;
+
+    /**
      * Ctor.
      * @param file The POM
      */
     DtProperties(final Pom file) {
+        this(file, "properties");
+    }
+
+    /**
+     * Ctor.
+     * @param file The POM
+     * @param elm The name of the XML element
+     */
+    DtProperties(final Pom file, final String elm) {
         this.pom = file;
+        this.element = elm;
     }
 
     @Override
@@ -32,11 +47,12 @@ final class DtProperties implements Properties {
         this.pom.modify(
             new Directives()
                 .xpath("/project")
-                .addIf("properties")
+                .addIf(this.element)
                 .strict(1)
                 .xpath(name)
                 .remove()
-                .xpath("/project/properties")
+                .xpath("/project")
+                .xpath(this.element)
                 .strict(1)
                 .add(name)
                 .set(value)
