@@ -15,4 +15,11 @@ public interface Build {
      * @return Build
      */
     Plugins plugins();
+
+    /**
+     * Get properties of the build.
+     * @return Properties
+     * @since 0.15.0
+     */
+    Properties properties();
 }

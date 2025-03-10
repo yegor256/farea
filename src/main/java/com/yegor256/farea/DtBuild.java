@@ -38,4 +38,8 @@ final class DtBuild implements Build {
         return new DtPlugins(this.home, this.pom);
     }
 
+    @Override
+    public Properties properties() {
+        return new DtProperties(this.pom, "build");
+    }
 }
