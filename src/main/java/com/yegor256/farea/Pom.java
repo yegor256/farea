@@ -108,7 +108,7 @@ final class Pom {
             Files.write(
                 this.path,
                 new XMLDocument(
-                    new Xembler(dirs).applyQuietly(this.before().node())
+                    new Xembler(dirs).applyQuietly(this.before().inner())
                 ).toString().getBytes(StandardCharsets.UTF_8)
             );
         }
