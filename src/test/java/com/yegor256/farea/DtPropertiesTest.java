@@ -91,12 +91,37 @@ final class DtPropertiesTest {
             .set("xxx", map)
             .set("another", "foo");
         MatcherAssert.assertThat(
-            "Collection is not set",
+            "Map is not set",
             XhtmlMatchers.xhtml(pom.xml()),
             XhtmlMatchers.hasXPaths(
                 "//properties/xxx[count(*) = 2]",
                 "//properties/xxx[one='1']",
                 "//properties/xxx[two='2']"
+            )
+        );
+    }
+
+    @Test
+    void setsMapOfMaps(@Mktmp final Path dir) throws IOException {
+        final Path xml = dir.resolve("pom-9.xml");
+        final Pom pom = new Pom(xml);
+        final Map<String, Object> lower = new HashMap<>();
+        lower.put("alpha", 1);
+        lower.put("beta", 2);
+        final Map<String, Object> upper = new HashMap<>();
+        upper.put("blue", 88);
+        upper.put("orange", lower);
+        new DtProperties(pom)
+            .set("ttt", upper)
+            .set("something", "foo-bar");
+        MatcherAssert.assertThat(
+            "Map of maps is not set",
+            XhtmlMatchers.xhtml(pom.xml()),
+            XhtmlMatchers.hasXPaths(
+                "//properties/ttt[blue='88']",
+                "//properties/ttt/orange[count(*) = 2]",
+                "//properties/ttt/orange[alpha='1']",
+                "//properties/ttt/orange[beta='2']"
             )
         );
     }
