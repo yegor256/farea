@@ -109,6 +109,11 @@ final class Base {
                 )
             );
         }
+        if (vals.isEmpty()) {
+            throw new IllegalStateException(
+                String.format("Neither project nor parent contains '%s' tag", tag)
+            );
+        }
         return vals.get(0);
     }
 

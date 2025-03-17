@@ -9,7 +9,7 @@ import java.io.IOException;
 /**
  * Dependency.
  *
- * @since 0.1.0
+ * @since 0.0.1
  */
 public interface Dependency {
     /**
@@ -22,7 +22,7 @@ public interface Dependency {
 
     /**
      * Set classifier of it.
-     * @param classifier The scope
+     * @param classifier The classifier
      * @return Itself
      * @throws IOException If fails
      */

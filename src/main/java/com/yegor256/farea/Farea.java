@@ -206,8 +206,8 @@ public final class Farea {
     }
 
     /**
-     * Ctor.
-     * @return Deps
+     * Get dependencies.
+     * @return Dependencies
      * @throws IOException If fails
      */
     public Dependencies dependencies() throws IOException {
