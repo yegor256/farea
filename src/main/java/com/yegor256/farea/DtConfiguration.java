@@ -6,6 +6,7 @@ package com.yegor256.farea;
 
 import java.io.IOException;
 import java.util.Map;
+import org.xembly.Directive;
 import org.xembly.Directives;
 import org.xembly.Xembler;
 
@@ -36,32 +37,40 @@ final class DtConfiguration implements Configuration {
         this.xpath = xpth;
     }
 
-    @SuppressWarnings("unchecked")
     @Override
     public Configuration set(final String key, final Object value) throws IOException {
-        final Directives dirs = new Directives()
-            .xpath(this.xpath)
-            .strict(1)
-            .addIf("configuration")
-            .addIf(key);
+        this.pom.modify(
+            new Directives()
+                .xpath(this.xpath)
+                .strict(1)
+                .addIf("configuration")
+                .addIf(key)
+                .append(DtConfiguration.dirs(value))
+        );
+        return this;
+    }
+
+    private static Iterable<Directive> dirs(final Object value) {
+        final Directives dirs = new Directives();
         if (value instanceof Iterable) {
-            for (final Object item : Iterable.class.cast(value)) {
-                dirs.add("item").set(Xembler.escape(item.toString())).up();
+            for (final Object item : (Iterable<?>) value) {
+                dirs.add("item").append(DtConfiguration.dirs(item)).up();
+            }
+        } else if (value instanceof String[]) {
+            for (final String item : (String[]) value) {
+                dirs.add("item").append(DtConfiguration.dirs(item)).up();
             }
         } else if (value instanceof Map) {
-            for (final Object entry : Map.class.cast(value).entrySet()) {
-                final Map.Entry<Object, Object> ent = Map.Entry.class.cast(entry);
-                dirs.add(ent.getKey()).set(Xembler.escape(ent.getValue().toString())).up();
-            }
-        } else if (value instanceof Object[]) {
-            for (final Object item : Object[].class.cast(value)) {
-                dirs.add("item").set(Xembler.escape(item.toString())).up();
+            for (final Map.Entry<?, ?> entry : ((Map<?, ?>) value).entrySet()) {
+                dirs
+                    .add(entry.getKey().toString())
+                    .append(DtConfiguration.dirs(entry.getValue()))
+                    .up();
             }
         } else {
             dirs.set(Xembler.escape(value.toString()));
         }
-        this.pom.modify(dirs);
-        return this;
+        return dirs;
     }
 
 }

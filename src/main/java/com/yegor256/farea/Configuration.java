@@ -13,9 +13,16 @@ import java.io.IOException;
  */
 public interface Configuration {
     /**
-     * Get config.
+     * Set one config element.
+     *
+     * <p>The value could either be an object with the {@code toString()}
+     * method implemented, or a {@link Iterable}, or
+     * a {@link java.util.Map}.</p>
+     *
+     * <p>It will be saved to the file system immediately.</p>
+     *
      * @param key The key
-     * @param value The value
+     * @param value The value (could be Iterable or Map)
      * @return Config
      * @throws IOException If fails
      */
