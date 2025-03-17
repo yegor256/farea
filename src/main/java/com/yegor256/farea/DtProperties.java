@@ -43,20 +43,25 @@ final class DtProperties implements Properties {
     }
 
     @Override
-    public Properties set(final String name, final String value) throws IOException {
-        this.pom.modify(
-            new Directives()
-                .xpath("/project")
-                .addIf(this.element)
-                .strict(1)
-                .xpath(name)
-                .remove()
-                .xpath("/project")
-                .xpath(this.element)
-                .strict(1)
-                .add(name)
-                .set(value)
-        );
+    public Properties set(final String name, final Object value) throws IOException {
+        final Directives dirs = new Directives()
+            .xpath("/project")
+            .addIf(this.element)
+            .strict(1)
+            .xpath(name)
+            .remove()
+            .xpath("/project")
+            .xpath(this.element)
+            .strict(1)
+            .add(name);
+        if (value instanceof Iterable) {
+            for (final Object item : (Iterable<?>) value) {
+                dirs.add("item").set(item.toString()).up();
+            }
+        } else {
+            dirs.set(value.toString());
+        }
+        this.pom.modify(dirs);
         return this;
     }
 

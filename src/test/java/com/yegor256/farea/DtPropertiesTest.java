@@ -9,6 +9,7 @@ import com.yegor256.Mktmp;
 import com.yegor256.MktmpResolver;
 import java.io.IOException;
 import java.nio.file.Path;
+import java.util.Arrays;
 import org.hamcrest.MatcherAssert;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -56,6 +57,23 @@ final class DtPropertiesTest {
                 ).made(10).xml()
             ),
             XhtmlMatchers.hasXPaths("/project/properties[count(*[starts-with(name(), 'foo-')])=10]")
+        );
+    }
+
+    @Test
+    void setsCollection(@Mktmp final Path dir) throws IOException {
+        final Path xml = dir.resolve("pom-8.xml");
+        final Pom pom = new Pom(xml);
+        new DtProperties(pom)
+            .set("xxx", Arrays.asList("foo", "bar"));
+        MatcherAssert.assertThat(
+            "Collection is not set",
+            XhtmlMatchers.xhtml(pom.xml()),
+            XhtmlMatchers.hasXPaths(
+                "//properties/xxx[count(item) = 2]",
+                "//properties/xxx[item='foo']",
+                "//properties/xxx[item='bar']"
+            )
         );
     }
 }

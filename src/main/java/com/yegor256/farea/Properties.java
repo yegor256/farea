@@ -14,10 +14,17 @@ import java.io.IOException;
 public interface Properties {
     /**
      * Set one property.
+     *
+     * <p>The value could either be an object with the {@code toString()}
+     * method implemented, or a {@link java.util.Collection}, or
+     * a {@link java.util.Map}.</p>
+     *
+     * <p>It will be saved to the file system immediately.</p>
+     *
      * @param name The name
-     * @param value The value
+     * @param value The value (it could be a collection or a map too)
      * @return Properties
      * @throws IOException If fails
      */
-    Properties set(String name, String value) throws IOException;
+    Properties set(String name, Object value) throws IOException;
 }
