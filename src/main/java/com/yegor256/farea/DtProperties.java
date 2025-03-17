@@ -5,6 +5,7 @@
 package com.yegor256.farea;
 
 import java.io.IOException;
+import java.util.Map;
 import org.xembly.Directives;
 
 /**
@@ -57,6 +58,17 @@ final class DtProperties implements Properties {
         if (value instanceof Iterable) {
             for (final Object item : (Iterable<?>) value) {
                 dirs.add("item").set(item.toString()).up();
+            }
+        } else if (value instanceof String[]) {
+            for (final String item : (String[]) value) {
+                dirs.add("item").set(item).up();
+            }
+        } else if (value instanceof Map) {
+            for (final Map.Entry<?, ?> entry : ((Map<?, ?>) value).entrySet()) {
+                dirs
+                    .add(entry.getKey().toString())
+                    .set(entry.getValue().toString())
+                    .up();
             }
         } else {
             dirs.set(value.toString());
