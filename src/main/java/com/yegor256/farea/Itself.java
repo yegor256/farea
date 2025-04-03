@@ -10,7 +10,6 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Set;
@@ -36,6 +35,11 @@ final class Itself {
      * Original POM, of the current project.
      */
     private final Base base;
+
+    /**
+     * The classpath string, separated by {@code File.pathSeparator}.
+     */
+    private final String classpath;
 
     /**
      * Should it fail if plugin.xml is not in the classpath?
@@ -66,9 +70,22 @@ final class Itself {
      * @param crf Careful?
      */
     Itself(final Path dir, final Base pom, final boolean crf) {
+        this(dir, pom, crf, System.getProperty("java.class.path"));
+    }
+
+    /**
+     * Ctor.
+     * @param dir The directory of the Maven project
+     * @param pom Original pom.xml
+     * @param crf Careful?
+     * @param cpath The classpath
+     * @checkstyle ParameterNumberCheck (5 lines)
+     */
+    Itself(final Path dir, final Base pom, final boolean crf, final String cpath) {
         this.home = dir;
         this.base = pom;
         this.careful = crf;
+        this.classpath = cpath;
     }
 
     /**
@@ -124,8 +141,7 @@ final class Itself {
         }
         Files.createFile(zip);
         final Set<String> seen = new HashSet<>(0);
-        final String classpath = System.getProperty("java.class.path");
-        final String[] jars = classpath.split(File.pathSeparator);
+        final String[] jars = this.classpath.split(File.pathSeparator);
         if (!this.zip(version, zip, seen, jars) && this.careful) {
             throw new IllegalStateException(
                 String.join(
@@ -190,9 +206,13 @@ final class Itself {
                 }
             }
             if (!descripted) {
-                final Path dup = Paths.get("target/plugin.xml");
+                final String pname = "target/plugin.xml";
+                final Path dup = this.home.resolve(pname);
                 if (dup.toFile().exists()) {
+                    final ZipEntry entry = new ZipEntry(pname);
+                    stream.putNextEntry(entry);
                     this.copyDescriptor(dup, version, stream);
+                    stream.closeEntry();
                     Logger.debug(Itself.class, "The %[file]s copied into the JAR", dup);
                 }
             }

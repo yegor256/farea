@@ -42,6 +42,27 @@ final class ItselfTest {
     }
 
     @Test
+    void deploysJarWithNoPluginXml(@Mktmp final Path dir,
+        @Mktmp final Path repos) throws IOException {
+        final Path xml = dir.resolve("target/plugin.xml");
+        xml.toFile().getParentFile().mkdirs();
+        Files.write(xml, "<plugin><version>0</version></plugin>".getBytes());
+        final String version = new Itself(
+            dir,
+            new Base(Paths.get("src/test/resources/fake-pom.xml")),
+            false,
+            ""
+        ).deploy(repos);
+        MatcherAssert.assertThat(
+            "Resolves",
+            repos.resolve(
+                String.format("g1/g2/a/%s/a-%1$s.jar", version)
+            ).toFile().exists(),
+            Matchers.is(true)
+        );
+    }
+
+    @Test
     void deploysJarAndPom(@Mktmp final Path dir, @Mktmp final Path repos) throws IOException {
         final String version = new Itself(
             dir,
