@@ -8,7 +8,20 @@ import java.io.IOException;
 import java.nio.file.Path;
 
 /**
- * Requisite.
+ * Requisite represents a file or directory in the Maven project workspace.
+ *
+ * <p>This interface provides methods to manipulate files in the project directory,
+ * allowing you to create, read, update, and delete files as part of your testing
+ * process. A Requisite typically represents a single file or directory in the 
+ * project structure.</p>
+ *
+ * <p>Usage example:</p>
+ * <pre>
+ * Requisite file = farea.files().file("src/main/java/Hello.java");
+ * file.write("public class Hello { public static void main(String[] args) {} }".getBytes());
+ * assert file.exists();
+ * String content = file.content();
+ * </pre>
  *
  * @since 0.2.0
  */

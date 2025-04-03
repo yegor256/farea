@@ -8,9 +8,39 @@ import java.io.IOException;
 import java.nio.file.Path;
 
 /**
- * Dependencies.
+ * Dependencies provides methods to add and manage Maven dependencies in the project.
+ * 
+ * <p>This interface allows you to add Maven dependencies to the POM file, enabling
+ * you to test how your project interacts with various libraries. It includes
+ * special functionality to add the current project as a dependency, which is 
+ * particularly useful when testing libraries.</p>
+ * 
+ * <p>Usage examples:</p>
+ * 
+ * <p>1. Adding a standard dependency:</p>
+ * <pre>
+ * Dependency junit = farea.dependencies()
+ *     .append("org.junit.jupiter", "junit-jupiter-api", "5.7.0")
+ *     .scope("test");
+ * </pre>
+ * 
+ * <p>2. Adding the current project as a dependency (useful for testing libraries):</p>
+ * <pre>
+ * Dependency self = farea.dependencies()
+ *     .appendItself()
+ *     .scope("compile");
+ * </pre>
+ * 
+ * <p>3. Adding a dependency with classifier:</p>
+ * <pre>
+ * farea.dependencies()
+ *     .append("org.hibernate", "hibernate-core", "5.4.30.Final")
+ *     .classifier("sources");
+ * </pre>
  *
  * @since 0.1.0
+ * @see Dependency
+ * @see Farea#dependencies()
  */
 public interface Dependencies {
     /**

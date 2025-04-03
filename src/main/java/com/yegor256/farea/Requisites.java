@@ -7,9 +7,27 @@ package com.yegor256.farea;
 import java.io.IOException;
 
 /**
- * Requisites.
+ * Requisites provides access to files and directories in the Maven project workspace.
+ * 
+ * <p>This interface acts as a factory for {@link Requisite} objects, allowing you
+ * to access and manipulate files within the project structure. It also provides
+ * utility methods to view all files in the workspace and access build logs.</p>
+ * 
+ * <p>Usage example:</p>
+ * <pre>
+ * // Create a Java file
+ * farea.files().file("src/main/java/Hello.java")
+ *     .write("public class Hello { }".getBytes());
+ *     
+ * // Access build log after execution
+ * String log = farea.files().log().content();
+ * 
+ * // Show all files in the project directory
+ * farea.files().show();
+ * </pre>
  *
  * @since 0.2.0
+ * @see Requisite
  */
 public interface Requisites {
     /**

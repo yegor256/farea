@@ -7,9 +7,40 @@ package com.yegor256.farea;
 import java.io.IOException;
 
 /**
- * Execution.
+ * Execution represents a Maven plugin execution in the project's POM file.
+ * 
+ * <p>This interface allows you to configure Maven plugin executions, including
+ * the phase, goals, and execution-specific configuration. An Execution object 
+ * corresponds to a single execution entry within a plugin's configuration.</p>
+ * 
+ * <p>Through this interface, you can:</p>
+ * <ul>
+ *   <li>Set the Maven lifecycle phase for the execution</li>
+ *   <li>Set the goals to execute</li>
+ *   <li>Configure execution-specific parameters</li>
+ * </ul>
+ * 
+ * <p>Usage example:</p>
+ * <pre>
+ * // Create a plugin execution
+ * Execution execution = farea.build()
+ *     .plugins()
+ *     .append("org.apache.maven.plugins", "maven-failsafe-plugin", "3.0.0")
+ *     .execution("integration-tests")
+ *     .goals("integration-test", "verify")
+ *     .phase("integration-test");
+ *     
+ * // Add execution-specific configuration
+ * execution.configuration()
+ *     .set("includes", new String[] {"**/*IT.java"})
+ *     .set("systemPropertyVariables", 
+ *         Collections.singletonMap("server.port", "8081"));
+ * </pre>
  *
  * @since 0.1.0
+ * @see Plugin#execution()
+ * @see Plugin#execution(String)
+ * @see Configuration
  */
 public interface Execution {
     /**
