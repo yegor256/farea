@@ -12,7 +12,7 @@ import java.nio.file.Path;
  *
  * <p>This interface provides methods to manipulate files in the project directory,
  * allowing you to create, read, update, and delete files as part of your testing
- * process. A Requisite typically represents a single file or directory in the 
+ * process. A Requisite typically represents a single file or directory in the
  * project structure.</p>
  *
  * <p>Usage example:</p>
