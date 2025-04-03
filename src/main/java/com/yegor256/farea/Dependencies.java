@@ -14,7 +14,7 @@ import java.nio.file.Path;
  */
 public interface Dependencies {
     /**
-     * Ctor.
+     * Append a dependency.
      * @param group The group ID
      * @param artifact The artifact ID
      * @param version The version

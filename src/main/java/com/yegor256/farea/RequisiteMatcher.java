@@ -50,7 +50,7 @@ public final class RequisiteMatcher extends BaseMatcher<Requisite> {
         .with("BUILD FAILURE");
 
     /**
-     * The log we've seen by the {@link #matches(Object)}.
+     * The log we've seen in the {@link #matches(Object)}.
      */
     private String seen;
 

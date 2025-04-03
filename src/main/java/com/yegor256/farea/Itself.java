@@ -170,7 +170,7 @@ final class Itself {
      * @param zip The ZIP file to create
      * @param seen List of entries seen already
      * @param jars JARs to package into the ZIP (including the "target/classes/" directory)
-     * @return TRUE if descripted (has "plugin.xml" file inside)
+     * @return TRUE if descriptor is found (has "plugin.xml" file inside)
      * @throws IOException If fails
      * @checkstyle ParameterNumberCheck (10 lines)
      */

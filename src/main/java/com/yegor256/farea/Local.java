@@ -27,7 +27,7 @@ final class Local {
     }
 
     /**
-     * Get its path.
+     * Get the local repository path.
      *
      * @return The absolute path of it
      */

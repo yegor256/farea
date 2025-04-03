@@ -169,7 +169,7 @@ public final class Farea {
      * Run it all together.
      *
      * <p>This method doesn't guarantee thread-safety. If you run it
-     * with the same directory, most probably there will be problems, because
+     * with the same directory, there will most probably be problems because
      * of conflicts between running Maven processes.</p>
      *
      * @param script The script to run
