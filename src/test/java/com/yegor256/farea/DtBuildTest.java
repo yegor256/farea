@@ -23,8 +23,7 @@ final class DtBuildTest {
 
     @Test
     void appendsBuildProperties(@Mktmp final Path dir) throws IOException {
-        final Path xml = dir.resolve("pom.xml");
-        final Pom pom = new Pom(xml).init();
+        final Pom pom = new Pom(dir.resolve("pom.xml")).init();
         new DtBuild(dir, pom).properties().set("foo", "bar");
         MatcherAssert.assertThat(
             "Sets build propertiees",

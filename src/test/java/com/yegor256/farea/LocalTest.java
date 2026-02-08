@@ -4,7 +4,6 @@
  */
 package com.yegor256.farea;
 
-import java.nio.file.Path;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
@@ -18,11 +17,9 @@ final class LocalTest {
 
     @Test
     void returnsRepositoryPathIfExists() {
-        final Local local = new Local();
-        final Path repo = local.path();
         MatcherAssert.assertThat(
             "Repository path should end with .m2/repository",
-            repo.toString().replace("\\", "/"),
+            new Local().path().toString().replace("\\", "/"),
             Matchers.endsWith("/.m2/repository")
         );
     }

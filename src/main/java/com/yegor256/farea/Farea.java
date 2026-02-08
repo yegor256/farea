@@ -487,6 +487,7 @@ public final class Farea {
      *
      * @since 0.0.4
      */
+    @FunctionalInterface
     public interface Script {
         /**
          * Run it.

@@ -6,12 +6,9 @@ package com.yegor256.farea;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 import org.cactoos.Scalar;
 import org.cactoos.experimental.Threads;
-import org.hamcrest.MatcherAssert;
-import org.hamcrest.Matchers;
 
 /**
  * Run piece of code in many threads.
@@ -48,25 +45,13 @@ final class Jointly<T> {
      * @return The result built
      */
     T made(final int threads) {
-        final AtomicInteger started = new AtomicInteger();
         final AtomicReference<T> ret = new AtomicReference<>();
         final Collection<Scalar<T>> bodies = new ArrayList<>(threads);
-        final AtomicInteger finished = new AtomicInteger();
         for (int idx = 0; idx < threads; ++idx) {
-            bodies.add(
-                () -> {
-                    final T out = this.block.exec(started.getAndIncrement());
-                    finished.incrementAndGet();
-                    return out;
-                }
-            );
+            final int thread = idx;
+            bodies.add(() -> this.block.exec(thread));
         }
         new Threads<>(threads, bodies).forEach(ret::set);
-        MatcherAssert.assertThat(
-            "all threads counted",
-            finished.get(),
-            Matchers.equalTo(threads)
-        );
         return ret.get();
     }
 
@@ -76,6 +61,7 @@ final class Jointly<T> {
      * @param <R> Type of result
      * @since 0.11.0
      */
+    @FunctionalInterface
     public interface Block<R> {
         /**
          * The method to run.

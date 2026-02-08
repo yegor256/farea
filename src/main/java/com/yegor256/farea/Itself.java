@@ -13,8 +13,9 @@ import java.nio.file.Path;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 import org.xembly.Directives;
@@ -25,6 +26,11 @@ import org.xembly.Directives;
  * @since 0.0.1
  */
 final class Itself {
+
+    /**
+     * Lock for synchronizing class-level operations.
+     */
+    private static final Lock LOCK = new ReentrantLock();
 
     /**
      * Directory of Maven project.
@@ -106,7 +112,8 @@ final class Itself {
         final String name = String.format(
             "%s-%s", this.base.artifactId(), version
         );
-        synchronized (Itself.class) {
+        Itself.LOCK.lock();
+        try {
             this.assembleJar(
                 version,
                 place.resolve(
@@ -119,6 +126,8 @@ final class Itself {
                 ),
                 this.base.xml().toString().getBytes(StandardCharsets.UTF_8)
             );
+        } finally {
+            Itself.LOCK.unlock();
         }
         return version;
     }
@@ -193,8 +202,7 @@ final class Itself {
                     if (seen.contains(name)) {
                         continue;
                     }
-                    final ZipEntry entry = new ZipEntry(name);
-                    stream.putNextEntry(entry);
+                    stream.putNextEntry(new ZipEntry(name));
                     if ("META-INF/maven/plugin.xml".equals(name)) {
                         this.copyDescriptor(file, version, stream);
                         descripted = true;
@@ -209,8 +217,7 @@ final class Itself {
                 final String pname = "target/plugin.xml";
                 final Path dup = this.home.resolve(pname);
                 if (dup.toFile().exists()) {
-                    final ZipEntry entry = new ZipEntry(pname);
-                    stream.putNextEntry(entry);
+                    stream.putNextEntry(new ZipEntry(pname));
                     this.copyDescriptor(dup, version, stream);
                     stream.closeEntry();
                     Logger.debug(Itself.class, "The %[file]s copied into the JAR", dup);
@@ -250,28 +257,47 @@ final class Itself {
             final String version = String.format(
                 "%s-farea-%08x", this.base.version(), System.nanoTime()
             );
-            synchronized (Itself.class) {
+            Itself.LOCK.lock();
+            try {
                 final Path temp = this.temp(version);
                 if (temp.toFile().mkdirs()) {
                     Runtime.getRuntime().addShutdownHook(
-                        new Thread(
-                            () -> {
-                                if (temp.toFile().exists()) {
-                                    try (Stream<Path> files = Files.walk(temp)) {
-                                        files
-                                            .map(Path::toFile)
-                                            .sorted(Comparator.reverseOrder())
-                                            .forEach(File::delete);
-                                    } catch (final IOException ex) {
-                                        throw new IllegalArgumentException(ex);
-                                    }
-                                }
-                            }
-                        )
+                        new Thread(() -> Itself.cleanup(temp))
                     );
                     return version;
                 }
+            } finally {
+                Itself.LOCK.unlock();
             }
+        }
+    }
+
+    /**
+     * Cleanup temporary directory.
+     * @param temp The temporary directory to clean up
+     */
+    private static void cleanup(final Path temp) {
+        if (temp.toFile().exists()) {
+            try {
+                Files.walk(temp)
+                    .sorted(Comparator.reverseOrder())
+                    .collect(Collectors.toList())
+                    .forEach(Itself::tryDelete);
+            } catch (final IOException ex) {
+                throw new IllegalArgumentException(ex);
+            }
+        }
+    }
+
+    /**
+     * Try to delete a path, ignoring errors.
+     * @param path The path to delete
+     */
+    private static void tryDelete(final Path path) {
+        try {
+            Files.deleteIfExists(path);
+        } catch (final IOException ignored) {
+            assert ignored != null;
         }
     }
 

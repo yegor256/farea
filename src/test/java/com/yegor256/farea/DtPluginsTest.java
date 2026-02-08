@@ -24,8 +24,7 @@ final class DtPluginsTest {
 
     @Test
     void appendsOnce(@Mktmp final Path dir) throws IOException {
-        final Path xml = dir.resolve("pom.xml");
-        final Pom pom = new Pom(xml).init();
+        final Pom pom = new Pom(dir.resolve("pom.xml")).init();
         new DtPlugins(dir, pom).append("g1", "a1", "0.0.0");
         MatcherAssert.assertThat(
             "Appends one plugin",
@@ -38,8 +37,7 @@ final class DtPluginsTest {
 
     @Test
     void avoidsDuplicates(@Mktmp final Path dir) throws IOException {
-        final Path xml = dir.resolve("pom.xml");
-        final Pom pom = new Pom(xml).init();
+        final Pom pom = new Pom(dir.resolve("pom.xml")).init();
         new DtPlugins(dir, pom).append("g", "a", "0.0.1");
         new DtPlugins(dir, pom).append("g", "a", "0.0.1");
         MatcherAssert.assertThat(
@@ -51,8 +49,7 @@ final class DtPluginsTest {
 
     @Test
     void addsTwoPluginsWithExecutions(@Mktmp final Path dir) throws IOException {
-        final Path xml = dir.resolve("pom.xml");
-        final Pom pom = new Pom(xml).init();
+        final Pom pom = new Pom(dir.resolve("pom.xml")).init();
         new DtPlugins(dir, pom)
             .append("g", "a1", "0.0.1")
             .execution("first")

@@ -9,6 +9,7 @@ import com.yegor256.Mktmp;
 import com.yegor256.MktmpResolver;
 import com.yegor256.WeAreOnline;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
@@ -30,7 +31,10 @@ final class FareaTest {
             f -> {
                 f.files()
                     .file("src/main/java/foo/Hello.java")
-                    .write("package foo; import org.cactoos.Input; class Hello {}".getBytes());
+                    .write(
+                        "package foo; import org.cactoos.Input; class Hello {}"
+                            .getBytes(StandardCharsets.UTF_8)
+                    );
                 f.dependencies()
                     .append("org.cactoos", "cactoos", "0.55.0");
                 MatcherAssert.assertThat(
@@ -56,6 +60,11 @@ final class FareaTest {
                 Matchers.not(Matchers.equalTo(0))
             )
         );
+        MatcherAssert.assertThat(
+            "farea ran without exception",
+            dir.toFile().exists(),
+            Matchers.is(true)
+        );
     }
 
     @Test
@@ -76,6 +85,11 @@ final class FareaTest {
                 );
             }
         );
+        MatcherAssert.assertThat(
+            "farea ran without exception",
+            dir.toFile().exists(),
+            Matchers.is(true)
+        );
     }
 
     @Test
@@ -93,6 +107,11 @@ final class FareaTest {
                 );
             }
         );
+        MatcherAssert.assertThat(
+            "farea ran without exception",
+            dir.toFile().exists(),
+            Matchers.is(true)
+        );
     }
 
     @Test
@@ -108,10 +127,15 @@ final class FareaTest {
                 );
             }
         );
+        MatcherAssert.assertThat(
+            "farea ran without exception",
+            dir.toFile().exists(),
+            Matchers.is(true)
+        );
     }
 
     @Test
-    void buildsInManyThreads(@Mktmp final Path dir) throws IOException {
+    void buildsInManyThreads(@Mktmp final Path dir) {
         MatcherAssert.assertThat(
             "the build works in many processes",
             new Jointly<>(
@@ -123,7 +147,7 @@ final class FareaTest {
                                 "foo-bar"
                             );
                             f.files().file("src/main/java/Foo.java")
-                                .write("class Foo {}".getBytes());
+                                .write("class Foo {}".getBytes(StandardCharsets.UTF_8));
                             f.dependencies().appendItself();
                             f.exec("compile");
                         }
@@ -133,6 +157,27 @@ final class FareaTest {
             ).made(),
             Matchers.notNullValue()
         );
+    }
+
+    @Test
+    void createsPomInManyThreads(@Mktmp final Path dir) throws IOException {
+        new Jointly<>(
+            thread -> {
+                new Farea(dir.resolve(Integer.toString(thread))).together(
+                    f -> {
+                        f.properties().set(
+                            String.format("foo-%d", thread),
+                            "foo-bar"
+                        );
+                        f.files().file("src/main/java/Foo.java")
+                            .write("class Foo {}".getBytes(StandardCharsets.UTF_8));
+                        f.dependencies().appendItself();
+                        f.exec("compile");
+                    }
+                );
+                return 0;
+            }
+        ).made();
         MatcherAssert.assertThat(
             "the pom.xml is correctly created",
             new Farea(dir).files().file("0/pom.xml").content(),

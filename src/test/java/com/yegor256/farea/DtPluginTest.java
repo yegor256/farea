@@ -24,8 +24,7 @@ final class DtPluginTest {
 
     @Test
     void appendsManyExecutions(@Mktmp final Path dir) throws IOException {
-        final Path xml = dir.resolve("pom.xml");
-        final Pom pom = new Pom(xml).init();
+        final Pom pom = new Pom(dir.resolve("pom.xml")).init();
         final Plugin plugin = new DtPlugins(dir, pom).append("g", "a", "0.0.1");
         plugin.execution("foo").phase("first");
         plugin.execution("bar").phase("second");
@@ -38,8 +37,7 @@ final class DtPluginTest {
 
     @Test
     void appendsGoalsExecutions(@Mktmp final Path dir) throws IOException {
-        final Path xml = dir.resolve("pom.xml");
-        final Pom pom = new Pom(xml).init();
+        final Pom pom = new Pom(dir.resolve("pom.xml")).init();
         final Plugin plugin = new DtPlugins(dir, pom).append("g", "a", "0.0.1");
         plugin.execution().phase("first").goals("x");
         plugin.execution("bar").phase("second").goals("y");
@@ -52,8 +50,7 @@ final class DtPluginTest {
 
     @Test
     void addsConfiguration(@Mktmp final Path dir) throws IOException {
-        final Path xml = dir.resolve("pom.xml");
-        final Pom pom = new Pom(xml).init();
+        final Pom pom = new Pom(dir.resolve("pom.xml")).init();
         new DtPlugins(dir, pom)
             .append("z", "z", "0.0.2")
             .configuration()
@@ -71,8 +68,7 @@ final class DtPluginTest {
 
     @Test
     void addsGoalsAndConfiguration(@Mktmp final Path dir) throws IOException {
-        final Path xml = dir.resolve("pom.xml");
-        final Pom pom = new Pom(xml).init();
+        final Pom pom = new Pom(dir.resolve("pom.xml")).init();
         new DtPlugins(dir, pom)
             .appendItself()
             .execution("default")

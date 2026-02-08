@@ -27,15 +27,17 @@ final class ItselfTest {
 
     @Test
     void deploysJar(@Mktmp final Path dir, @Mktmp final Path repos) throws IOException {
-        final String version = new Itself(
-            dir,
-            new Base(Paths.get("src/test/resources/fake-pom.xml")),
-            false
-        ).deploy(repos);
         MatcherAssert.assertThat(
             "Resolves",
             repos.resolve(
-                String.format("g1/g2/a/%s/a-%1$s.jar", version)
+                String.format(
+                    "g1/g2/a/%s/a-%1$s.jar",
+                    new Itself(
+                        dir,
+                        new Base(Paths.get("src/test/resources/fake-pom.xml")),
+                        false
+                    ).deploy(repos)
+                )
             ).toFile().exists(),
             Matchers.is(true)
         );
@@ -44,19 +46,23 @@ final class ItselfTest {
     @Test
     void deploysJarWithNoPluginXml(@Mktmp final Path dir,
         @Mktmp final Path repos) throws IOException {
-        final Path xml = dir.resolve("target/plugin.xml");
-        xml.toFile().getParentFile().mkdirs();
-        Files.write(xml, "<plugin><version>0</version></plugin>".getBytes());
-        final String version = new Itself(
-            dir,
-            new Base(Paths.get("src/test/resources/fake-pom.xml")),
-            false,
-            ""
-        ).deploy(repos);
+        dir.resolve("target").toFile().mkdirs();
+        Files.write(
+            dir.resolve("target/plugin.xml"),
+            "<plugin><version>0</version></plugin>".getBytes(StandardCharsets.UTF_8)
+        );
         MatcherAssert.assertThat(
             "Resolves",
             repos.resolve(
-                String.format("g1/g2/a/%s/a-%1$s.jar", version)
+                String.format(
+                    "g1/g2/a/%s/a-%1$s.jar",
+                    new Itself(
+                        dir,
+                        new Base(Paths.get("src/test/resources/fake-pom.xml")),
+                        false,
+                        ""
+                    ).deploy(repos)
+                )
             ).toFile().exists(),
             Matchers.is(true)
         );
@@ -64,17 +70,21 @@ final class ItselfTest {
 
     @Test
     void deploysJarAndPom(@Mktmp final Path dir, @Mktmp final Path repos) throws IOException {
-        final String version = new Itself(
-            dir,
-            new Base(Paths.get("src/test/resources/fake-pom.xml")),
-            false
-        ).deploy(repos);
         MatcherAssert.assertThat(
             "Deploys JAR and POM",
             XhtmlMatchers.xhtml(
                 new String(
                     Files.readAllBytes(
-                        repos.resolve(String.format("g1/g2/a/%s/a-%1$s.pom", version))
+                        repos.resolve(
+                            String.format(
+                                "g1/g2/a/%s/a-%1$s.pom",
+                                new Itself(
+                                    dir,
+                                    new Base(Paths.get("src/test/resources/fake-pom.xml")),
+                                    false
+                                ).deploy(repos)
+                            )
+                        )
                     ),
                     StandardCharsets.UTF_8
                 )

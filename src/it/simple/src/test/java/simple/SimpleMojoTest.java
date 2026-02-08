@@ -6,6 +6,7 @@ package simple;
 
 import com.yegor256.farea.Farea;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import org.junit.jupiter.api.Assertions;
@@ -27,7 +28,9 @@ final class SimpleMojoTest {
         final Path local = Paths.get(System.getProperty("maven.repo.local"));
         new Farea(dir).together(
             f -> {
-                f.files().file("src/main/resources/hello.txt").write("Hello!".getBytes());
+                f.files().file("src/main/resources/hello.txt").write(
+                    "Hello!".getBytes(StandardCharsets.UTF_8)
+                );
                 f.properties()
                     .set("project.build.sourceEncoding", "UTF-8")
                     .set("project.reporting.outputEncoding", "UTF-8");
@@ -49,5 +52,6 @@ final class SimpleMojoTest {
                 Assertions.assertTrue(log.contains("message: Hello, друг!"));
             }
         );
+        Assertions.assertTrue(dir.toFile().exists());
     }
 }

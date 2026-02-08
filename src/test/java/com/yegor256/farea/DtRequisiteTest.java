@@ -7,6 +7,7 @@ package com.yegor256.farea;
 import com.yegor256.Mktmp;
 import com.yegor256.MktmpResolver;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import org.hamcrest.MatcherAssert;
@@ -25,9 +26,9 @@ final class DtRequisiteTest {
 
     @Test
     void copiesDirectory(@Mktmp final Path src, @Mktmp final Path farea) throws IOException {
-        Files.write(src.resolve("one.txt"), "".getBytes());
+        Files.write(src.resolve("one.txt"), "".getBytes(StandardCharsets.UTF_8));
         src.resolve("a/b/c/d").toFile().mkdirs();
-        Files.write(src.resolve("a/b/c/d/two.txt"), "".getBytes());
+        Files.write(src.resolve("a/b/c/d/two.txt"), "".getBytes(StandardCharsets.UTF_8));
         new DtRequisite(farea, "new").save(src);
         MatcherAssert.assertThat(
             "copied two files",
@@ -40,8 +41,8 @@ final class DtRequisiteTest {
     void copiesDirectoryIntoFile(@Mktmp final Path src,
         @Mktmp final Path farea) throws IOException {
         src.resolve("d").toFile().mkdirs();
-        Files.write(src.resolve("d/foo.txt"), "".getBytes());
-        new DtRequisite(farea, "boo.txt").write("hello".getBytes());
+        Files.write(src.resolve("d/foo.txt"), "".getBytes(StandardCharsets.UTF_8));
+        new DtRequisite(farea, "boo.txt").write("hello".getBytes(StandardCharsets.UTF_8));
         Assertions.assertThrows(
             IOException.class,
             () -> new DtRequisite(farea, "boo.txt").save(src),
@@ -53,10 +54,10 @@ final class DtRequisiteTest {
     void copiesDirectoryIntoExistingDirectory(@Mktmp final Path src,
         @Mktmp final Path farea) throws IOException {
         src.resolve("a/b").toFile().mkdirs();
-        Files.write(src.resolve("a/b/foo.txt"), "".getBytes());
+        Files.write(src.resolve("a/b/foo.txt"), "".getBytes(StandardCharsets.UTF_8));
         new DtRequisite(farea, "one/two").save(src);
         src.resolve("a/c").toFile().mkdirs();
-        Files.write(src.resolve("a/c/bar.txt"), "".getBytes());
+        Files.write(src.resolve("a/c/bar.txt"), "".getBytes(StandardCharsets.UTF_8));
         new DtRequisite(farea, "one/two").save(src);
         MatcherAssert.assertThat(
             "copied second file too",
@@ -68,7 +69,7 @@ final class DtRequisiteTest {
     @Test
     void copiesFile(@Mktmp final Path src, @Mktmp final Path farea) throws IOException {
         final Path path = src.resolve("one.txt");
-        Files.write(path, "".getBytes());
+        Files.write(path, "".getBytes(StandardCharsets.UTF_8));
         new DtRequisite(farea, "a/b/c/new.txt").save(path).show();
         MatcherAssert.assertThat(
             "copied one file only",
@@ -80,7 +81,7 @@ final class DtRequisiteTest {
     @Test
     void deletesOneFile(@Mktmp final Path dir) throws IOException {
         final String name = "foo.txt";
-        Files.write(dir.resolve(name), "".getBytes());
+        Files.write(dir.resolve(name), "".getBytes(StandardCharsets.UTF_8));
         new DtRequisite(dir, name).delete();
         MatcherAssert.assertThat(
             "Deletes one file",
@@ -93,7 +94,7 @@ final class DtRequisiteTest {
     void deletesOneDirectory(@Mktmp final Path dir) throws IOException {
         final String name = "foo/bar/zzz";
         dir.resolve(name).toFile().mkdirs();
-        Files.write(dir.resolve(name).resolve("file.txt"), "".getBytes());
+        Files.write(dir.resolve(name).resolve("file.txt"), "".getBytes(StandardCharsets.UTF_8));
         new DtRequisite(dir, name).delete();
         MatcherAssert.assertThat(
             "Deletes one directory",

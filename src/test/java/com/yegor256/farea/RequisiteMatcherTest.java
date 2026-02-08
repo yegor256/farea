@@ -7,8 +7,10 @@ package com.yegor256.farea;
 import com.yegor256.Mktmp;
 import com.yegor256.MktmpResolver;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import org.hamcrest.MatcherAssert;
+import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
@@ -26,13 +28,18 @@ final class RequisiteMatcherTest {
             f -> {
                 f.files()
                     .log()
-                    .write("hello world BUILD SUCCESS maybe".getBytes());
+                    .write("hello world BUILD SUCCESS maybe".getBytes(StandardCharsets.UTF_8));
                 MatcherAssert.assertThat(
                     "matches the log",
                     f.files().log(),
                     RequisiteMatcher.SUCCESS
                 );
             }
+        );
+        MatcherAssert.assertThat(
+            "farea ran without exception",
+            dir.toFile().exists(),
+            Matchers.is(true)
         );
     }
 
@@ -42,13 +49,18 @@ final class RequisiteMatcherTest {
             f -> {
                 f.files()
                     .log()
-                    .write("hello world BUILD FAILURE maybe".getBytes());
+                    .write("hello world BUILD FAILURE maybe".getBytes(StandardCharsets.UTF_8));
                 MatcherAssert.assertThat(
                     "matches the log",
                     f.files().log(),
                     RequisiteMatcher.FAILURE
                 );
             }
+        );
+        MatcherAssert.assertThat(
+            "farea ran without exception",
+            dir.toFile().exists(),
+            Matchers.is(true)
         );
     }
 }

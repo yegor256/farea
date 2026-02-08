@@ -12,7 +12,6 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.concurrent.atomic.AtomicInteger;
 import org.cactoos.Scalar;
 import org.cactoos.experimental.Threads;
 import org.cactoos.iterable.Repeated;
@@ -44,8 +43,7 @@ final class PomTest {
 
     @Test
     void createsDirectoryIfAbsent(@Mktmp final Path dir) throws IOException {
-        final Path xml = dir.resolve("a/b/c/pom.xml");
-        new Pom(xml).init();
+        new Pom(dir.resolve("a/b/c/pom.xml")).init();
         MatcherAssert.assertThat(
             "Directory created",
             dir.resolve("a/b/c").toFile().exists(),
@@ -66,8 +64,7 @@ final class PomTest {
 
     @Test
     void simplyModifies(@Mktmp final Path dir) throws IOException {
-        final Path xml = dir.resolve("pom-1.xml");
-        final Pom pom = new Pom(xml);
+        final Pom pom = new Pom(dir.resolve("pom-1.xml"));
         pom.modify(
             new Directives()
                 .xpath("/project")
@@ -84,9 +81,36 @@ final class PomTest {
 
     @Test
     void modifiesInManyThreads(@Mktmp final Path dir) throws IOException {
-        final Path xml = dir.resolve("pom-1.xml");
-        final Pom pom = new Pom(xml);
-        final AtomicInteger count = new AtomicInteger();
+        final Pom pom = new Pom(dir.resolve("pom-1.xml"));
+        pom.init();
+        final int threads = Runtime.getRuntime().availableProcessors();
+        new Threads<>(
+            threads,
+            new Repeated<Scalar<?>>(
+                threads,
+                () -> {
+                    pom.modify(
+                        new Directives()
+                            .xpath("/project")
+                            .addIf("bar")
+                            .strict(1)
+                            .add(String.format("foo-%d", System.nanoTime()))
+                            .set("yes!")
+                    );
+                    return 0;
+                }
+            )
+        ).forEach(x -> Assertions.assertEquals(0, x));
+        MatcherAssert.assertThat(
+            "all threads ran",
+            Integer.parseInt(pom.xpath("count(/project/bar/*)").get(0)),
+            Matchers.equalTo(threads)
+        );
+    }
+
+    @Test
+    void storesConcurrentModifications(@Mktmp final Path dir) throws IOException {
+        final Pom pom = new Pom(dir.resolve("pom-2.xml"));
         final int threads = Runtime.getRuntime().availableProcessors();
         new Threads<>(
             threads,
@@ -99,7 +123,7 @@ final class PomTest {
                             .xpath("/project")
                             .addIf("bar")
                             .strict(1)
-                            .add(String.format("foo-%d", count.addAndGet(1)))
+                            .add(String.format("foo-%d", System.nanoTime()))
                             .set("yes!")
                     );
                     return 0;
@@ -107,13 +131,10 @@ final class PomTest {
             )
         ).forEach(x -> Assertions.assertEquals(0, x));
         MatcherAssert.assertThat(
-            "all threads counted",
-            count.get(),
-            Matchers.equalTo(threads)
-        );
-        MatcherAssert.assertThat(
             "the pom.xml has all modifications",
-            XhtmlMatchers.xhtml(new String(Files.readAllBytes(xml), StandardCharsets.UTF_8)),
+            XhtmlMatchers.xhtml(
+                new String(Files.readAllBytes(dir.resolve("pom-2.xml")), StandardCharsets.UTF_8)
+            ),
             XhtmlMatchers.hasXPaths(
                 String.format("/project/bar[count(*)=%d]", threads)
             )

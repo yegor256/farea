@@ -12,6 +12,8 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 import org.xembly.Directive;
 import org.xembly.Directives;
 import org.xembly.Xembler;
@@ -31,11 +33,17 @@ final class Pom {
     private final Path path;
 
     /**
+     * Lock for thread-safe modifications.
+     */
+    private final Lock lock;
+
+    /**
      * Ctor.
      * @param file Location of it
      */
     Pom(final Path file) {
         this.path = file;
+        this.lock = new ReentrantLock();
     }
 
     /**
@@ -104,13 +112,16 @@ final class Pom {
                 this.path.toFile().getParentFile()
             );
         }
-        synchronized (this.path) {
+        this.lock.lock();
+        try {
             Files.write(
                 this.path,
                 new XMLDocument(
                     new Xembler(dirs).applyQuietly(this.before().inner())
                 ).toString().getBytes(StandardCharsets.UTF_8)
             );
+        } finally {
+            this.lock.unlock();
         }
     }
 

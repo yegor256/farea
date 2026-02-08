@@ -11,6 +11,7 @@ import java.io.IOException;
  *
  * @since 0.1.0
  */
+@FunctionalInterface
 public interface Properties {
     /**
      * Set one property.
