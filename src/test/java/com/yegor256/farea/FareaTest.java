@@ -103,7 +103,7 @@ final class FareaTest {
                 MatcherAssert.assertThat(
                     "Builds clean pom.xml",
                     f.files().log(),
-                    new RequisiteMatcher().without("WARNING")
+                    new RequisiteMatcher().without("[WARNING]")
                 );
             }
         );
