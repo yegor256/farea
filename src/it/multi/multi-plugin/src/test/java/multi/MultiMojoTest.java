@@ -28,12 +28,10 @@ final class MultiMojoTest {
         final Path local = Paths.get(System.getProperty("maven.repo.local"));
         new Farea(dir).together(
             f -> {
-                f.files().file("src/main/resources/hello.txt").write(
-                    "Hello!".getBytes(StandardCharsets.UTF_8)
+                f.files().file("src/main/resources/multi.txt").write(
+                    "Multi!".getBytes(StandardCharsets.UTF_8)
                 );
-                f.properties()
-                    .set("project.build.sourceEncoding", "UTF-8")
-                    .set("project.reporting.outputEncoding", "UTF-8");
+                f.properties().set("project.build.sourceEncoding", "UTF-8");
                 f.build()
                     .plugins()
                     .appendItself(local)
@@ -47,9 +45,9 @@ final class MultiMojoTest {
                     "initialize"
                 );
                 final String log = f.files().log().content();
-                Assertions.assertTrue(log.contains("project.name: test"));
-                Assertions.assertTrue(log.contains("total goals: 1"));
-                Assertions.assertTrue(log.contains("message: Hello, друг!"));
+                Assertions.assertTrue(log.contains("[multi] project.name: test"));
+                Assertions.assertTrue(log.contains("[multi] total goals: 1"));
+                Assertions.assertTrue(log.contains("[multi] message: Hello, друг!"));
             }
         );
         Assertions.assertTrue(dir.toFile().exists());
