@@ -26,7 +26,7 @@ final class DtBuildTest {
         final Pom pom = new Pom(dir.resolve("pom.xml")).init();
         new DtBuild(dir, pom).properties().set("foo", "bar");
         MatcherAssert.assertThat(
-            "Sets build propertiees",
+            "Sets build properties",
             pom.xpath("/project/build/foo/text()").get(0),
             Matchers.equalTo("bar")
         );
