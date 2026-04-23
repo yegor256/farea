@@ -8,7 +8,6 @@ import com.yegor256.farea.Farea;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.condition.DisabledOnOs;
@@ -25,7 +24,7 @@ final class MultiMojoTest {
     @Test
     @DisabledOnOs(OS.WINDOWS)
     void callsCustomPlugin(final @TempDir Path dir) throws IOException {
-        final Path local = Paths.get(System.getProperty("maven.repo.local"));
+        final Path local = Path.of(System.getProperty("maven.repo.local"));
         new Farea(dir).together(
             f -> {
                 f.files().file("src/main/resources/multi.txt").write(

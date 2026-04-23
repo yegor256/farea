@@ -37,7 +37,7 @@ final class RequisiteMatcherTest {
             }
         );
         MatcherAssert.assertThat(
-            "farea ran without exception",
+            "matcher ran without exception",
             dir.toFile().exists(),
             Matchers.is(true)
         );
@@ -58,7 +58,7 @@ final class RequisiteMatcherTest {
             }
         );
         MatcherAssert.assertThat(
-            "farea ran without exception",
+            "matcher ran without exception",
             dir.toFile().exists(),
             Matchers.is(true)
         );
