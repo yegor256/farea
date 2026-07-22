@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
- * SPDX-FileCopyrightText: Copyright (c) 2023-2026 Yegor Bugayenko
- * SPDX-License-Identifier: MIT
+* SPDX-FileCopyrightText: Copyright (c) 2023-2026 Yegor Bugayenko
+* SPDX-License-Identifier: MIT
 -->
 <plugin>
   <name>foo-maven-plugin</name>
