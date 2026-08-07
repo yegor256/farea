@@ -43,6 +43,7 @@ import java.io.IOException;
  * @since 0.0.1
  */
 public interface Dependency {
+
     /**
      * Set scope of it.
      * @param scope The scope

@@ -48,7 +48,6 @@ final class Pom {
 
     /**
      * Read and return its XML content.
-     *
      * @return The XML
      * @throws IOException If fails
      */
@@ -59,7 +58,6 @@ final class Pom {
     /**
      * Initialize it, making sure it looks like a default {@code pom.xml}
      * for Apache Maven.
-     *
      * @return Itself
      * @throws IOException If fails
      */

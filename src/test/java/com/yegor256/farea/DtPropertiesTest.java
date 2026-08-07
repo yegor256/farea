@@ -15,7 +15,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 
 /**
  * Test case for {@link DtProperties}.
- *
  * @since 0.1.0
  */
 @ExtendWith(MktmpResolver.class)
@@ -23,8 +22,7 @@ final class DtPropertiesTest {
 
     @Test
     void setsUniqueProperty(@Mktmp final Path dir) throws IOException {
-        final Path xml = dir.resolve("pom-1.xml");
-        final Pom pom = new Pom(xml);
+        final Pom pom = new Pom(dir.resolve("pom-1.xml"));
         new DtProperties(pom)
             .set("foo", "bar1")
             .set("foo", "bar2")
@@ -43,8 +41,7 @@ final class DtPropertiesTest {
 
     @Test
     void setsInManyThreads(@Mktmp final Path dir) throws IOException {
-        final Path xml = dir.resolve("pom-2.xml");
-        final Pom pom = new Pom(xml);
+        final Pom pom = new Pom(dir.resolve("pom-2.xml"));
         MatcherAssert.assertThat(
             "the pom.xml has all modifications",
             XhtmlMatchers.xhtml(

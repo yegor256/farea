@@ -46,6 +46,7 @@ import java.nio.file.Path;
  * @since 0.1.0
  */
 public interface Plugins {
+
     /**
      * Append Apache Maven plugin.
      * @param artifact The artifact ID
@@ -53,8 +54,7 @@ public interface Plugins {
      * @return Plugin just added
      * @throws IOException If fails
      */
-    Plugin append(String artifact,
-        String version) throws IOException;
+    Plugin append(String artifact, String version) throws IOException;
 
     /**
      * Append custom plugin.

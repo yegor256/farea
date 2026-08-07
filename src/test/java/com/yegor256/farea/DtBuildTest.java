@@ -15,7 +15,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 
 /**
  * Test case for {@link DtBuild}.
- *
  * @since 0.15.0
  */
 @ExtendWith(MktmpResolver.class)

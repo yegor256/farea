@@ -12,7 +12,6 @@ import org.cactoos.experimental.Threads;
 
 /**
  * Run piece of code in many threads.
- *
  * @param <T> Type of result
  * @since 0.11.0
  */
@@ -25,7 +24,7 @@ final class Jointly<T> {
 
     /**
      * Ctor.
-     * @param blk The code block to run.
+     * @param blk The code block to run
      */
     Jointly(final Jointly.Block<T> blk) {
         this.block = blk;
@@ -57,12 +56,12 @@ final class Jointly<T> {
 
     /**
      * The block of code to run, in many threads.
-     *
      * @param <R> Type of result
      * @since 0.11.0
      */
     @FunctionalInterface
-    public interface Block<R> {
+    interface Block<R> {
+
         /**
          * The method to run.
          * @param thread The number of thread running

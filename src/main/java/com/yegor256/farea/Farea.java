@@ -322,7 +322,7 @@ public final class Farea {
             .map(this.home::relativize)
             .map(Path::toString)
             .map(s -> String.format("%s", s))
-            .collect(Collectors.joining("\n"));
+            .collect(Collectors.joining(System.lineSeparator()));
     }
 
     /**
@@ -450,10 +450,10 @@ public final class Farea {
 
     /**
      * When build fails.
-     *
      * @since 0.9.0
      */
     public static final class BuildFailureException extends IOException {
+
         /**
          * Serialization marker.
          */
@@ -469,7 +469,16 @@ public final class Farea {
          * @param code The exit code of Maven build
          */
         public BuildFailureException(final int code) {
-            super(String.format("build failed with exit code 0x%04x", code));
+            this(String.format("build failed with exit code 0x%04x", code), code);
+        }
+
+        /**
+         * Ctor.
+         * @param message The exception message
+         * @param code The exit code of Maven build
+         */
+        private BuildFailureException(final String message, final int code) {
+            super(message);
             this.exit = code;
         }
 
@@ -484,11 +493,11 @@ public final class Farea {
 
     /**
      * Script to run.
-     *
      * @since 0.0.4
      */
     @FunctionalInterface
     public interface Script {
+
         /**
          * Run it.
          * @param farea Instance of itself
@@ -496,5 +505,4 @@ public final class Farea {
          */
         void run(Farea farea) throws IOException;
     }
-
 }

@@ -26,6 +26,7 @@ import java.nio.file.Path;
  * @since 0.2.0
  */
 public interface Requisite {
+
     /**
      * Write to file.
      * @param content The content to write

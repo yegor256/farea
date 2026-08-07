@@ -9,7 +9,6 @@ import org.xembly.Directives;
 
 /**
  * Dependency inside Dependencies.
- *
  * @since 0.0.1
  */
 final class DtDependency implements Dependency {
@@ -66,5 +65,4 @@ final class DtDependency implements Dependency {
         );
         return this;
     }
-
 }

@@ -44,6 +44,7 @@ import java.io.IOException;
  * @since 0.1.0
  */
 public interface Execution {
+
     /**
      * Set phase.
      * @param value The Maven execution

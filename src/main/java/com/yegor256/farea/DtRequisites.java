@@ -9,7 +9,6 @@ import java.nio.file.Path;
 
 /**
  * Files in Maven Reactor.
- *
  * @since 0.2.0
  */
 final class DtRequisites implements Requisites {
@@ -41,5 +40,4 @@ final class DtRequisites implements Requisites {
     public Requisite file(final String name) {
         return new DtRequisite(this.home, name);
     }
-
 }

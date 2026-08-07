@@ -40,6 +40,7 @@ package com.yegor256.farea;
  * @since 0.0.1
  */
 public interface Plugin {
+
     /**
      * Append new execution or get access to existing one (using default name).
      * @return Execution found or added

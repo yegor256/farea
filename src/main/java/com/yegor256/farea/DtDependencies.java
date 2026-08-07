@@ -10,7 +10,6 @@ import org.xembly.Directives;
 
 /**
  * Dependencies inside Build.
- *
  * @since 0.0.1
  */
 final class DtDependencies implements Dependencies {
@@ -63,5 +62,4 @@ final class DtDependencies implements Dependencies {
             new Itself(this.home, base, false).deploy(local)
         );
     }
-
 }

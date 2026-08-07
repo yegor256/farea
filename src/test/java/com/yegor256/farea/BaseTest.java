@@ -14,7 +14,6 @@ import org.junit.jupiter.api.Test;
 
 /**
  * Test case for {@link Base}.
- *
  * @since 0.1.0
  */
 final class BaseTest {
@@ -25,7 +24,7 @@ final class BaseTest {
         Files.write(
             temp,
             String.join(
-                "\n",
+                System.lineSeparator(),
                 "<project xmlns=\"http://maven.apache.org/POM/4.0.0\">",
                 "  <modelVersion>4.0.0</modelVersion>",
                 "  <groupId>com.example</groupId>",
@@ -47,7 +46,7 @@ final class BaseTest {
         Files.write(
             temp,
             String.join(
-                "\n",
+                System.lineSeparator(),
                 "<project xmlns=\"http://maven.apache.org/POM/4.0.0\">",
                 "  <modelVersion>4.0.0</modelVersion>",
                 "  <groupId>com.example</groupId>",
@@ -69,7 +68,7 @@ final class BaseTest {
         Files.write(
             temp,
             String.join(
-                "\n",
+                System.lineSeparator(),
                 "<project xmlns=\"http://maven.apache.org/POM/4.0.0\">",
                 "  <modelVersion>4.0.0</modelVersion>",
                 "  <groupId>com.example</groupId>",
@@ -91,7 +90,7 @@ final class BaseTest {
         Files.write(
             temp,
             String.join(
-                "\n",
+                System.lineSeparator(),
                 "<project xmlns=\"http://maven.apache.org/POM/4.0.0\">",
                 "  <modelVersion>4.0.0</modelVersion>",
                 "  <groupId>g</groupId>",

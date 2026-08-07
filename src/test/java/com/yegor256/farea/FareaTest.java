@@ -18,7 +18,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 
 /**
  * Test case for {@link Farea}.
- *
  * @since 0.1.0
  */
 @ExtendWith(WeAreOnline.class)
@@ -30,8 +29,7 @@ final class FareaTest {
         new Farea(dir).together(
             f -> {
                 f.files()
-                    .file("src/main/java/foo/Hello.java")
-                    .write(
+                    .file("src/main/java/foo/Hello.java").write(
                         "package foo; import org.cactoos.Input; class Hello {}"
                             .getBytes(StandardCharsets.UTF_8)
                     );

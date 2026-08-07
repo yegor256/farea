@@ -8,7 +8,6 @@ import java.nio.file.Path;
 
 /**
  * Build inside POM.
- *
  * @since 0.0.1
  */
 final class DtBuild implements Build {

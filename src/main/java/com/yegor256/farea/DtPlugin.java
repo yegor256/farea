@@ -6,7 +6,6 @@ package com.yegor256.farea;
 
 /**
  * Plugin inside Plugin.
- *
  * @since 0.0.1
  */
 final class DtPlugin implements Plugin {
@@ -51,5 +50,4 @@ final class DtPlugin implements Plugin {
             )
         );
     }
-
 }

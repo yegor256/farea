@@ -43,6 +43,7 @@ import java.nio.file.Path;
  * @since 0.1.0
  */
 public interface Dependencies {
+
     /**
      * Append a dependency.
      * @param group The group ID

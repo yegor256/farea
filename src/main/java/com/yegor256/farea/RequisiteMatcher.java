@@ -112,7 +112,7 @@ public final class RequisiteMatcher extends BaseMatcher<Requisite> {
 
     @Override
     public void describeMismatch(final Object log, final Description desc) {
-        desc.appendText("\n").appendText(this.seen);
+        desc.appendText(System.lineSeparator()).appendText(this.seen);
     }
 
     /**

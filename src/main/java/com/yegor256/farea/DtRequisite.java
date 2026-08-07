@@ -18,7 +18,6 @@ import java.util.stream.Collectors;
 
 /**
  * File in Maven Reactor.
- *
  * @since 0.0.1
  */
 final class DtRequisite implements Requisite {
@@ -117,7 +116,7 @@ final class DtRequisite implements Requisite {
                     .map(this.home::relativize)
                     .map(Path::toString)
                     .map(s -> String.format("%s", s))
-                    .collect(Collectors.joining("\n  "))
+                    .collect(Collectors.joining(String.format("%n  ")))
             );
         } else {
             Logger.info(
@@ -176,5 +175,4 @@ final class DtRequisite implements Requisite {
     public Path path() {
         return this.home.resolve(this.name);
     }
-
 }

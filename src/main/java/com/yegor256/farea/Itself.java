@@ -22,7 +22,6 @@ import org.xembly.Directives;
 
 /**
  * This classpath classes packaged as a plugin.
- *
  * @since 0.0.1
  */
 final class Itself {
@@ -85,7 +84,6 @@ final class Itself {
      * @param pom Original pom.xml
      * @param crf Careful?
      * @param cpath The classpath
-     * @checkstyle ParameterNumberCheck (5 lines)
      */
     Itself(final Path dir, final Base pom, final boolean crf, final String cpath) {
         this.home = dir;
@@ -100,7 +98,7 @@ final class Itself {
      * @return The {@code version} of a new Maven dependency just deployed
      * @throws IOException If fails
      */
-    public String deploy(final Path local) throws IOException {
+    String deploy(final Path local) throws IOException {
         final String version = this.next();
         final Path place = local.resolve(
             String.format(
@@ -312,5 +310,4 @@ final class Itself {
             .resolve("farea")
             .resolve(version);
     }
-
 }

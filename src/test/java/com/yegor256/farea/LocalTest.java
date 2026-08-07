@@ -10,7 +10,6 @@ import org.junit.jupiter.api.Test;
 
 /**
  * Test case for {@link Local}.
- *
  * @since 0.1.0
  */
 final class LocalTest {
@@ -23,5 +22,4 @@ final class LocalTest {
             Matchers.endsWith("/.m2/repository")
         );
     }
-
 }

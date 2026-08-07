@@ -10,7 +10,6 @@ import org.xembly.Directives;
 
 /**
  * Plugins inside Build.
- *
  * @since 0.0.1
  */
 final class DtPlugins implements Plugins {
@@ -48,8 +47,7 @@ final class DtPlugins implements Plugins {
             new Directives()
                 .xpath("/project")
                 .addIf("build")
-                .addIf("plugins")
-                .xpath(
+                .addIf("plugins").xpath(
                     String.format(
                         "/project/build/plugins[not(plugin[groupId='%s' and artifactId='%s'])]",
                         group, artifact
@@ -86,5 +84,4 @@ final class DtPlugins implements Plugins {
             new Itself(this.home, base).deploy(local)
         );
     }
-
 }

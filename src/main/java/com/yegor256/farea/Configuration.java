@@ -43,6 +43,7 @@ import java.io.IOException;
  */
 @FunctionalInterface
 public interface Configuration {
+
     /**
      * Set one config element.
      *

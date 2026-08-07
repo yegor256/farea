@@ -24,7 +24,6 @@ import org.xembly.Directives;
 
 /**
  * Test case for {@link Pom}.
- *
  * @since 0.1.0
  */
 @ExtendWith(MktmpResolver.class)
@@ -58,7 +57,9 @@ final class PomTest {
         MatcherAssert.assertThat(
             "Prints without spaces",
             new XMLDocument(xml).toString(),
-            Matchers.containsString("<name>test</name>\n   <properties>\n      <maven")
+            Matchers.containsString(
+                String.format("<name>test</name>%n   <properties>%n      <maven")
+            )
         );
     }
 

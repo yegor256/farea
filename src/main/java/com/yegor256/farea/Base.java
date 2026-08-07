@@ -49,7 +49,7 @@ final class Base {
      * @return Group ID
      * @throws IOException If fails
      */
-    public String groupId() throws IOException {
+    String groupId() throws IOException {
         return this.inherit("groupId");
     }
 
@@ -58,7 +58,7 @@ final class Base {
      * @return Artifact ID
      * @throws IOException If fails
      */
-    public String artifactId() throws IOException {
+    String artifactId() throws IOException {
         return this.inherit("artifactId");
     }
 
@@ -67,7 +67,7 @@ final class Base {
      * @return Version
      * @throws IOException If fails
      */
-    public String version() throws IOException {
+    String version() throws IOException {
         return this.inherit("version");
     }
 
@@ -76,7 +76,7 @@ final class Base {
      * @return XML
      * @throws IOException If fails
      */
-    public XML xml() throws IOException {
+    XML xml() throws IOException {
         if (!this.pom.toFile().exists()) {
             throw new IllegalStateException(
                 String.format(
@@ -116,5 +116,4 @@ final class Base {
         }
         return vals.get(0);
     }
-
 }

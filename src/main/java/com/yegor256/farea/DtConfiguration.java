@@ -12,7 +12,6 @@ import org.xembly.Xembler;
 
 /**
  * Configuration of an Execution.
- *
  * @since 0.0.1
  */
 final class DtConfiguration implements Configuration {
@@ -72,5 +71,4 @@ final class DtConfiguration implements Configuration {
         }
         return dirs;
     }
-
 }

@@ -9,7 +9,6 @@ import org.xembly.Directives;
 
 /**
  * Properties of a project.
- *
  * @since 0.0.1
  */
 final class DtProperties implements Properties {

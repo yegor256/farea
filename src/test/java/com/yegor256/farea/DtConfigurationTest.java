@@ -18,7 +18,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 
 /**
  * Test case for {@link DtConfiguration}.
- *
  * @since 0.1.0
  */
 @ExtendWith(MktmpResolver.class)
@@ -26,8 +25,7 @@ final class DtConfigurationTest {
 
     @Test
     void setsUtfStringAsParam(@Mktmp final Path dir) throws IOException {
-        final Path xml = dir.resolve("pom-fake.xml");
-        final Pom pom = new Pom(xml);
+        final Pom pom = new Pom(dir.resolve("pom-fake.xml"));
         pom.init();
         new DtConfiguration(pom, "/project")
             .set("something", "привет! <test");
@@ -40,8 +38,7 @@ final class DtConfigurationTest {
 
     @Test
     void setsListAsParam(@Mktmp final Path dir) throws IOException {
-        final Path xml = dir.resolve("pom-1.xml");
-        final Pom pom = new Pom(xml);
+        final Pom pom = new Pom(dir.resolve("pom-1.xml"));
         new DtPlugins(dir, pom).append("a", "0.0.0")
             .execution("foo")
             .phase("boom")
@@ -56,13 +53,12 @@ final class DtConfigurationTest {
 
     @Test
     void setsArrayAsParam(@Mktmp final Path dir) throws IOException {
-        final Path xml = dir.resolve("pom-2.xml");
-        final Pom pom = new Pom(xml);
+        final Pom pom = new Pom(dir.resolve("pom-2.xml"));
         new DtPlugins(dir, pom).append("xyz", "1.1.1")
             .execution("foo")
             .phase("boom")
             .configuration()
-            .set("bar", new String[] {"\u0000", "beta"});
+            .set("bar", new String[] {"\0", "beta"});
         MatcherAssert.assertThat(
             "Sets array as param",
             XhtmlMatchers.xhtml(pom.xml()),
@@ -72,8 +68,7 @@ final class DtConfigurationTest {
 
     @Test
     void setsMapAsParam(@Mktmp final Path dir) throws IOException {
-        final Path xml = dir.resolve("pom-3.xml");
-        final Pom pom = new Pom(xml);
+        final Pom pom = new Pom(dir.resolve("pom-3.xml"));
         final Map<String, Integer> map = new HashMap<>(0);
         map.put("test", 42);
         new DtPlugins(dir, pom).append("bbb", "1.2.3")
@@ -90,8 +85,7 @@ final class DtConfigurationTest {
 
     @Test
     void setsCollection(@Mktmp final Path dir) throws IOException {
-        final Path xml = dir.resolve("pom-8.xml");
-        final Pom pom = new Pom(xml).init();
+        final Pom pom = new Pom(dir.resolve("pom-8.xml")).init();
         new DtConfiguration(pom, "/project")
             .set("noise", "boom")
             .set("xxx", Arrays.asList("foo1", "bar1"));
@@ -108,8 +102,7 @@ final class DtConfigurationTest {
 
     @Test
     void setsMap(@Mktmp final Path dir) throws IOException {
-        final Path xml = dir.resolve("pom-8.xml");
-        final Pom pom = new Pom(xml).init();
+        final Pom pom = new Pom(dir.resolve("pom-8.xml")).init();
         final Map<String, Integer> map = new HashMap<>();
         map.put("one", 1);
         map.put("two", 2);
@@ -129,8 +122,7 @@ final class DtConfigurationTest {
 
     @Test
     void setsMapOfMaps(@Mktmp final Path dir) throws IOException {
-        final Path xml = dir.resolve("pom-9.xml");
-        final Pom pom = new Pom(xml).init();
+        final Pom pom = new Pom(dir.resolve("pom-9.xml")).init();
         final Map<String, Object> lower = new HashMap<>();
         lower.put("alpha", 1);
         lower.put("beta", 2);

@@ -6,10 +6,10 @@ package com.yegor256.farea;
 
 /**
  * Build.
- *
  * @since 0.1.0
  */
 public interface Build {
+
     /**
      * Get access to build.
      * @return Build
