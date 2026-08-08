@@ -236,15 +236,11 @@
           <plugin>
             <groupId>com.qulice</groupId>
             <artifactId>qulice-maven-plugin</artifactId>
-            <version>0.30.2</version>
+            <version>0.30.5</version>
             <configuration>
               <excludes combine.children="append">
                 <exclude>checkstyle:/src/site/resources/.*</exclude>
                 <exclude>duplicatefinder:.*</exclude>
-                <!-- UseDiamondOperator false positive on an anonymous class,
-                  which requires source 9+ to compile with a diamond,
-                  see https://github.com/yegor256/qulice/issues/1690 -->
-                <exclude>pmd:.*/src/main/java/com/yegor256/farea/DtRequisite\.java</exclude>
               </excludes>
             </configuration>
           </plugin>
