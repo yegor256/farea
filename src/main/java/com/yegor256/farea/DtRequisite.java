@@ -4,6 +4,7 @@
  */
 package com.yegor256.farea;
 
+import com.google.errorprone.annotations.InlineMe;
 import com.jcabi.log.Logger;
 import java.io.File;
 import java.io.IOException;
@@ -15,6 +16,7 @@ import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.Collection;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * File in Maven Reactor.
@@ -44,6 +46,10 @@ final class DtRequisite implements Requisite {
 
     @Override
     @Deprecated
+    @InlineMe(
+        replacement = "this.write(content.getBytes(StandardCharsets.UTF_8))",
+        imports = "java.nio.charset.StandardCharsets"
+    )
     public Requisite write(final String content) throws IOException {
         return this.write(content.getBytes(StandardCharsets.UTF_8));
     }
@@ -77,9 +83,12 @@ final class DtRequisite implements Requisite {
     public Requisite save(final Path src) throws IOException {
         if (src.toFile().isDirectory()) {
             final Path target = this.path();
-            final Collection<Path> sources = Files.walk(src)
-                .filter(file -> !file.toFile().isDirectory())
-                .collect(Collectors.toList());
+            final Collection<Path> sources;
+            try (Stream<Path> walk = Files.walk(src)) {
+                sources = walk
+                    .filter(file -> !file.toFile().isDirectory())
+                    .collect(Collectors.toList());
+            }
             final Requisites reqs = new DtRequisites(this.home);
             int total = 0;
             for (final Path file : sources) {
@@ -109,14 +118,17 @@ final class DtRequisite implements Requisite {
     @Override
     public void show() throws IOException {
         if (this.path().toFile().isDirectory()) {
-            Logger.info(
-                this, "The content of the %[file]s directory:%n  %s",
-                this.name,
-                Files.walk(this.path())
+            final String listing;
+            try (Stream<Path> walk = Files.walk(this.path())) {
+                listing = walk
                     .map(this.home::relativize)
                     .map(Path::toString)
                     .map(s -> String.format("%s", s))
-                    .collect(Collectors.joining(String.format("%n  ")))
+                    .collect(Collectors.joining(String.format("%n  ")));
+            }
+            Logger.info(
+                this, "The content of the %[file]s directory:%n  %s",
+                this.name, listing
             );
         } else {
             Logger.info(

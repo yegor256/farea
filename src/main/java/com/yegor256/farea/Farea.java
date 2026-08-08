@@ -17,7 +17,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Comparator;
-import java.util.LinkedList;
 import java.util.Locale;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.logging.Level;
@@ -318,11 +317,13 @@ public final class Farea {
      * @throws IOException If fails
      */
     public String walk() throws IOException {
-        return Files.walk(this.home)
-            .map(this.home::relativize)
-            .map(Path::toString)
-            .map(s -> String.format("%s", s))
-            .collect(Collectors.joining(System.lineSeparator()));
+        try (Stream<Path> paths = Files.walk(this.home)) {
+            return paths
+                .map(this.home::relativize)
+                .map(Path::toString)
+                .map(s -> String.format("%s", s))
+                .collect(Collectors.joining(System.lineSeparator()));
+        }
     }
 
     /**
@@ -418,7 +419,7 @@ public final class Farea {
      * @return The command
      */
     private static Collection<String> mvn() {
-        final Collection<String> cmd = new LinkedList<>();
+        final Collection<String> cmd = new ArrayList<>(3);
         if (System.getProperty("os.name").toLowerCase(Locale.getDefault()).contains("windows")) {
             cmd.add("cmd");
             cmd.add("/c");

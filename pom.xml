@@ -72,6 +72,12 @@
       <version>0.4.0</version>
     </dependency>
     <dependency>
+      <groupId>com.google.errorprone</groupId>
+      <artifactId>error_prone_annotations</artifactId>
+      <version>2.50.0</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
       <groupId>com.jcabi</groupId>
       <artifactId>jcabi-log</artifactId>
       <version>0.24.3</version>
@@ -236,15 +242,19 @@
           <plugin>
             <groupId>com.qulice</groupId>
             <artifactId>qulice-maven-plugin</artifactId>
-            <version>0.30.2</version>
+            <version>0.30.5</version>
             <configuration>
               <excludes combine.children="append">
                 <exclude>checkstyle:/src/site/resources/.*</exclude>
                 <exclude>duplicatefinder:.*</exclude>
-                <!-- UseDiamondOperator false positive on an anonymous class,
-                  which requires source 9+ to compile with a diamond,
-                  see https://github.com/yegor256/qulice/issues/1690 -->
-                <exclude>pmd:.*/src/main/java/com/yegor256/farea/DtRequisite\.java</exclude>
+                <!--
+                ErrorProneValidator forks javac without a source, target,
+                or release flag, so PatternMatchingInstanceof suggests Java
+                16+ syntax that fails to compile under this project's
+                Java 8 source level.
+                @see https://github.com/yegor256/qulice/issues/1716
+                -->
+                <exclude>errorprone:/src/main/java/com/yegor256/farea/DtConfiguration\.java</exclude>
               </excludes>
             </configuration>
           </plugin>

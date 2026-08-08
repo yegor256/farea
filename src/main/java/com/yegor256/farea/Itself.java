@@ -16,6 +16,7 @@ import java.util.Set;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 import org.xembly.Directives;
@@ -192,23 +193,25 @@ final class Itself {
                     continue;
                 }
                 final Path src = jar.toPath();
-                for (final Path file : Files.walk(src).collect(Collectors.toList())) {
-                    if (file.toFile().isDirectory()) {
-                        continue;
+                try (Stream<Path> walk = Files.walk(src)) {
+                    for (final Path file : walk.collect(Collectors.toList())) {
+                        if (file.toFile().isDirectory()) {
+                            continue;
+                        }
+                        final String name = src.relativize(file).toString().replace("\\", "/");
+                        if (seen.contains(name)) {
+                            continue;
+                        }
+                        stream.putNextEntry(new ZipEntry(name));
+                        if ("META-INF/maven/plugin.xml".equals(name)) {
+                            this.copyDescriptor(file, version, stream);
+                            descripted = true;
+                        } else {
+                            Files.copy(file, stream);
+                        }
+                        stream.closeEntry();
+                        seen.add(name);
                     }
-                    final String name = src.relativize(file).toString().replace("\\", "/");
-                    if (seen.contains(name)) {
-                        continue;
-                    }
-                    stream.putNextEntry(new ZipEntry(name));
-                    if ("META-INF/maven/plugin.xml".equals(name)) {
-                        this.copyDescriptor(file, version, stream);
-                        descripted = true;
-                    } else {
-                        Files.copy(file, stream);
-                    }
-                    stream.closeEntry();
-                    seen.add(name);
                 }
             }
             if (!descripted) {
@@ -276,8 +279,8 @@ final class Itself {
      */
     private static void cleanup(final Path temp) {
         if (temp.toFile().exists()) {
-            try {
-                Files.walk(temp)
+            try (Stream<Path> walk = Files.walk(temp)) {
+                walk
                     .sorted(Comparator.reverseOrder())
                     .collect(Collectors.toList())
                     .forEach(Itself::tryDelete);

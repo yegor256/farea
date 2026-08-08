@@ -13,8 +13,8 @@ package com.yegor256.farea;
  *
  * <p>Through this interface, you can:</p>
  * <ul>
- *   <li>Add or access plugin executions</li>
- *   <li>Configure plugin parameters</li>
+ * <li>Add or access plugin executions</li>
+ * <li>Configure plugin parameters</li>
  * </ul>
  *
  * <p>Usage example:</p>

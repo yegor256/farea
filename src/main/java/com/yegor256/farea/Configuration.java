@@ -18,10 +18,10 @@ import java.io.IOException;
  *
  * <p>The following types of values are supported:</p>
  * <ul>
- *   <li>Simple values (String, Number, Boolean) - stored as XML text content</li>
- *   <li>{@link Iterable} - stored as a sequence of XML elements</li>
- *   <li>{@link java.util.Map} - stored as a nested XML structure</li>
- *   <li>Arrays - stored as a sequence of XML elements</li>
+ * <li>Simple values (String, Number, Boolean) - stored as XML text content</li>
+ * <li>{@link Iterable} - stored as a sequence of XML elements</li>
+ * <li>{@link java.util.Map} - stored as a nested XML structure</li>
+ * <li>Arrays - stored as a sequence of XML elements</li>
  * </ul>
  *
  * <p>Usage example:</p>

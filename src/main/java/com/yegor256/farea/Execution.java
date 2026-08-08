@@ -15,9 +15,9 @@ import java.io.IOException;
  *
  * <p>Through this interface, you can:</p>
  * <ul>
- *   <li>Set the Maven lifecycle phase for the execution</li>
- *   <li>Set the goals to execute</li>
- *   <li>Configure execution-specific parameters</li>
+ * <li>Set the Maven lifecycle phase for the execution</li>
+ * <li>Set the goals to execute</li>
+ * <li>Configure execution-specific parameters</li>
  * </ul>
  *
  * <p>Usage example:</p>

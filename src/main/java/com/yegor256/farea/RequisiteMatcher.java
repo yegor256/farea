@@ -5,8 +5,8 @@
 package com.yegor256.farea;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collection;
-import java.util.LinkedList;
 import java.util.regex.Pattern;
 import org.hamcrest.BaseMatcher;
 import org.hamcrest.Description;
@@ -57,17 +57,17 @@ public final class RequisiteMatcher extends BaseMatcher<Requisite> {
     /**
      * Explanation of the failure.
      */
-    private final Collection<String> failures = new LinkedList<>();
+    private final Collection<String> failures = new ArrayList<>(0);
 
     /**
      * Expect these regular expressions to be present there.
      */
-    private final Collection<Pattern> positive = new LinkedList<>();
+    private final Collection<Pattern> positive = new ArrayList<>(0);
 
     /**
      * Expect these expressions to be absent.
      */
-    private final Collection<Pattern> negative = new LinkedList<>();
+    private final Collection<Pattern> negative = new ArrayList<>(0);
 
     @Override
     public boolean matches(final Object log) {
