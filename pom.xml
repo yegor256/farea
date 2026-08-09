@@ -242,19 +242,11 @@
           <plugin>
             <groupId>com.qulice</groupId>
             <artifactId>qulice-maven-plugin</artifactId>
-            <version>0.30.5</version>
+            <version>0.30.6</version>
             <configuration>
               <excludes combine.children="append">
                 <exclude>checkstyle:/src/site/resources/.*</exclude>
                 <exclude>duplicatefinder:.*</exclude>
-                <!--
-                ErrorProneValidator forks javac without a source, target,
-                or release flag, so PatternMatchingInstanceof suggests Java
-                16+ syntax that fails to compile under this project's
-                Java 8 source level.
-                @see https://github.com/yegor256/qulice/issues/1716
-                -->
-                <exclude>errorprone:/src/main/java/com/yegor256/farea/DtConfiguration\.java</exclude>
               </excludes>
             </configuration>
           </plugin>
