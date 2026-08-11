@@ -180,7 +180,6 @@ final class Itself {
      * @param jars JARs to package into the ZIP (including the "target/classes/" directory)
      * @return TRUE if descriptor is found (has "plugin.xml" file inside)
      * @throws IOException If fails
-     * @checkstyle ParameterNumberCheck (10 lines)
      */
     @SuppressWarnings("PMD.CognitiveComplexity")
     private boolean zip(final String version, final Path zip, final Set<String> seen,
