@@ -46,19 +46,13 @@ public final class MultiMojo extends AbstractMojo {
     public void execute() {
         StaticLoggerBinder.getSingleton().setMavenLog(this.getLog());
         this.getLog().info(
-            String.format(
-                "project.name: %s", this.project.getName()
-            )
+            String.format("[multi] project.name: %s", this.project.getName())
         );
         this.getLog().info(
-            String.format(
-                "total goals: %d", this.session.getGoals().size()
-            )
+            String.format("[multi] total goals: %d", this.session.getGoals().size())
         );
         this.getLog().info(
-            String.format(
-                "message: %s", this.message
-            )
+            String.format("[multi] message: %s", this.message)
         );
     }
 }

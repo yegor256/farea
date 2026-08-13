@@ -8,7 +8,7 @@
   <parent>
     <groupId>com.jcabi</groupId>
     <artifactId>parent</artifactId>
-    <version>0.72.0</version>
+    <version>0.73.1</version>
   </parent>
   <groupId>com.yegor256</groupId>
   <artifactId>farea</artifactId>
@@ -69,7 +69,7 @@
     <dependency>
       <groupId>com.yegor256</groupId>
       <artifactId>jaxec</artifactId>
-      <version>0.4.0</version>
+      <version>0.5.1</version>
     </dependency>
     <dependency>
       <groupId>com.google.errorprone</groupId>
@@ -85,7 +85,7 @@
     <dependency>
       <groupId>com.jcabi</groupId>
       <artifactId>jcabi-xml</artifactId>
-      <version>0.33.5</version>
+      <version>0.35.0</version>
     </dependency>
     <dependency>
       <groupId>com.jcabi.incubator</groupId>
@@ -107,13 +107,13 @@
     <dependency>
       <groupId>org.cactoos</groupId>
       <artifactId>cactoos</artifactId>
-      <version>0.57.0</version>
+      <version>0.60.0</version>
       <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>net.sf.saxon</groupId>
       <artifactId>Saxon-HE</artifactId>
-      <version>12.5</version>
+      <version>12.9</version>
       <scope>test</scope>
     </dependency>
     <dependency>
@@ -189,7 +189,7 @@
       <plugin>
         <groupId>com.github.spotbugs</groupId>
         <artifactId>spotbugs-maven-plugin</artifactId>
-        <version>4.9.3.0</version>
+        <version>4.9.8.3</version>
         <executions>
           <execution>
             <goals>
@@ -201,14 +201,14 @@
           <dependency>
             <groupId>com.github.spotbugs</groupId>
             <artifactId>spotbugs</artifactId>
-            <version>4.9.3</version>
+            <version>4.9.8</version>
           </dependency>
         </dependencies>
       </plugin>
       <plugin>
         <groupId>org.pitest</groupId>
         <artifactId>pitest-maven</artifactId>
-        <version>1.19.0</version>
+        <version>1.23.1</version>
         <executions>
           <execution>
             <goals>
@@ -228,7 +228,7 @@
           <dependency>
             <groupId>org.pitest</groupId>
             <artifactId>pitest-junit5-plugin</artifactId>
-            <version>1.2.2</version>
+            <version>1.2.3</version>
           </dependency>
         </dependencies>
       </plugin>

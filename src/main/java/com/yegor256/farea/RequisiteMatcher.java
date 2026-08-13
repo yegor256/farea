@@ -15,22 +15,12 @@ import org.hamcrest.Matcher;
 /**
  * Hamcrest matcher for a requisite.
  *
- * <p>Use it like this:</p>
+ * <p>Use it like this, after a Maven execution:</p>
  *
- * <code><pre> new Farea(dir).together(f -> {
- *   f.build()
- *     .plugins()
- *     .appendItself()
- *     .goal("my-goal")
- *     .phase("test")
- *     .configuration()
- *     .set("message", "Hello, world!");
- *   f.exec("test");
- *   assertThat(
- *     f.files().log(),
- *     new RequisiteMatcher.OnSuccess()
- *   );
- * });</pre></code>
+ * <code><pre> assertThat(
+ *   f.files().log(),
+ *   new RequisiteMatcher().with("BUILD SUCCESS")
+ * );</pre></code>
  *
  * @since 0.0.1
  */
