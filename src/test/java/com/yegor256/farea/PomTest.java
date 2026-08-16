@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.regex.Pattern;
 import org.cactoos.Scalar;
 import org.cactoos.experimental.Threads;
 import org.cactoos.iterable.Repeated;
@@ -28,6 +29,11 @@ import org.xembly.Directives;
  */
 @ExtendWith(MktmpResolver.class)
 final class PomTest {
+
+    /**
+     * Any line break, in any style.
+     */
+    private static final Pattern BREAK = Pattern.compile("\\R");
 
     @Test
     void printsCorrectly(@Mktmp final Path dir) throws IOException {
@@ -56,7 +62,9 @@ final class PomTest {
         new Pom(xml).init().modify(new Directives().xpath("/project").add("properties"));
         MatcherAssert.assertThat(
             "Prints without spaces",
-            new XMLDocument(xml).toString(),
+            PomTest.BREAK
+                .matcher(new XMLDocument(xml).toString())
+                .replaceAll(System.lineSeparator()),
             Matchers.containsString(
                 String.format("<name>test</name>%n   <properties>%n      <maven")
             )
