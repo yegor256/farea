@@ -90,14 +90,7 @@ final class PomTest {
             new Repeated<Scalar<?>>(
                 threads,
                 () -> {
-                    pom.modify(
-                        new Directives()
-                            .xpath("/project")
-                            .addIf("bar")
-                            .strict(1)
-                            .add(String.format("foo-%d", System.nanoTime()))
-                            .set("yes!")
-                    );
+                    pom.modify(PomTest.bar());
                     return 0;
                 }
             )
@@ -119,14 +112,7 @@ final class PomTest {
                 threads,
                 () -> {
                     pom.init();
-                    pom.modify(
-                        new Directives()
-                            .xpath("/project")
-                            .addIf("bar")
-                            .strict(1)
-                            .add(String.format("foo-%d", System.nanoTime()))
-                            .set("yes!")
-                    );
+                    pom.modify(PomTest.bar());
                     return 0;
                 }
             )
@@ -140,5 +126,18 @@ final class PomTest {
                 String.format("/project/bar[count(*)=%d]", threads)
             )
         );
+    }
+
+    /**
+     * Directives that append one uniquely named element under "bar".
+     * @return The directives
+     */
+    private static Directives bar() {
+        return new Directives()
+            .xpath("/project")
+            .addIf("bar")
+            .strict(1)
+            .add(String.format("foo-%d", System.nanoTime()))
+            .set("yes!");
     }
 }
