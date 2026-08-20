@@ -136,10 +136,6 @@ final class PomTest {
         );
     }
 
-    /**
-     * Directives that append one uniquely named element under "bar".
-     * @return The directives
-     */
     private static Directives bar() {
         return new Directives()
             .xpath("/project")

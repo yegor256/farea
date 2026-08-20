@@ -135,10 +135,6 @@ final class FareaTest {
         );
     }
 
-    /**
-     * Assert that Farea left its home directory behind.
-     * @param dir The home directory of Farea
-     */
     private static void ran(final Path dir) {
         MatcherAssert.assertThat(
             "farea ran without exception",
@@ -147,11 +143,6 @@ final class FareaTest {
         );
     }
 
-    /**
-     * Compile a trivial project in every thread, each in its own subdirectory.
-     * @param dir The directory holding one subdirectory per thread
-     * @return The exit code of the last thread
-     */
     private static Integer compiled(final Path dir) {
         return new Jointly<Integer>(
             thread -> {

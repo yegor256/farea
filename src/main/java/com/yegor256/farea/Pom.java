@@ -123,11 +123,6 @@ final class Pom {
         }
     }
 
-    /**
-     * Get content as is now.
-     * @return XML
-     * @throws IOException If fails
-     */
     private XML before() throws IOException {
         final XML before;
         if (this.path.toFile().exists()) {

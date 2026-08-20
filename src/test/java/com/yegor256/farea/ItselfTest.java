@@ -93,20 +93,10 @@ final class ItselfTest {
         );
     }
 
-    /**
-     * The base of the fake project used by all tests here.
-     * @return The base
-     */
     private static Base base() {
         return new Base(Paths.get("src/test/resources/fake-pom.xml"));
     }
 
-    /**
-     * The place in the repository where the JAR of this version lands.
-     * @param repos The local repository it was deployed to
-     * @param version The version that was deployed
-     * @return Path of the JAR
-     */
     private static Path jar(final Path repos, final String version) {
         return repos.resolve(String.format("g1/g2/a/%s/a-%1$s.jar", version));
     }

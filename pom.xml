@@ -171,6 +171,11 @@
         <groupId>org.revapi</groupId>
         <artifactId>revapi-maven-plugin</artifactId>
         <version>0.15.1</version>
+        <configuration>
+          <analysisConfigurationFiles>
+            <file>.revapi.json</file>
+          </analysisConfigurationFiles>
+        </configuration>
         <dependencies>
           <dependency>
             <groupId>org.revapi</groupId>
@@ -242,7 +247,7 @@
           <plugin>
             <groupId>com.qulice</groupId>
             <artifactId>qulice-maven-plugin</artifactId>
-            <version>0.30.13</version>
+            <version>0.31.1</version>
           </plugin>
         </plugins>
       </build>

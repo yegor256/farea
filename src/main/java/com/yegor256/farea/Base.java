@@ -90,12 +90,6 @@ final class Base {
         );
     }
 
-    /**
-     * Take or inherit.
-     * @param tag The tag in pom.xml
-     * @return The value
-     * @throws IOException If fails
-     */
     private String inherit(final String tag) throws IOException {
         final List<String> vals = new ArrayList<>(
             this.xml().xpath(

@@ -36,13 +36,6 @@ final class RequisiteMatcherTest {
         );
     }
 
-    /**
-     * Write this text to the log and match it against this matcher.
-     * @param dir The home directory of Farea
-     * @param text The text to write to the log
-     * @param matcher The matcher the log must satisfy
-     * @throws IOException If fails
-     */
     private static void check(final Path dir, final String text,
         final Matcher<Requisite> matcher) throws IOException {
         new Farea(dir).together(

@@ -55,14 +55,6 @@ final class BaseTest {
         );
     }
 
-    /**
-     * Save a POM with these coordinates into a temporary file.
-     * @param group The groupId
-     * @param artifact The artifactId
-     * @param version The version
-     * @return Path of the saved POM
-     * @throws IOException If fails
-     */
     private static Path pom(final String group, final String artifact,
         final String version) throws IOException {
         final Path temp = Files.createTempFile("pom", ".xml");

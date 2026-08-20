@@ -231,7 +231,7 @@ public final class Farea {
         int code = 0;
         try {
             this.exec(args);
-        } catch (final Farea.BuildFailureException ex) {
+        } catch (final BuildFailureException ex) {
             Logger.debug(this, "Build failed with exit code 0x%04x", ex.getCode());
             code = ex.getCode();
         }
@@ -298,7 +298,7 @@ public final class Farea {
                 Level.WARNING, "The stdout of the failed Maven build",
                 new String(Files.readAllBytes(log), StandardCharsets.UTF_8)
             );
-            throw new Farea.BuildFailureException(code);
+            throw new BuildFailureException(code);
         }
     }
 
@@ -326,12 +326,6 @@ public final class Farea {
         }
     }
 
-    /**
-     * Run Maven with these args, saving output to the log.
-     * @param args The args for the "mvn" command
-     * @param log The log file
-     * @return Shell exit code
-     */
     private int jaxec(final String[] args, final Path log) {
         return new Jaxec()
             .with(Farea.mvn())
@@ -345,13 +339,6 @@ public final class Farea {
             .code();
     }
 
-    /**
-     * Tail log file.
-     * @param log The file
-     * @param finished When to stop
-     * @return Total number of bytes seen
-     * @throws IOException If fails
-     */
     private Long tail(final Path log, final AtomicBoolean finished) throws IOException {
         long pos = 0L;
         while (!finished.get()) {
@@ -380,9 +367,6 @@ public final class Farea {
         return pos;
     }
 
-    /**
-     * Sleep a little bit.
-     */
     private static void sleep() {
         try {
             Thread.sleep(1000L);
@@ -392,10 +376,6 @@ public final class Farea {
         }
     }
 
-    /**
-     * Join this thread.
-     * @param thread The thread to join
-     */
     private static void join(final Thread thread) {
         try {
             thread.join(10_000L, 0);
@@ -405,19 +385,10 @@ public final class Farea {
         }
     }
 
-    /**
-     * Execute with command line arguments.
-     * @return POM
-     * @throws IOException If fails
-     */
     private Pom pom() throws IOException {
         return new Pom(this.home.resolve("pom.xml")).init();
     }
 
-    /**
-     * Name of Maven executable, specific for an operating system.
-     * @return The command
-     */
     private static Collection<String> mvn() {
         final Collection<String> cmd = new ArrayList<>(3);
         if (System.getProperty("os.name").toLowerCase(Locale.getDefault()).contains("windows")) {
@@ -430,12 +401,6 @@ public final class Farea {
         return cmd;
     }
 
-    /**
-     * Log with indentation.
-     * @param level Logging level
-     * @param intro The intro message
-     * @param body The body
-     */
     private static void log(final Level level, final String intro, final String body) {
         Logger.log(
             level,
@@ -447,49 +412,6 @@ public final class Farea {
                 String.format("%s  ", System.lineSeparator())
             )
         );
-    }
-
-    /**
-     * When build fails.
-     * @since 0.9.0
-     */
-    public static final class BuildFailureException extends IOException {
-
-        /**
-         * Serialization marker.
-         */
-        private static final long serialVersionUID = 5188162404688529763L;
-
-        /**
-         * The exit code.
-         */
-        private final int exit;
-
-        /**
-         * Ctor.
-         * @param code The exit code of Maven build
-         */
-        public BuildFailureException(final int code) {
-            this(String.format("build failed with exit code 0x%04x", code), code);
-        }
-
-        /**
-         * Ctor.
-         * @param message The exception message
-         * @param code The exit code of Maven build
-         */
-        private BuildFailureException(final String message, final int code) {
-            super(message);
-            this.exit = code;
-        }
-
-        /**
-         * Get the code.
-         * @return The code
-         */
-        public int getCode() {
-            return this.exit;
-        }
     }
 
     /**
