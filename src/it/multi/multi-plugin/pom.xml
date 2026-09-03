@@ -78,7 +78,7 @@
     <plugins>
       <plugin>
         <artifactId>maven-surefire-plugin</artifactId>
-        <version>3.5.6</version>
+        <version>3.6.0</version>
         <configuration>
           <systemProperties>
             <maven.repo.local>${maven.repo.local}</maven.repo.local>
