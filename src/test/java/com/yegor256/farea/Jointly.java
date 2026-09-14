@@ -12,6 +12,7 @@ import org.cactoos.experimental.Threads;
 
 /**
  * Run piece of code in many threads.
+ *
  * @param <T> Type of result
  * @since 0.11.0
  */
@@ -24,6 +25,7 @@ final class Jointly<T> {
 
     /**
      * Ctor.
+     *
      * @param blk The code block to run
      */
     Jointly(final Jointly.Block<T> blk) {
@@ -32,6 +34,7 @@ final class Jointly<T> {
 
     /**
      * Build the result.
+     *
      * @return The result built
      */
     T made() {
@@ -40,6 +43,7 @@ final class Jointly<T> {
 
     /**
      * Build the result.
+     *
      * @param threads How many threads to use
      * @return The result built
      */
@@ -56,6 +60,7 @@ final class Jointly<T> {
 
     /**
      * The block of code to run, in many threads.
+     *
      * @param <R> Type of result
      * @since 0.11.0
      */
@@ -64,6 +69,7 @@ final class Jointly<T> {
 
         /**
          * The method to run.
+         *
          * @param thread The number of thread running
          * @return The result
          * @throws Exception If fails

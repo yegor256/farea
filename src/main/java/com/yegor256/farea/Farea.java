@@ -77,6 +77,7 @@ public final class Farea {
 
     /**
      * Ctor.
+     *
      * @param dir The home dir
      * @since 0.1.0
      */
@@ -86,6 +87,7 @@ public final class Farea {
 
     /**
      * Ctor.
+     *
      * @param dir The home dir
      */
     public Farea(final Path dir) {
@@ -102,6 +104,7 @@ public final class Farea {
 
     /**
      * Ctor.
+     *
      * @param dir The home dir
      * @param mopts Maven opts
      * @since 0.1.0
@@ -112,6 +115,7 @@ public final class Farea {
 
     /**
      * Ctor.
+     *
      * @param dir The home dir
      * @param mopts Maven opts
      * @since 0.1.0
@@ -122,6 +126,7 @@ public final class Farea {
 
     /**
      * Ctor.
+     *
      * @param dir The home dir
      * @param mopts Maven opts
      * @since 0.1.0
@@ -132,6 +137,7 @@ public final class Farea {
 
     /**
      * Ctor.
+     *
      * @param dir The home dir
      * @param mopts Maven opts
      */
@@ -142,6 +148,7 @@ public final class Farea {
 
     /**
      * Clean the reactor, remove all files from it.
+     *
      * @throws IOException If fails
      */
     public void clean() throws IOException {
@@ -158,6 +165,7 @@ public final class Farea {
 
     /**
      * With an extra command-line option.
+     *
      * @param opt The option to add
      */
     public void withOpt(final String opt) {
@@ -180,6 +188,7 @@ public final class Farea {
 
     /**
      * Access to files.
+     *
      * @return Files in home
      */
     public Requisites files() {
@@ -188,6 +197,7 @@ public final class Farea {
 
     /**
      * Access to properties.
+     *
      * @return Properties in the pom.xml
      * @throws IOException If fails
      */
@@ -197,6 +207,7 @@ public final class Farea {
 
     /**
      * Get access to build.
+     *
      * @return Build
      * @throws IOException If fails
      */
@@ -206,6 +217,7 @@ public final class Farea {
 
     /**
      * Get dependencies.
+     *
      * @return Dependencies
      * @throws IOException If fails
      */
@@ -304,6 +316,7 @@ public final class Farea {
 
     /**
      * Log file.
+     *
      * @return Files in home
      * @throws IOException If fails
      */
@@ -313,6 +326,7 @@ public final class Farea {
 
     /**
      * List of all files.
+     *
      * @return List of files in the dir
      * @throws IOException If fails
      */
@@ -416,6 +430,7 @@ public final class Farea {
 
     /**
      * Script to run.
+     *
      * @since 0.0.4
      */
     @FunctionalInterface
@@ -423,6 +438,7 @@ public final class Farea {
 
         /**
          * Run it.
+         *
          * @param farea Instance of itself
          * @throws IOException If fails
          */

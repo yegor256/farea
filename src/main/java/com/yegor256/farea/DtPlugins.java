@@ -10,6 +10,7 @@ import org.xembly.Directives;
 
 /**
  * Plugins inside Build.
+ *
  * @since 0.0.1
  */
 final class DtPlugins implements Plugins {
@@ -26,6 +27,7 @@ final class DtPlugins implements Plugins {
 
     /**
      * Ctor.
+     *
      * @param dir The location of the project directory
      * @param file The POM
      */

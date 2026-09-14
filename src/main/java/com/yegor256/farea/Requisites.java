@@ -33,6 +33,7 @@ public interface Requisites {
 
     /**
      * Show them all, as a tree.
+     *
      * @throws IOException If fails
      * @since 0.7.0
      */
@@ -40,12 +41,14 @@ public interface Requisites {
 
     /**
      * Access to a log of the Maven build.
+     *
      * @return Log output
      */
     Requisite log();
 
     /**
      * Access to a single file.
+     *
      * @param name File name
      * @return File in home
      */

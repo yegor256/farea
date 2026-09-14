@@ -25,6 +25,7 @@ import org.xembly.Directives;
 
 /**
  * Test case for {@link Pom}.
+ *
  * @since 0.1.0
  */
 @ExtendWith(MktmpResolver.class)

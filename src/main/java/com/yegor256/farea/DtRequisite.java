@@ -20,6 +20,7 @@ import java.util.stream.Stream;
 
 /**
  * File in Maven Reactor.
+ *
  * @since 0.0.1
  */
 final class DtRequisite implements Requisite {
@@ -36,6 +37,7 @@ final class DtRequisite implements Requisite {
 
     /**
      * Ctor.
+     *
      * @param dir The home dir
      * @param file The name of it
      */

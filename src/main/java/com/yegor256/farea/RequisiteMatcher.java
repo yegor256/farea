@@ -57,17 +57,26 @@ public final class RequisiteMatcher extends BaseMatcher<Requisite> {
     /**
      * Explanation of the failure.
      */
-    private final Collection<String> failures = new ArrayList<>(0);
+    private final Collection<String> failures;
 
     /**
      * Expect these regular expressions to be present there.
      */
-    private final Collection<Pattern> positive = new ArrayList<>(0);
+    private final Collection<Pattern> positive;
 
     /**
      * Expect these expressions to be absent.
      */
-    private final Collection<Pattern> negative = new ArrayList<>(0);
+    private final Collection<Pattern> negative;
+
+    /**
+     * Ctor.
+     */
+    public RequisiteMatcher() {
+        this.failures = new ArrayList<>(0);
+        this.positive = new ArrayList<>(0);
+        this.negative = new ArrayList<>(0);
+    }
 
     @Override
     public boolean matches(final Object log) {
@@ -117,6 +126,7 @@ public final class RequisiteMatcher extends BaseMatcher<Requisite> {
 
     /**
      * With this pattern.
+     *
      * @param regex The pattern
      * @return Itself
      */
@@ -126,6 +136,7 @@ public final class RequisiteMatcher extends BaseMatcher<Requisite> {
 
     /**
      * With this pattern.
+     *
      * @param regex The pattern
      * @return Itself
      */
@@ -136,6 +147,7 @@ public final class RequisiteMatcher extends BaseMatcher<Requisite> {
 
     /**
      * Without this pattern.
+     *
      * @param regex The pattern
      * @return Itself
      */
@@ -145,6 +157,7 @@ public final class RequisiteMatcher extends BaseMatcher<Requisite> {
 
     /**
      * Without this pattern.
+     *
      * @param regex The pattern
      * @return Itself
      */

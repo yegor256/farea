@@ -43,12 +43,14 @@ public interface Plugin {
 
     /**
      * Append new execution or get access to existing one (using default name).
+     *
      * @return Execution found or added
      */
     Execution execution();
 
     /**
      * Append new execution or get access to existing one.
+     *
      * @param name The "id" of it
      * @return Execution found or added
      */
@@ -56,6 +58,7 @@ public interface Plugin {
 
     /**
      * Get config.
+     *
      * @return Config
      */
     Configuration configuration();

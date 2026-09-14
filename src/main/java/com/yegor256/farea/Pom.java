@@ -39,6 +39,7 @@ final class Pom {
 
     /**
      * Ctor.
+     *
      * @param file Location of it
      */
     Pom(final Path file) {
@@ -48,6 +49,7 @@ final class Pom {
 
     /**
      * Read and return its XML content.
+     *
      * @return The XML
      * @throws IOException If fails
      */
@@ -58,6 +60,7 @@ final class Pom {
     /**
      * Initialize it, making sure it looks like a default {@code pom.xml}
      * for Apache Maven.
+     *
      * @return Itself
      * @throws IOException If fails
      */
@@ -87,6 +90,7 @@ final class Pom {
 
     /**
      * Get by XPath.
+     *
      * @param expr XPath expression
      * @return List of values
      * @throws IOException If fails

@@ -9,6 +9,7 @@ import java.nio.file.Path;
 
 /**
  * Files in Maven Reactor.
+ *
  * @since 0.2.0
  */
 final class DtRequisites implements Requisites {
@@ -20,6 +21,7 @@ final class DtRequisites implements Requisites {
 
     /**
      * Ctor.
+     *
      * @param dir The home dir
      */
     DtRequisites(final Path dir) {

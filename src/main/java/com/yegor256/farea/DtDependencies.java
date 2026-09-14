@@ -10,6 +10,7 @@ import org.xembly.Directives;
 
 /**
  * Dependencies inside Build.
+ *
  * @since 0.0.1
  */
 final class DtDependencies implements Dependencies {
@@ -26,6 +27,7 @@ final class DtDependencies implements Dependencies {
 
     /**
      * Ctor.
+     *
      * @param dir The location of the project directory
      * @param file The POM
      */

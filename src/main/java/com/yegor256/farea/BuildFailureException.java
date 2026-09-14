@@ -8,6 +8,7 @@ import java.io.IOException;
 
 /**
  * When build fails.
+ *
  * @since 0.9.0
  */
 public final class BuildFailureException extends IOException {
@@ -24,6 +25,7 @@ public final class BuildFailureException extends IOException {
 
     /**
      * Ctor.
+     *
      * @param code The exit code of Maven build
      */
     public BuildFailureException(final int code) {
@@ -32,6 +34,7 @@ public final class BuildFailureException extends IOException {
 
     /**
      * Ctor.
+     *
      * @param message The exception message
      * @param code The exit code of Maven build
      */
@@ -42,6 +45,7 @@ public final class BuildFailureException extends IOException {
 
     /**
      * Get the code.
+     *
      * @return The code
      */
     public int getCode() {

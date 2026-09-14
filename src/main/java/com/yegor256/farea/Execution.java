@@ -47,6 +47,7 @@ public interface Execution {
 
     /**
      * Set phase.
+     *
      * @param value The Maven execution
      * @return Itself
      * @throws IOException If fails
@@ -55,6 +56,7 @@ public interface Execution {
 
     /**
      * Set goals.
+     *
      * @param values The Maven goals (non-empty list)
      * @return Itself
      * @throws IOException If fails
@@ -63,6 +65,7 @@ public interface Execution {
 
     /**
      * Get config.
+     *
      * @return Config
      */
     Configuration configuration();

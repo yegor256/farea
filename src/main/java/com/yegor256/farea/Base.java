@@ -38,6 +38,7 @@ final class Base {
 
     /**
      * Ctor.
+     *
      * @param src Original pom.xml
      */
     Base(final Path src) {
@@ -46,6 +47,7 @@ final class Base {
 
     /**
      * Get groupId.
+     *
      * @return Group ID
      * @throws IOException If fails
      */
@@ -55,6 +57,7 @@ final class Base {
 
     /**
      * Get artifactId.
+     *
      * @return Artifact ID
      * @throws IOException If fails
      */
@@ -64,6 +67,7 @@ final class Base {
 
     /**
      * Get version.
+     *
      * @return Version
      * @throws IOException If fails
      */
@@ -73,6 +77,7 @@ final class Base {
 
     /**
      * Get XML.
+     *
      * @return XML
      * @throws IOException If fails
      */

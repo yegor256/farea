@@ -9,6 +9,7 @@ import java.nio.file.Paths;
 
 /**
  * Local maven repository, usually in "~/.m2/repository".
+ *
  * @since 0.0.1
  */
 final class Local {
@@ -27,6 +28,7 @@ final class Local {
 
     /**
      * Ctor.
+     *
      * @param home User home
      */
     Local(final Path home) {
@@ -35,6 +37,7 @@ final class Local {
 
     /**
      * Get the local repository path.
+     *
      * @return The absolute path of it
      */
     Path path() {

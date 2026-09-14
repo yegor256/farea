@@ -8,6 +8,7 @@ import java.nio.file.Path;
 
 /**
  * Build inside POM.
+ *
  * @since 0.0.1
  */
 final class DtBuild implements Build {
@@ -24,6 +25,7 @@ final class DtBuild implements Build {
 
     /**
      * Ctor.
+     *
      * @param dir The location of the project directory
      * @param file The POM
      */

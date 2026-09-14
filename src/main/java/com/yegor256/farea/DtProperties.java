@@ -9,6 +9,7 @@ import org.xembly.Directives;
 
 /**
  * Properties of a project.
+ *
  * @since 0.0.1
  */
 final class DtProperties implements Properties {
@@ -25,6 +26,7 @@ final class DtProperties implements Properties {
 
     /**
      * Ctor.
+     *
      * @param file The POM
      */
     DtProperties(final Pom file) {
@@ -33,6 +35,7 @@ final class DtProperties implements Properties {
 
     /**
      * Ctor.
+     *
      * @param file The POM
      * @param elm The name of the XML element
      */

@@ -12,6 +12,7 @@ import org.xembly.Xembler;
 
 /**
  * Configuration of an Execution.
+ *
  * @since 0.0.1
  */
 final class DtConfiguration implements Configuration {
@@ -28,6 +29,7 @@ final class DtConfiguration implements Configuration {
 
     /**
      * Ctor.
+     *
      * @param file The POM
      * @param xpth The location of the parent element
      */

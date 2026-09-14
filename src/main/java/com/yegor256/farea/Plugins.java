@@ -49,6 +49,7 @@ public interface Plugins {
 
     /**
      * Append Apache Maven plugin.
+     *
      * @param artifact The artifact ID
      * @param version The version
      * @return Plugin just added
@@ -58,6 +59,7 @@ public interface Plugins {
 
     /**
      * Append custom plugin.
+     *
      * @param group The group ID
      * @param artifact The artifact ID
      * @param version The version
@@ -69,6 +71,7 @@ public interface Plugins {
 
     /**
      * Add itself (the code in this classpath) to the Maven reactor.
+     *
      * @return Itself as a plugin
      * @throws IOException If fails
      */
@@ -76,6 +79,7 @@ public interface Plugins {
 
     /**
      * Add itself (the code in this classpath) to the Maven reactor.
+     *
      * @param local Path of local Maven repo, usually "~/.m2/repository"
      * @return Itself as a plugin
      * @throws IOException If fails

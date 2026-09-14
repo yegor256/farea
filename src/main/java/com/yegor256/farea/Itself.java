@@ -23,6 +23,7 @@ import org.xembly.Directives;
 
 /**
  * This classpath classes packaged as a plugin.
+ *
  * @since 0.0.1
  */
 final class Itself {
@@ -54,6 +55,7 @@ final class Itself {
 
     /**
      * Ctor.
+     *
      * @param dir The directory of the Maven project
      */
     Itself(final Path dir) {
@@ -62,6 +64,7 @@ final class Itself {
 
     /**
      * Ctor.
+     *
      * @param dir The directory of the Maven project
      * @param pom Original pom.xml
      */
@@ -71,6 +74,7 @@ final class Itself {
 
     /**
      * Ctor.
+     *
      * @param dir The directory of the Maven project
      * @param pom Original pom.xml
      * @param crf Careful?
@@ -81,6 +85,7 @@ final class Itself {
 
     /**
      * Ctor.
+     *
      * @param dir The directory of the Maven project
      * @param pom Original pom.xml
      * @param crf Careful?
@@ -95,6 +100,7 @@ final class Itself {
 
     /**
      * Deploy it to local Maven repository.
+     *
      * @param local Path of local Maven repo, usually "~/.m2/repository"
      * @return The {@code version} of a new Maven dependency just deployed
      * @throws IOException If fails

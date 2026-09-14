@@ -46,6 +46,7 @@ public interface Dependencies {
 
     /**
      * Append a dependency.
+     *
      * @param group The group ID
      * @param artifact The artifact ID
      * @param version The version
@@ -57,6 +58,7 @@ public interface Dependencies {
 
     /**
      * Add itself (the code in this classpath) to the Maven reactor.
+     *
      * @return Itself as a dependency
      * @throws IOException If fails
      */
@@ -64,6 +66,7 @@ public interface Dependencies {
 
     /**
      * Add itself (the code in this classpath) to the Maven reactor.
+     *
      * @param local Path of local Maven repo, usually "~/.m2/repository"
      * @return Itself as a plugin
      * @throws IOException If fails

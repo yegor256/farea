@@ -29,6 +29,7 @@ public interface Requisite {
 
     /**
      * Write to file.
+     *
      * @param content The content to write
      * @return Itself
      * @throws IOException If fails
@@ -38,6 +39,7 @@ public interface Requisite {
 
     /**
      * Write to file.
+     *
      * @param content The content to write
      * @return Itself
      * @throws IOException If fails
@@ -49,6 +51,7 @@ public interface Requisite {
 
     /**
      * Create requisite by copying it from an existing file (or directory).
+     *
      * @param src The file/directory to copy from
      * @return Itself
      * @throws IOException If fails
@@ -57,6 +60,7 @@ public interface Requisite {
 
     /**
      * Read content.
+     *
      * @return The content of the file
      * @throws IOException If fails
      */
@@ -64,24 +68,28 @@ public interface Requisite {
 
     /**
      * Show it in the log.
+     *
      * @throws IOException If fails
      */
     void show() throws IOException;
 
     /**
      * Deletes it (recursively, if it is a directory).
+     *
      * @throws IOException If fails
      */
     void delete() throws IOException;
 
     /**
      * Check existence.
+     *
      * @return TRUE if file exists
      */
     boolean exists();
 
     /**
      * Get its path.
+     *
      * @return Absolute path of it
      * @since 0.5.0
      */
