@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.regex.Pattern;
 import org.cactoos.Scalar;
 import org.cactoos.experimental.Threads;
 import org.cactoos.iterable.Repeated;
@@ -29,6 +30,11 @@ import org.xembly.Directives;
  */
 @ExtendWith(MktmpResolver.class)
 final class PomTest {
+
+    /**
+     * Any line break, in any style.
+     */
+    private static final Pattern BREAK = Pattern.compile("\\R");
 
     @Test
     void printsCorrectly(@Mktmp final Path dir) throws IOException {
@@ -57,8 +63,12 @@ final class PomTest {
         new Pom(xml).init().modify(new Directives().xpath("/project").add("properties"));
         MatcherAssert.assertThat(
             "Prints without spaces",
-            new XMLDocument(xml).toString(),
-            Matchers.containsString("<name>test</name>\n   <properties>\n      <maven")
+            PomTest.BREAK
+                .matcher(new XMLDocument(xml).toString())
+                .replaceAll(System.lineSeparator()),
+            Matchers.containsString(
+                String.format("<name>test</name>%n   <properties>%n      <maven")
+            )
         );
     }
 
@@ -89,14 +99,7 @@ final class PomTest {
             new Repeated<Scalar<?>>(
                 threads,
                 () -> {
-                    pom.modify(
-                        new Directives()
-                            .xpath("/project")
-                            .addIf("bar")
-                            .strict(1)
-                            .add(String.format("foo-%d", System.nanoTime()))
-                            .set("yes!")
-                    );
+                    pom.modify(PomTest.bar());
                     return 0;
                 }
             )
@@ -118,14 +121,7 @@ final class PomTest {
                 threads,
                 () -> {
                     pom.init();
-                    pom.modify(
-                        new Directives()
-                            .xpath("/project")
-                            .addIf("bar")
-                            .strict(1)
-                            .add(String.format("foo-%d", System.nanoTime()))
-                            .set("yes!")
-                    );
+                    pom.modify(PomTest.bar());
                     return 0;
                 }
             )
@@ -139,5 +135,14 @@ final class PomTest {
                 String.format("/project/bar[count(*)=%d]", threads)
             )
         );
+    }
+
+    private static Directives bar() {
+        return new Directives()
+            .xpath("/project")
+            .addIf("bar")
+            .strict(1)
+            .add(String.format("foo-%d", System.nanoTime()))
+            .set("yes!");
     }
 }

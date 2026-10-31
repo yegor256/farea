@@ -30,8 +30,7 @@ final class FareaTest {
         new Farea(dir).together(
             f -> {
                 f.files()
-                    .file("src/main/java/foo/Hello.java")
-                    .write(
+                    .file("src/main/java/foo/Hello.java").write(
                         "package foo; import org.cactoos.Input; class Hello {}"
                             .getBytes(StandardCharsets.UTF_8)
                     );
@@ -60,11 +59,7 @@ final class FareaTest {
                 Matchers.not(Matchers.equalTo(0))
             )
         );
-        MatcherAssert.assertThat(
-            "farea ran without exception",
-            dir.toFile().exists(),
-            Matchers.is(true)
-        );
+        FareaTest.ran(dir);
     }
 
     @Test
@@ -85,11 +80,7 @@ final class FareaTest {
                 );
             }
         );
-        MatcherAssert.assertThat(
-            "farea ran without exception",
-            dir.toFile().exists(),
-            Matchers.is(true)
-        );
+        FareaTest.ran(dir);
     }
 
     @Test
@@ -107,11 +98,7 @@ final class FareaTest {
                 );
             }
         );
-        MatcherAssert.assertThat(
-            "farea ran without exception",
-            dir.toFile().exists(),
-            Matchers.is(true)
-        );
+        FareaTest.ran(dir);
     }
 
     @Test
@@ -127,6 +114,29 @@ final class FareaTest {
                 );
             }
         );
+        FareaTest.ran(dir);
+    }
+
+    @Test
+    void buildsInManyThreads(@Mktmp final Path dir) {
+        MatcherAssert.assertThat(
+            "the build works in many processes",
+            FareaTest.compiled(dir),
+            Matchers.notNullValue()
+        );
+    }
+
+    @Test
+    void createsPomInManyThreads(@Mktmp final Path dir) throws IOException {
+        FareaTest.compiled(dir);
+        MatcherAssert.assertThat(
+            "the pom.xml is correctly created",
+            new Farea(dir).files().file("0/pom.xml").content(),
+            XhtmlMatchers.hasXPaths("/project/properties[count(*[starts-with(name(), 'foo-')])=1]")
+        );
+    }
+
+    private static void ran(final Path dir) {
         MatcherAssert.assertThat(
             "farea ran without exception",
             dir.toFile().exists(),
@@ -134,34 +144,8 @@ final class FareaTest {
         );
     }
 
-    @Test
-    void buildsInManyThreads(@Mktmp final Path dir) {
-        MatcherAssert.assertThat(
-            "the build works in many processes",
-            new Jointly<>(
-                thread -> {
-                    new Farea(dir.resolve(Integer.toString(thread))).together(
-                        f -> {
-                            f.properties().set(
-                                String.format("foo-%d", thread),
-                                "foo-bar"
-                            );
-                            f.files().file("src/main/java/Foo.java")
-                                .write("class Foo {}".getBytes(StandardCharsets.UTF_8));
-                            f.dependencies().appendItself();
-                            f.exec("compile");
-                        }
-                    );
-                    return 0;
-                }
-            ).made(),
-            Matchers.notNullValue()
-        );
-    }
-
-    @Test
-    void createsPomInManyThreads(@Mktmp final Path dir) throws IOException {
-        new Jointly<>(
+    private static Integer compiled(final Path dir) {
+        return new Jointly<Integer>(
             thread -> {
                 new Farea(dir.resolve(Integer.toString(thread))).together(
                     f -> {
@@ -178,10 +162,5 @@ final class FareaTest {
                 return 0;
             }
         ).made();
-        MatcherAssert.assertThat(
-            "the pom.xml is correctly created",
-            new Farea(dir).files().file("0/pom.xml").content(),
-            XhtmlMatchers.hasXPaths("/project/properties[count(*[starts-with(name(), 'foo-')])=1]")
-        );
     }
 }

@@ -31,6 +31,7 @@ final class DtExecution implements Execution {
 
     /**
      * Ctor.
+     *
      * @param file The POM
      * @param position The position
      * @param name The "id" of it
@@ -83,8 +84,7 @@ final class DtExecution implements Execution {
         return new Directives()
             .xpath(xpath)
             .strict(1)
-            .addIf("executions")
-            .xpath(
+            .addIf("executions").xpath(
                 String.format(
                     "../executions[not(execution[id='%s'])]",
                     this.eid
@@ -93,13 +93,11 @@ final class DtExecution implements Execution {
             .add("execution")
             .add("id")
             .set(this.eid)
-            .xpath(xpath)
-            .xpath(
+            .xpath(xpath).xpath(
                 String.format(
                     "executions/execution[id='%s']",
                     this.eid
                 )
             );
     }
-
 }

@@ -9,7 +9,7 @@ import com.jcabi.xml.XMLDocument;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -38,6 +38,7 @@ final class Base {
 
     /**
      * Ctor.
+     *
      * @param src Original pom.xml
      */
     Base(final Path src) {
@@ -46,37 +47,41 @@ final class Base {
 
     /**
      * Get groupId.
+     *
      * @return Group ID
      * @throws IOException If fails
      */
-    public String groupId() throws IOException {
+    String groupId() throws IOException {
         return this.inherit("groupId");
     }
 
     /**
      * Get artifactId.
+     *
      * @return Artifact ID
      * @throws IOException If fails
      */
-    public String artifactId() throws IOException {
+    String artifactId() throws IOException {
         return this.inherit("artifactId");
     }
 
     /**
      * Get version.
+     *
      * @return Version
      * @throws IOException If fails
      */
-    public String version() throws IOException {
+    String version() throws IOException {
         return this.inherit("version");
     }
 
     /**
      * Get XML.
+     *
      * @return XML
      * @throws IOException If fails
      */
-    public XML xml() throws IOException {
+    XML xml() throws IOException {
         if (!this.pom.toFile().exists()) {
             throw new IllegalStateException(
                 String.format(
@@ -90,14 +95,8 @@ final class Base {
         );
     }
 
-    /**
-     * Take or inherit.
-     * @param tag The tag in pom.xml
-     * @return The value
-     * @throws IOException If fails
-     */
     private String inherit(final String tag) throws IOException {
-        final List<String> vals = new LinkedList<>(
+        final List<String> vals = new ArrayList<>(
             this.xml().xpath(
                 String.format("/mvn:project/mvn:%s/text()", tag)
             )
@@ -116,5 +115,4 @@ final class Base {
         }
         return vals.get(0);
     }
-
 }

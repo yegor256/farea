@@ -10,14 +10,17 @@ package com.yegor256.farea;
  * @since 0.1.0
  */
 public interface Build {
+
     /**
      * Get access to build.
+     *
      * @return Build
      */
     Plugins plugins();
 
     /**
      * Get properties of the build.
+     *
      * @return Properties
      * @since 0.15.0
      */

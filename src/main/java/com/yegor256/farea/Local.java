@@ -23,7 +23,16 @@ final class Local {
      * Ctor.
      */
     Local() {
-        this.user = Paths.get(System.getProperty("user.home"));
+        this(Paths.get(System.getProperty("user.home")));
+    }
+
+    /**
+     * Ctor.
+     *
+     * @param home User home
+     */
+    Local(final Path home) {
+        this.user = home;
     }
 
     /**
@@ -31,7 +40,7 @@ final class Local {
      *
      * @return The absolute path of it
      */
-    public Path path() {
+    Path path() {
         final Path home = this.user.resolve(".m2");
         if (!home.toFile().exists()) {
             throw new IllegalStateException(
@@ -52,5 +61,4 @@ final class Local {
         }
         return local;
     }
-
 }

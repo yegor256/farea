@@ -15,9 +15,9 @@ import java.io.IOException;
  *
  * <p>Through this interface, you can:</p>
  * <ul>
- *   <li>Set the Maven lifecycle phase for the execution</li>
- *   <li>Set the goals to execute</li>
- *   <li>Configure execution-specific parameters</li>
+ * <li>Set the Maven lifecycle phase for the execution</li>
+ * <li>Set the goals to execute</li>
+ * <li>Configure execution-specific parameters</li>
  * </ul>
  *
  * <p>Usage example:</p>
@@ -44,8 +44,10 @@ import java.io.IOException;
  * @since 0.1.0
  */
 public interface Execution {
+
     /**
      * Set phase.
+     *
      * @param value The Maven execution
      * @return Itself
      * @throws IOException If fails
@@ -54,6 +56,7 @@ public interface Execution {
 
     /**
      * Set goals.
+     *
      * @param values The Maven goals (non-empty list)
      * @return Itself
      * @throws IOException If fails
@@ -62,6 +65,7 @@ public interface Execution {
 
     /**
      * Get config.
+     *
      * @return Config
      */
     Configuration configuration();

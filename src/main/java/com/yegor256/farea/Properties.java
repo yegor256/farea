@@ -13,6 +13,7 @@ import java.io.IOException;
  */
 @FunctionalInterface
 public interface Properties {
+
     /**
      * Set one property.
      *

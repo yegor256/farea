@@ -23,5 +23,4 @@ final class LocalTest {
             Matchers.endsWith("/.m2/repository")
         );
     }
-
 }

@@ -22,6 +22,7 @@ public final class MultiMojo extends AbstractMojo {
 
     /**
      * Maven project.
+     *
      * @checkstyle VisibilityModifierCheck (5 lines)
      */
     @Parameter(defaultValue = "${project}", readonly = true)
@@ -29,6 +30,7 @@ public final class MultiMojo extends AbstractMojo {
 
     /**
      * Maven session.
+     *
      * @checkstyle VisibilityModifierCheck (5 lines)
      */
     @Parameter(defaultValue = "${session}", readonly = true)
@@ -36,6 +38,7 @@ public final class MultiMojo extends AbstractMojo {
 
     /**
      * Fake message to print in logs.
+     *
      * @checkstyle MemberNameCheck (7 lines)
      * @checkstyle VisibilityModifierCheck (5 lines)
      */

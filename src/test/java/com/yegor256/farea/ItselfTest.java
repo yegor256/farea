@@ -29,15 +29,9 @@ final class ItselfTest {
     void deploysJar(@Mktmp final Path dir, @Mktmp final Path repos) throws IOException {
         MatcherAssert.assertThat(
             "Resolves",
-            repos.resolve(
-                String.format(
-                    "g1/g2/a/%s/a-%1$s.jar",
-                    new Itself(
-                        dir,
-                        new Base(Paths.get("src/test/resources/fake-pom.xml")),
-                        false
-                    ).deploy(repos)
-                )
+            ItselfTest.jar(
+                repos,
+                new Itself(dir, ItselfTest.base(), false).deploy(repos)
             ).toFile().exists(),
             Matchers.is(true)
         );
@@ -53,16 +47,9 @@ final class ItselfTest {
         );
         MatcherAssert.assertThat(
             "Resolves",
-            repos.resolve(
-                String.format(
-                    "g1/g2/a/%s/a-%1$s.jar",
-                    new Itself(
-                        dir,
-                        new Base(Paths.get("src/test/resources/fake-pom.xml")),
-                        false,
-                        ""
-                    ).deploy(repos)
-                )
+            ItselfTest.jar(
+                repos,
+                new Itself(dir, ItselfTest.base(), false, "").deploy(repos)
             ).toFile().exists(),
             Matchers.is(true)
         );
@@ -78,11 +65,7 @@ final class ItselfTest {
                         repos.resolve(
                             String.format(
                                 "g1/g2/a/%s/a-%1$s.pom",
-                                new Itself(
-                                    dir,
-                                    new Base(Paths.get("src/test/resources/fake-pom.xml")),
-                                    false
-                                ).deploy(repos)
+                                new Itself(dir, ItselfTest.base(), false).deploy(repos)
                             )
                         )
                     ),
@@ -98,11 +81,7 @@ final class ItselfTest {
 
     @Test
     void deploysInManyThreads(@Mktmp final Path dir, @Mktmp final Path repos) {
-        final Itself itself = new Itself(
-            dir,
-            new Base(Paths.get("src/test/resources/fake-pom.xml")),
-            false
-        );
+        final Itself itself = new Itself(dir, ItselfTest.base(), false);
         MatcherAssert.assertThat(
             "the JAR deploys in many threads",
             new Jointly<>(
@@ -113,5 +92,13 @@ final class ItselfTest {
             ).made(),
             Matchers.notNullValue()
         );
+    }
+
+    private static Base base() {
+        return new Base(Paths.get("src/test/resources/fake-pom.xml"));
+    }
+
+    private static Path jar(final Path repos, final String version) {
+        return repos.resolve(String.format("g1/g2/a/%s/a-%1$s.jar", version));
     }
 }

@@ -5,8 +5,8 @@
 package com.yegor256.farea;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collection;
-import java.util.LinkedList;
 import java.util.regex.Pattern;
 import org.hamcrest.BaseMatcher;
 import org.hamcrest.Description;
@@ -47,17 +47,26 @@ public final class RequisiteMatcher extends BaseMatcher<Requisite> {
     /**
      * Explanation of the failure.
      */
-    private final Collection<String> failures = new LinkedList<>();
+    private final Collection<String> failures;
 
     /**
      * Expect these regular expressions to be present there.
      */
-    private final Collection<Pattern> positive = new LinkedList<>();
+    private final Collection<Pattern> positive;
 
     /**
      * Expect these expressions to be absent.
      */
-    private final Collection<Pattern> negative = new LinkedList<>();
+    private final Collection<Pattern> negative;
+
+    /**
+     * Ctor.
+     */
+    public RequisiteMatcher() {
+        this.failures = new ArrayList<>(0);
+        this.positive = new ArrayList<>(0);
+        this.negative = new ArrayList<>(0);
+    }
 
     @Override
     public boolean matches(final Object log) {
@@ -102,11 +111,12 @@ public final class RequisiteMatcher extends BaseMatcher<Requisite> {
 
     @Override
     public void describeMismatch(final Object log, final Description desc) {
-        desc.appendText("\n").appendText(this.seen);
+        desc.appendText(System.lineSeparator()).appendText(this.seen);
     }
 
     /**
      * With this pattern.
+     *
      * @param regex The pattern
      * @return Itself
      */
@@ -116,6 +126,7 @@ public final class RequisiteMatcher extends BaseMatcher<Requisite> {
 
     /**
      * With this pattern.
+     *
      * @param regex The pattern
      * @return Itself
      */
@@ -126,6 +137,7 @@ public final class RequisiteMatcher extends BaseMatcher<Requisite> {
 
     /**
      * Without this pattern.
+     *
      * @param regex The pattern
      * @return Itself
      */
@@ -135,6 +147,7 @@ public final class RequisiteMatcher extends BaseMatcher<Requisite> {
 
     /**
      * Without this pattern.
+     *
      * @param regex The pattern
      * @return Itself
      */

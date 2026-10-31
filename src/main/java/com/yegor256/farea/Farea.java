@@ -17,7 +17,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Comparator;
-import java.util.LinkedList;
 import java.util.Locale;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.logging.Level;
@@ -78,6 +77,7 @@ public final class Farea {
 
     /**
      * Ctor.
+     *
      * @param dir The home dir
      * @since 0.1.0
      */
@@ -87,6 +87,7 @@ public final class Farea {
 
     /**
      * Ctor.
+     *
      * @param dir The home dir
      */
     public Farea(final Path dir) {
@@ -103,6 +104,7 @@ public final class Farea {
 
     /**
      * Ctor.
+     *
      * @param dir The home dir
      * @param mopts Maven opts
      * @since 0.1.0
@@ -113,6 +115,7 @@ public final class Farea {
 
     /**
      * Ctor.
+     *
      * @param dir The home dir
      * @param mopts Maven opts
      * @since 0.1.0
@@ -123,6 +126,7 @@ public final class Farea {
 
     /**
      * Ctor.
+     *
      * @param dir The home dir
      * @param mopts Maven opts
      * @since 0.1.0
@@ -133,6 +137,7 @@ public final class Farea {
 
     /**
      * Ctor.
+     *
      * @param dir The home dir
      * @param mopts Maven opts
      */
@@ -143,6 +148,7 @@ public final class Farea {
 
     /**
      * Clean the reactor, remove all files from it.
+     *
      * @throws IOException If fails
      */
     public void clean() throws IOException {
@@ -159,6 +165,7 @@ public final class Farea {
 
     /**
      * With an extra command-line option.
+     *
      * @param opt The option to add
      */
     public void withOpt(final String opt) {
@@ -181,6 +188,7 @@ public final class Farea {
 
     /**
      * Access to files.
+     *
      * @return Files in home
      */
     public Requisites files() {
@@ -189,6 +197,7 @@ public final class Farea {
 
     /**
      * Access to properties.
+     *
      * @return Properties in the pom.xml
      * @throws IOException If fails
      */
@@ -198,6 +207,7 @@ public final class Farea {
 
     /**
      * Get access to build.
+     *
      * @return Build
      * @throws IOException If fails
      */
@@ -207,6 +217,7 @@ public final class Farea {
 
     /**
      * Get dependencies.
+     *
      * @return Dependencies
      * @throws IOException If fails
      */
@@ -232,7 +243,7 @@ public final class Farea {
         int code = 0;
         try {
             this.exec(args);
-        } catch (final Farea.BuildFailureException ex) {
+        } catch (final BuildFailureException ex) {
             Logger.debug(this, "Build failed with exit code 0x%04x", ex.getCode());
             code = ex.getCode();
         }
@@ -299,12 +310,13 @@ public final class Farea {
                 Level.WARNING, "The stdout of the failed Maven build",
                 new String(Files.readAllBytes(log), StandardCharsets.UTF_8)
             );
-            throw new Farea.BuildFailureException(code);
+            throw new BuildFailureException(code);
         }
     }
 
     /**
      * Log file.
+     *
      * @return Files in home
      * @throws IOException If fails
      */
@@ -314,23 +326,20 @@ public final class Farea {
 
     /**
      * List of all files.
+     *
      * @return List of files in the dir
      * @throws IOException If fails
      */
     public String walk() throws IOException {
-        return Files.walk(this.home)
-            .map(this.home::relativize)
-            .map(Path::toString)
-            .map(s -> String.format("%s", s))
-            .collect(Collectors.joining("\n"));
+        try (Stream<Path> paths = Files.walk(this.home)) {
+            return paths
+                .map(this.home::relativize)
+                .map(Path::toString)
+                .map(s -> String.format("%s", s))
+                .collect(Collectors.joining(System.lineSeparator()));
+        }
     }
 
-    /**
-     * Run Maven with these args, saving output to the log.
-     * @param args The args for the "mvn" command
-     * @param log The log file
-     * @return Shell exit code
-     */
     private int jaxec(final String[] args, final Path log) {
         return new Jaxec()
             .with(Farea.mvn())
@@ -344,13 +353,6 @@ public final class Farea {
             .code();
     }
 
-    /**
-     * Tail log file.
-     * @param log The file
-     * @param finished When to stop
-     * @return Total number of bytes seen
-     * @throws IOException If fails
-     */
     private Long tail(final Path log, final AtomicBoolean finished) throws IOException {
         long pos = 0L;
         while (!finished.get()) {
@@ -379,9 +381,6 @@ public final class Farea {
         return pos;
     }
 
-    /**
-     * Sleep a little bit.
-     */
     private static void sleep() {
         try {
             Thread.sleep(1000L);
@@ -391,10 +390,6 @@ public final class Farea {
         }
     }
 
-    /**
-     * Join this thread.
-     * @param thread The thread to join
-     */
     private static void join(final Thread thread) {
         try {
             thread.join(10_000L, 0);
@@ -404,21 +399,12 @@ public final class Farea {
         }
     }
 
-    /**
-     * Execute with command line arguments.
-     * @return POM
-     * @throws IOException If fails
-     */
     private Pom pom() throws IOException {
         return new Pom(this.home.resolve("pom.xml")).init();
     }
 
-    /**
-     * Name of Maven executable, specific for an operating system.
-     * @return The command
-     */
     private static Collection<String> mvn() {
-        final Collection<String> cmd = new LinkedList<>();
+        final Collection<String> cmd = new ArrayList<>(3);
         if (System.getProperty("os.name").toLowerCase(Locale.getDefault()).contains("windows")) {
             cmd.add("cmd");
             cmd.add("/c");
@@ -429,12 +415,6 @@ public final class Farea {
         return cmd;
     }
 
-    /**
-     * Log with indentation.
-     * @param level Logging level
-     * @param intro The intro message
-     * @param body The body
-     */
     private static void log(final Level level, final String intro, final String body) {
         Logger.log(
             level,
@@ -449,52 +429,19 @@ public final class Farea {
     }
 
     /**
-     * When build fails.
-     *
-     * @since 0.9.0
-     */
-    public static final class BuildFailureException extends IOException {
-        /**
-         * Serialization marker.
-         */
-        private static final long serialVersionUID = 5188162404688529763L;
-
-        /**
-         * The exit code.
-         */
-        private final int exit;
-
-        /**
-         * Ctor.
-         * @param code The exit code of Maven build
-         */
-        public BuildFailureException(final int code) {
-            super(String.format("build failed with exit code 0x%04x", code));
-            this.exit = code;
-        }
-
-        /**
-         * Get the code.
-         * @return The code
-         */
-        public int getCode() {
-            return this.exit;
-        }
-    }
-
-    /**
      * Script to run.
      *
      * @since 0.0.4
      */
     @FunctionalInterface
     public interface Script {
+
         /**
          * Run it.
+         *
          * @param farea Instance of itself
          * @throws IOException If fails
          */
         void run(Farea farea) throws IOException;
     }
-
 }

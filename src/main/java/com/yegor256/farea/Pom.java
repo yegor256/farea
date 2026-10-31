@@ -39,6 +39,7 @@ final class Pom {
 
     /**
      * Ctor.
+     *
      * @param file Location of it
      */
     Pom(final Path file) {
@@ -89,6 +90,7 @@ final class Pom {
 
     /**
      * Get by XPath.
+     *
      * @param expr XPath expression
      * @return List of values
      * @throws IOException If fails
@@ -125,11 +127,6 @@ final class Pom {
         }
     }
 
-    /**
-     * Get content as is now.
-     * @return XML
-     * @throws IOException If fails
-     */
     private XML before() throws IOException {
         final XML before;
         if (this.path.toFile().exists()) {

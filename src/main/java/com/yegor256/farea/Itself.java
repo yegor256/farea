@@ -16,6 +16,7 @@ import java.util.Set;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 import org.xembly.Directives;
@@ -54,6 +55,7 @@ final class Itself {
 
     /**
      * Ctor.
+     *
      * @param dir The directory of the Maven project
      */
     Itself(final Path dir) {
@@ -62,6 +64,7 @@ final class Itself {
 
     /**
      * Ctor.
+     *
      * @param dir The directory of the Maven project
      * @param pom Original pom.xml
      */
@@ -71,6 +74,7 @@ final class Itself {
 
     /**
      * Ctor.
+     *
      * @param dir The directory of the Maven project
      * @param pom Original pom.xml
      * @param crf Careful?
@@ -81,11 +85,11 @@ final class Itself {
 
     /**
      * Ctor.
+     *
      * @param dir The directory of the Maven project
      * @param pom Original pom.xml
      * @param crf Careful?
      * @param cpath The classpath
-     * @checkstyle ParameterNumberCheck (5 lines)
      */
     Itself(final Path dir, final Base pom, final boolean crf, final String cpath) {
         this.home = dir;
@@ -96,11 +100,12 @@ final class Itself {
 
     /**
      * Deploy it to local Maven repository.
+     *
      * @param local Path of local Maven repo, usually "~/.m2/repository"
      * @return The {@code version} of a new Maven dependency just deployed
      * @throws IOException If fails
      */
-    public String deploy(final Path local) throws IOException {
+    String deploy(final Path local) throws IOException {
         final String version = this.next();
         final Path place = local.resolve(
             String.format(
@@ -132,12 +137,6 @@ final class Itself {
         return version;
     }
 
-    /**
-     * Zip the entire module into a JAR.
-     * @param version Version of the JAR to use
-     * @param zip The location of the JAR
-     * @throws IOException If fails
-     */
     private void assembleJar(final String version, final Path zip) throws IOException {
         if (zip.toFile().exists()) {
             Files.delete(zip);
@@ -173,16 +172,6 @@ final class Itself {
         );
     }
 
-    /**
-     * Package it in a single ZIP.
-     * @param version Version of the JAR to use
-     * @param zip The ZIP file to create
-     * @param seen List of entries seen already
-     * @param jars JARs to package into the ZIP (including the "target/classes/" directory)
-     * @return TRUE if descriptor is found (has "plugin.xml" file inside)
-     * @throws IOException If fails
-     * @checkstyle ParameterNumberCheck (10 lines)
-     */
     @SuppressWarnings("PMD.CognitiveComplexity")
     private boolean zip(final String version, final Path zip, final Set<String> seen,
         final String... jars) throws IOException {
@@ -194,23 +183,25 @@ final class Itself {
                     continue;
                 }
                 final Path src = jar.toPath();
-                for (final Path file : Files.walk(src).collect(Collectors.toList())) {
-                    if (file.toFile().isDirectory()) {
-                        continue;
+                try (Stream<Path> walk = Files.walk(src)) {
+                    for (final Path file : walk.collect(Collectors.toList())) {
+                        if (file.toFile().isDirectory()) {
+                            continue;
+                        }
+                        final String name = src.relativize(file).toString().replace("\\", "/");
+                        if (seen.contains(name)) {
+                            continue;
+                        }
+                        stream.putNextEntry(new ZipEntry(name));
+                        if ("META-INF/maven/plugin.xml".equals(name)) {
+                            this.copyDescriptor(file, version, stream);
+                            descripted = true;
+                        } else {
+                            Files.copy(file, stream);
+                        }
+                        stream.closeEntry();
+                        seen.add(name);
                     }
-                    final String name = src.relativize(file).toString().replace("\\", "/");
-                    if (seen.contains(name)) {
-                        continue;
-                    }
-                    stream.putNextEntry(new ZipEntry(name));
-                    if ("META-INF/maven/plugin.xml".equals(name)) {
-                        this.copyDescriptor(file, version, stream);
-                        descripted = true;
-                    } else {
-                        Files.copy(file, stream);
-                    }
-                    stream.closeEntry();
-                    seen.add(name);
                 }
             }
             if (!descripted) {
@@ -227,13 +218,6 @@ final class Itself {
         return descripted;
     }
 
-    /**
-     * Copy "plugin.xml" into the ZIP.
-     * @param file Location of the "plugin.xml"
-     * @param version The version of itself
-     * @param stream The ZIP
-     * @throws IOException If fails
-     */
     private void copyDescriptor(final Path file, final String version,
         final ZipOutputStream stream) throws IOException {
         final Path descriptor = this.temp(version).resolve("plugin.xml");
@@ -247,11 +231,6 @@ final class Itself {
         Files.copy(descriptor, stream);
     }
 
-    /**
-     * Create new version.
-     * @return The version
-     * @throws IOException If fails
-     */
     private String next() throws IOException {
         while (true) {
             final String version = String.format(
@@ -272,14 +251,10 @@ final class Itself {
         }
     }
 
-    /**
-     * Cleanup temporary directory.
-     * @param temp The temporary directory to clean up
-     */
     private static void cleanup(final Path temp) {
         if (temp.toFile().exists()) {
-            try {
-                Files.walk(temp)
+            try (Stream<Path> walk = Files.walk(temp)) {
+                walk
                     .sorted(Comparator.reverseOrder())
                     .collect(Collectors.toList())
                     .forEach(Itself::tryDelete);
@@ -289,10 +264,6 @@ final class Itself {
         }
     }
 
-    /**
-     * Try to delete a path, ignoring errors.
-     * @param path The path to delete
-     */
     private static void tryDelete(final Path path) {
         try {
             Files.deleteIfExists(path);
@@ -301,16 +272,10 @@ final class Itself {
         }
     }
 
-    /**
-     * Make a temp directory for this version.
-     * @param version The version
-     * @return The path
-     */
     private Path temp(final String version) {
         return this.home
             .resolve("target")
             .resolve("farea")
             .resolve(version);
     }
-
 }

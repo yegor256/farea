@@ -1,0 +1,15 @@
+[
+  {
+    "configuration": {
+      "differences": [
+        {
+          "code": "java.class.removed",
+          "ignore": true,
+          "justification": "Moved into its own file, as BuildFailureException, because qulice 0.31.1 ProhibitStaticNestedClassesCheck does not allow static nested classes outside tests.",
+          "old": "class com.yegor256.farea.Farea.BuildFailureException"
+        }
+      ]
+    },
+    "extension": "revapi.differences"
+  }
+]

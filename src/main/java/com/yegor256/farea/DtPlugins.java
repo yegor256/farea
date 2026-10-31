@@ -27,6 +27,7 @@ final class DtPlugins implements Plugins {
 
     /**
      * Ctor.
+     *
      * @param dir The location of the project directory
      * @param file The POM
      */
@@ -48,8 +49,7 @@ final class DtPlugins implements Plugins {
             new Directives()
                 .xpath("/project")
                 .addIf("build")
-                .addIf("plugins")
-                .xpath(
+                .addIf("plugins").xpath(
                     String.format(
                         "/project/build/plugins[not(plugin[groupId='%s' and artifactId='%s'])]",
                         group, artifact
@@ -86,5 +86,4 @@ final class DtPlugins implements Plugins {
             new Itself(this.home, base).deploy(local)
         );
     }
-
 }

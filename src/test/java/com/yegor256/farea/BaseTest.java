@@ -21,89 +21,56 @@ final class BaseTest {
 
     @Test
     void readsGroupId() throws IOException {
-        final Path temp = Files.createTempFile("pom", ".xml");
-        Files.write(
-            temp,
-            String.join(
-                "\n",
-                "<project xmlns=\"http://maven.apache.org/POM/4.0.0\">",
-                "  <modelVersion>4.0.0</modelVersion>",
-                "  <groupId>com.example</groupId>",
-                "  <artifactId>demo</artifactId>",
-                "  <version>1.2.3</version>",
-                "</project>"
-            ).getBytes(StandardCharsets.UTF_8)
-        );
         MatcherAssert.assertThat(
             "groupId should be 'com.example'",
-            new Base(temp).groupId(),
+            new Base(BaseTest.pom("com.example", "demo", "1.2.3")).groupId(),
             Matchers.equalTo("com.example")
         );
     }
 
     @Test
     void readsArtifactId() throws IOException {
-        final Path temp = Files.createTempFile("pom", ".xml");
-        Files.write(
-            temp,
-            String.join(
-                "\n",
-                "<project xmlns=\"http://maven.apache.org/POM/4.0.0\">",
-                "  <modelVersion>4.0.0</modelVersion>",
-                "  <groupId>com.example</groupId>",
-                "  <artifactId>demo</artifactId>",
-                "  <version>1.2.3</version>",
-                "</project>"
-            ).getBytes(StandardCharsets.UTF_8)
-        );
         MatcherAssert.assertThat(
             "artifactId should be 'demo'",
-            new Base(temp).artifactId(),
+            new Base(BaseTest.pom("com.example", "demo", "1.2.3")).artifactId(),
             Matchers.equalTo("demo")
         );
     }
 
     @Test
     void readsVersion() throws IOException {
-        final Path temp = Files.createTempFile("pom", ".xml");
-        Files.write(
-            temp,
-            String.join(
-                "\n",
-                "<project xmlns=\"http://maven.apache.org/POM/4.0.0\">",
-                "  <modelVersion>4.0.0</modelVersion>",
-                "  <groupId>com.example</groupId>",
-                "  <artifactId>demo</artifactId>",
-                "  <version>1.2.3</version>",
-                "</project>"
-            ).getBytes(StandardCharsets.UTF_8)
-        );
         MatcherAssert.assertThat(
             "version should be '1.2.3'",
-            new Base(temp).version(),
+            new Base(BaseTest.pom("com.example", "demo", "1.2.3")).version(),
             Matchers.equalTo("1.2.3")
         );
     }
 
     @Test
     void returnsXml() throws IOException {
+        MatcherAssert.assertThat(
+            "ArtifactId should be 'a'",
+            new Base(BaseTest.pom("g", "a", "v")).xml()
+                .xpath("/mvn:project/mvn:artifactId/text()").get(0),
+            Matchers.equalTo("a")
+        );
+    }
+
+    private static Path pom(final String group, final String artifact,
+        final String version) throws IOException {
         final Path temp = Files.createTempFile("pom", ".xml");
         Files.write(
             temp,
             String.join(
-                "\n",
+                System.lineSeparator(),
                 "<project xmlns=\"http://maven.apache.org/POM/4.0.0\">",
                 "  <modelVersion>4.0.0</modelVersion>",
-                "  <groupId>g</groupId>",
-                "  <artifactId>a</artifactId>",
-                "  <version>v</version>",
+                String.format("  <groupId>%s</groupId>", group),
+                String.format("  <artifactId>%s</artifactId>", artifact),
+                String.format("  <version>%s</version>", version),
                 "</project>"
             ).getBytes(StandardCharsets.UTF_8)
         );
-        MatcherAssert.assertThat(
-            "ArtifactId should be 'a'",
-            new Base(temp).xml().xpath("/mvn:project/mvn:artifactId/text()").get(0),
-            Matchers.equalTo("a")
-        );
+        return temp;
     }
 }

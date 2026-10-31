@@ -43,8 +43,10 @@ import java.io.IOException;
  * @since 0.0.1
  */
 public interface Dependency {
+
     /**
      * Set scope of it.
+     *
      * @param scope The scope
      * @return Itself
      * @throws IOException If fails
@@ -53,6 +55,7 @@ public interface Dependency {
 
     /**
      * Set classifier of it.
+     *
      * @param classifier The classifier
      * @return Itself
      * @throws IOException If fails

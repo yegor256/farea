@@ -25,7 +25,8 @@ final class Jointly<T> {
 
     /**
      * Ctor.
-     * @param blk The code block to run.
+     *
+     * @param blk The code block to run
      */
     Jointly(final Jointly.Block<T> blk) {
         this.block = blk;
@@ -33,6 +34,7 @@ final class Jointly<T> {
 
     /**
      * Build the result.
+     *
      * @return The result built
      */
     T made() {
@@ -41,6 +43,7 @@ final class Jointly<T> {
 
     /**
      * Build the result.
+     *
      * @param threads How many threads to use
      * @return The result built
      */
@@ -62,9 +65,11 @@ final class Jointly<T> {
      * @since 0.11.0
      */
     @FunctionalInterface
-    public interface Block<R> {
+    interface Block<R> {
+
         /**
          * The method to run.
+         *
          * @param thread The number of thread running
          * @return The result
          * @throws Exception If fails

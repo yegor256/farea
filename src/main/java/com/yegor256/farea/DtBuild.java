@@ -25,6 +25,7 @@ final class DtBuild implements Build {
 
     /**
      * Ctor.
+     *
      * @param dir The location of the project directory
      * @param file The POM
      */

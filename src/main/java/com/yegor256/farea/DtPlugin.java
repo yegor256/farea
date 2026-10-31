@@ -23,6 +23,7 @@ final class DtPlugin implements Plugin {
 
     /**
      * Ctor.
+     *
      * @param file The POM
      * @param position The position
      */
@@ -51,5 +52,4 @@ final class DtPlugin implements Plugin {
             )
         );
     }
-
 }

@@ -9,6 +9,7 @@ import com.yegor256.MktmpResolver;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
+import org.hamcrest.Matcher;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
@@ -24,41 +25,34 @@ final class RequisiteMatcherTest {
 
     @Test
     void matchesSimpleRequisite(@Mktmp final Path dir) throws IOException {
-        new Farea(dir).together(
-            f -> {
-                f.files()
-                    .log()
-                    .write("hello world BUILD SUCCESS maybe".getBytes(StandardCharsets.UTF_8));
-                MatcherAssert.assertThat(
-                    "matches the log",
-                    f.files().log(),
-                    RequisiteMatcher.SUCCESS
-                );
-            }
-        );
-        MatcherAssert.assertThat(
-            "matcher ran without exception",
-            dir.toFile().exists(),
-            Matchers.is(true)
+        RequisiteMatcherTest.check(
+            dir, "hello world BUILD SUCCESS maybe", RequisiteMatcher.SUCCESS
         );
     }
 
     @Test
     void matchesNegativeLog(@Mktmp final Path dir) throws IOException {
+        RequisiteMatcherTest.check(
+            dir, "hello world BUILD FAILURE maybe", RequisiteMatcher.FAILURE
+        );
+    }
+
+    private static void check(final Path dir, final String text,
+        final Matcher<Requisite> matcher) throws IOException {
         new Farea(dir).together(
             f -> {
                 f.files()
                     .log()
-                    .write("hello world BUILD FAILURE maybe".getBytes(StandardCharsets.UTF_8));
+                    .write(text.getBytes(StandardCharsets.UTF_8));
                 MatcherAssert.assertThat(
                     "matches the log",
                     f.files().log(),
-                    RequisiteMatcher.FAILURE
+                    matcher
                 );
             }
         );
         MatcherAssert.assertThat(
-            "matcher ran without exception",
+            "farea ran without exception",
             dir.toFile().exists(),
             Matchers.is(true)
         );

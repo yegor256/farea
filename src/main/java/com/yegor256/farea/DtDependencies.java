@@ -27,6 +27,7 @@ final class DtDependencies implements Dependencies {
 
     /**
      * Ctor.
+     *
      * @param dir The location of the project directory
      * @param file The POM
      */
@@ -63,5 +64,4 @@ final class DtDependencies implements Dependencies {
             new Itself(this.home, base, false).deploy(local)
         );
     }
-
 }

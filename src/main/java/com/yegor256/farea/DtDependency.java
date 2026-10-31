@@ -31,6 +31,7 @@ final class DtDependency implements Dependency {
 
     /**
      * Ctor.
+     *
      * @param file The POM
      * @param grp GroupId
      * @param art ArtifactId
@@ -66,5 +67,4 @@ final class DtDependency implements Dependency {
         );
         return this;
     }
-
 }
