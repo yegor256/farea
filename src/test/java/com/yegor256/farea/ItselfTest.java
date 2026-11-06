@@ -12,6 +12,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.zip.ZipFile;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
@@ -45,14 +46,23 @@ final class ItselfTest {
             dir.resolve("target/plugin.xml"),
             "<plugin><version>0</version></plugin>".getBytes(StandardCharsets.UTF_8)
         );
-        MatcherAssert.assertThat(
-            "Resolves",
+        try (ZipFile jar = new ZipFile(
             ItselfTest.jar(
                 repos,
                 new Itself(dir, ItselfTest.base(), false, "").deploy(repos)
-            ).toFile().exists(),
-            Matchers.is(true)
-        );
+            ).toFile()
+        )) {
+            MatcherAssert.assertThat(
+                "Empty classpath packages only the fallback descriptor",
+                jar.size(),
+                Matchers.is(1)
+            );
+            MatcherAssert.assertThat(
+                "Fallback descriptor is packaged",
+                jar.getEntry("target/plugin.xml"),
+                Matchers.notNullValue()
+            );
+        }
     }
 
     @Test
