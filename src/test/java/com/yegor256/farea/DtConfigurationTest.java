@@ -144,4 +144,23 @@ final class DtConfigurationTest {
             )
         );
     }
+    @Test
+    void setsIntegerArrayAsParam(@Mktmp final Path dir) throws IOException {
+        final Pom pom = new Pom(dir.resolve("pom-bug.xml")).init();
+
+        new DtConfiguration(pom, "/project")
+                .set("ports", new Integer[] {8080, 8081});
+
+        System.out.println("Generated XML:");
+        System.out.println(pom.xml());
+
+        MatcherAssert.assertThat(
+                "Issue #287: Integer arrays should generate XML items",
+                XhtmlMatchers.xhtml(pom.xml()),
+                XhtmlMatchers.hasXPaths(
+                        "/project/configuration/ports/item[1][.='8080']",
+                        "/project/configuration/ports/item[2][.='8081']"
+                )
+        );
+    }
 }
