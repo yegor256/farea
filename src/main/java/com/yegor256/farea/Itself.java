@@ -179,7 +179,7 @@ final class Itself {
         try (ZipOutputStream stream = new ZipOutputStream(Files.newOutputStream(zip))) {
             for (final String path : jars) {
                 final File jar = new File(path);
-                if (!jar.isDirectory()) {
+                if (path.isEmpty() || !jar.isDirectory()) {
                     continue;
                 }
                 final Path src = jar.toPath();
