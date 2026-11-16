@@ -47,11 +47,14 @@ final class ItselfTest {
             dir.resolve("target/plugin.xml"),
             "<plugin><version>0</version></plugin>".getBytes(StandardCharsets.UTF_8)
         );
-        final Path archive = ItselfTest.jar(
-            repos,
-            new Itself(dir, ItselfTest.base(), false, "").deploy(repos)
-        );
-        try (ZipFile jar = new ZipFile(archive.toFile())) {
+        try (
+            ZipFile jar = new ZipFile(
+                ItselfTest.jar(
+                    repos,
+                    new Itself(dir, ItselfTest.base(), false, "").deploy(repos)
+                ).toFile()
+            )
+        ) {
             MatcherAssert.assertThat(
                 "Empty classpath packages only the fallback descriptor",
                 jar.stream().map(ZipEntry::getName).toArray(String[]::new),
