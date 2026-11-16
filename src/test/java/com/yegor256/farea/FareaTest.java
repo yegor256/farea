@@ -35,7 +35,7 @@ final class FareaTest {
                             .getBytes(StandardCharsets.UTF_8)
                     );
                 f.dependencies()
-                    .append("org.cactoos", "cactoos", "0.55.0");
+                    .append("org.cactoos", "cactoos", "0.63.0");
                 MatcherAssert.assertThat(
                     "exit code is zero",
                     f.execQuiet("compile"),
@@ -68,7 +68,7 @@ final class FareaTest {
             f -> {
                 f.build()
                     .plugins()
-                    .append("maven-compiler-plugin", "3.11.0")
+                    .append("maven-compiler-plugin", "3.16.0")
                     .configuration()
                     .set("skip", "true");
                 f.withOpt("--debug");
