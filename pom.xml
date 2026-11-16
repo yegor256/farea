@@ -63,7 +63,7 @@
     </site>
   </distributionManagement>
   <properties>
-    <maven.version>3.10.0</maven.version>
+    <maven.version>3.10.1</maven.version>
   </properties>
   <dependencies>
     <dependency>
@@ -85,7 +85,7 @@
     <dependency>
       <groupId>com.jcabi</groupId>
       <artifactId>jcabi-xml</artifactId>
-      <version>0.37.1</version>
+      <version>0.37.3</version>
     </dependency>
     <dependency>
       <groupId>com.jcabi.incubator</groupId>
