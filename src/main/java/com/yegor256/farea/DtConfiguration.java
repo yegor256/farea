@@ -5,6 +5,7 @@
 package com.yegor256.farea;
 
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.util.Map;
 import org.xembly.Directive;
 import org.xembly.Directives;
@@ -57,9 +58,9 @@ final class DtConfiguration implements Configuration {
             for (final Object item : (Iterable<?>) value) {
                 dirs.add("item").append(DtConfiguration.dirs(item)).up();
             }
-        } else if (value instanceof String[]) {
-            for (final String item : (String[]) value) {
-                dirs.add("item").append(DtConfiguration.dirs(item)).up();
+        } else if (value.getClass().isArray()) {
+            for (int i = 0; i < Array.getLength(value); i++) {
+                dirs.add("item").append(DtConfiguration.dirs(Array.get(value, i))).up();
             }
         } else if (value instanceof Map) {
             for (final Map.Entry<?, ?> entry : ((Map<?, ?>) value).entrySet()) {
