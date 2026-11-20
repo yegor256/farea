@@ -91,11 +91,11 @@ final class DtRequisite implements Requisite {
                     .filter(file -> !file.toFile().isDirectory())
                     .collect(Collectors.toList());
             }
-            final Requisites reqs = new DtRequisites(this.home);
+            final Requisites reqs = new DtRequisites(target);
             int total = 0;
             for (final Path file : sources) {
                 reqs
-                    .file(target.resolve(src.relativize(file)).toString())
+                    .file(src.relativize(file).toString())
                     .write(Files.readAllBytes(file));
                 ++total;
             }

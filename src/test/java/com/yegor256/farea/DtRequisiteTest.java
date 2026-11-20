@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Assertions;
@@ -33,6 +34,20 @@ final class DtRequisiteTest {
         MatcherAssert.assertThat(
             "copied two files",
             farea.resolve("new/a/b/c/d/two.txt").toFile().exists(),
+            Matchers.is(true)
+        );
+    }
+
+    @Test
+    void copiesDirectoryWithRelativeHome(@Mktmp final Path src,
+        @Mktmp final Path farea) throws IOException {
+        Files.write(src.resolve("one.txt"), "hi".getBytes(StandardCharsets.UTF_8));
+        new DtRequisite(
+            Paths.get("").toAbsolutePath().relativize(farea), "copied"
+        ).save(src);
+        MatcherAssert.assertThat(
+            "copied file lands under the requested target, not duplicated",
+            farea.resolve("copied/one.txt").toFile().exists(),
             Matchers.is(true)
         );
     }
