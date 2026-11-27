@@ -53,7 +53,7 @@ class JavaCompilationTest {
       f.files()
         .file("src/test/java/Hello.java")
         .write("class Hello {}".getBytes());
-      f.dependencies().append("org.cactoos", "cactoos", "0.55.0");
+      f.dependencies().append("org.cactoos", "cactoos", "0.63.0");
       f.exec("compile");
       MatcherAssert.assertThat(
         "Compiles without any issues",
