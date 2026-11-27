@@ -261,6 +261,7 @@ public final class Farea {
     public void exec(final String... args) throws IOException {
         this.pom().init();
         final Path log = this.home.resolve("log.txt");
+        Files.deleteIfExists(log);
         if (Logger.isDebugEnabled(Farea.class)) {
             Farea.log(
                 Level.FINER,
