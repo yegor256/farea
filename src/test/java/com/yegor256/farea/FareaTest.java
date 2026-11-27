@@ -9,8 +9,14 @@ import com.yegor256.Mktmp;
 import com.yegor256.MktmpResolver;
 import com.yegor256.WeAreOnline;
 import java.io.IOException;
+import java.io.StringWriter;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.nio.file.Path;
+import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
+import org.apache.log4j.SimpleLayout;
+import org.apache.log4j.WriterAppender;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
@@ -133,6 +139,39 @@ final class FareaTest {
             "the pom.xml is correctly created",
             new Farea(dir).files().file("0/pom.xml").content(),
             XhtmlMatchers.hasXPaths("/project/properties[count(*[starts-with(name(), 'foo-')])=1]")
+        );
+    }
+
+    @Test
+    void doesNotReplayStaleLog(@Mktmp final Path dir) throws IOException {
+        final String stale = "STALE-LOG-FROM-PREVIOUS-RUN-must-not-be-replayed";
+        Files.write(
+            dir.resolve("log.txt"),
+            String.format("%s%n", stale).getBytes(StandardCharsets.UTF_8)
+        );
+        final Logger logger = Logger.getLogger("com.yegor256.farea");
+        final Level before = logger.getLevel();
+        final StringWriter writer = new StringWriter();
+        final WriterAppender appender = new WriterAppender(new SimpleLayout(), writer);
+        logger.addAppender(appender);
+        logger.setLevel(Level.DEBUG);
+        try {
+            new Farea(dir).together(
+                f -> {
+                    f.files().file("src/main/java/foo/Hello.java").write(
+                        "package foo; class Hello {}".getBytes(StandardCharsets.UTF_8)
+                    );
+                    f.exec("compile");
+                }
+            );
+        } finally {
+            logger.removeAppender(appender);
+            logger.setLevel(before);
+        }
+        MatcherAssert.assertThat(
+            "the stale log.txt is not streamed into the live debug output",
+            writer.toString(),
+            Matchers.not(Matchers.containsString(stale))
         );
     }
 
